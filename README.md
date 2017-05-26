@@ -1,7 +1,8 @@
 # casptone-etours
 This project for our graduation
 # event-name api 
-Come with event name as String and the following is parameter(s) type 
+Come with event name as String and the following is parameter(s) type.
+
 Ex: 
 
       {      
