@@ -1,8 +1,0 @@
-{
-  "name": "etours",
-  "description": "capstone project api",
-  "dependencies": {
-    "express": "^4.15.3",
-    "socket.io": "^2.0.1"
-  }
-}
