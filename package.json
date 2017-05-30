@@ -4,6 +4,7 @@
   "description": "my first socket.io app",
   "dependencies": {
     "express": "^4.15.3",
+    "mssql": "^4.0.4",
     "socket.io": "^1.7.4"
   },
   "scripts": {
