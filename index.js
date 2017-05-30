@@ -26,6 +26,9 @@ connection.connect(err => {
         console.log("have error");
         console.log(err)
     } else {
+        io.on('connection', function(socket) {
+            io.emit('chat message', 'database connected');
+        })
         console.log("connect successfully")
     }
 })
