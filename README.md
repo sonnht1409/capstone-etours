@@ -43,7 +43,7 @@ Ex:
               touristList: array [{
                                       UserID: int,
                                       Fullname: String, 
-                                      UCSN.SeatNumber: String, 
+                                      SeatNumber: String, 
                                       TouristStatus: int (1 on, 2 off )
                                     }] 
             }
