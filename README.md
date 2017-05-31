@@ -12,3 +12,24 @@ Ex:
                message: String    
             }   
       }
+      
+      
+# Client event 
+     {
+        event name: 'getTouristList',
+        params: 
+            {
+              tourInstanceID: int
+            }
+     }
+     
+     {
+        event name: 'Scan'
+        params: 
+            {
+              cardCode: String,
+              tourInstanceID: int
+            }
+     }
+     
+     
