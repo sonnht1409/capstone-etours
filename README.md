@@ -1,3 +1,5 @@
+# API URL
+http://52.187.181.75:8080/
 # casptone-etours
 This project for our graduation
 # event-name api 
@@ -14,7 +16,7 @@ Ex:
       }
       
       
-# Client event 
+# Client event (send to server)
      {
         event name: 'getTouristList',
         params: 
@@ -33,3 +35,23 @@ Ex:
      }
      
      
+# Server event (send to client)
+      {
+        event name: 'getTouristList',
+        data: 
+            {
+              touristList: array
+            }
+      }
+      
+      {
+        event name: 'Scan',
+        data: 
+            {
+              status: String,
+              fullname: String,
+              UserID: int,
+              SeatNumber: String,
+              TouristStatus: int (1 on, 2 off) this status before update
+            }
+      }
