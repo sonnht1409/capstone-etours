@@ -73,6 +73,7 @@ io.on('connection', function(socket) {
         var cardCode = params.cardCode;
         var tourInstanceID = params.tourInstanceID;
         var getUserQuery = "select tourInstanceID, UserID from Card where Code='" + cardCode + "'";
+        var UserInfo = {};
         connection.request().query(getUserQuery, function(err, result) {
             var message = "";
             var status = "FAILED";
@@ -85,6 +86,35 @@ io.on('connection', function(socket) {
                     if (tourInstanceID == result.recordset[0].tourInstanceID) {
                         status = "SUCCESS";
                         var UserID = result.recordset[0].UserID
+                        var getTouristMessage = "";
+
+                        // get tourist status to response
+                        var getTouristInfoQuery = "select fullname, [user].id as UserID, SeatNumber, TouristStatus \n " +
+                            "from [user] inner join User_Coach_SeatNumber as UCSN on [user].id = UCSN.UserID \n " +
+                            "inner join UserInfo as UI on [user].UserInfoID = UI.id \n " +
+                            "where [user].id = " + UserID;
+                        connection.request().query(getTouristInfoQuery, function(err, result) {
+                            if (err) {
+                                getTouristMessage = "ERROR! " + getTouristInfoQuery;
+                            } else {
+                                getTouristMessage = "SUCCESS! " + getTouristInfoQuery;
+                                if (typeof result !== "undefined" && result.recordset.length > 0) {
+                                    UserInfo = result.recordset[0];
+                                }
+                            }
+
+                            io.emit('chat message', getTouristMessage);
+                            io.emit('Scan', {
+                                status: status,
+                                fullname: UserInfo.fullname,
+                                UserID: UserInfo.UserID,
+                                SeatNumber: UserInfo.SeatNumber,
+                                TouristStatus: UserInfo.TouristStatus
+                            })
+                        })
+
+                        // update tourist status 
+
                         var updateTouristStatusQuery = "if (select TouristStatus from [user] where id =" + UserID + ") != 1 \n" +
                             "update [user] set TouristStatus = 1 where id =" + UserID + " \n " +
                             "else \n" +
@@ -98,13 +128,12 @@ io.on('connection', function(socket) {
                             }
                             io.emit('chat message', updateMessage);
                         })
+
+
                     }
                 }
             }
             io.emit('chat message', message)
-            io.emit('Scan', {
-                status: status
-            })
 
         })
     });
