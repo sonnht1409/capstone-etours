@@ -40,7 +40,12 @@ Ex:
         event name: 'getTouristList',
         data: 
             {
-              touristList: array
+              touristList: array [{
+                                      UserID: int,
+                                      Fullname: String, 
+                                      UCSN.SeatNumber: String, 
+                                      TouristStatus: int (1 on, 2 off )
+                                    }] 
             }
       }
       
