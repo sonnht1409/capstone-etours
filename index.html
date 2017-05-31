@@ -19,7 +19,8 @@
             $('form').submit(function() {
                 socket.emit('chat message', $('#m').val());
                 /*socket.emit('getTouristList', {
-                    tourInstanceID: 3
+                    tourInstanceID: 3,
+                    coachId: 1
                 }) 
                 socket.emit('Scan', {
                     cardCode: 'ET000001',

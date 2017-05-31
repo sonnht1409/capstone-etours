@@ -44,11 +44,13 @@ io.on('connection', function(socket) {
 
     socket.on('getTouristList', function(params) {
         var tourInstanceID = params.tourInstanceID;
+        var coachID = params.coachID;
         var getTouristListQuery = 'select [user].id as UserID,UI.Fullname, UCSN.SeatNumber, TSTT.Status \n ' +
             'from [user] inner join User_Coach_SeatNumber as UCSN on [user].id = UCSN.UserID \n ' +
             'inner join UserInfo as UI on [user].UserInfoID = UI.id \n ' +
             'inner join TouristStatus as TSTT on [user].TouristStatus = TSTT.ID \n' +
-            'where [user].RoleID = 3 and [user].TourInstanceID = ' + tourInstanceID + ' and [user].isActive = 1';
+            'where [user].RoleID = 3 and [user].TourInstanceID = ' + tourInstanceID +
+            ' and UCSN.CoachID= ' + coachID + ' and [user].isActive = 1';
         console.log(getTouristListQuery);
         connection.request().query(getTouristListQuery, function(err, result) {
             var message = "";
