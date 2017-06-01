@@ -77,9 +77,10 @@ io.on('connection', function(socket) {
     });
 
     socket.on('Scan', function(params) {
-        var cardCode = params.cardCode;
+        var clientParams = JSON.parse(params)
+        var cardCode = clientParams.cardCode;
         console.log("code: " + cardCode)
-        var tourInstanceID = params.tourInstanceID;
+        var tourInstanceID = clientParams.tourInstanceID;
         var getUserQuery = "select tourInstanceID, UserID from Card where Code='" + cardCode + "'";
         console.log(getUserQuery);
         var UserInfo = {};
