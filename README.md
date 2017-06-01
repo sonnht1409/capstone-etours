@@ -21,8 +21,8 @@ Ex:
         event name: 'getTouristList',
         params: 
             {
-              tourInstanceID: int,
-              coachID: int
+              tourInstanceID: int, (current is 3, for testing)
+              coachID: int (current is 1, for testing)
             }
      }
      
