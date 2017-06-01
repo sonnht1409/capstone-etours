@@ -45,11 +45,11 @@ io.on('connection', function(socket) {
     socket.on('getTouristList', function(params) {
         console.log("params from client")
         console.log(params)
-        var clientParams = JSON.parse(params);
-        console.log("parsed params")
-        console.log(clientParams)
-        var tourInstanceID = clientParams.tourInstanceID;
-        var coachID = clientParams.coachID;
+            /* var clientParams = JSON.parse(params);
+             console.log("parsed params")
+             console.log(clientParams) */
+        var tourInstanceID = params.tourInstanceID;
+        var coachID = params.coachID;
         var getTouristListQuery = 'select [user].id as UserID,UI.Fullname, UCSN.SeatNumber, TSTT.Status \n ' +
             'from [user] inner join User_Coach_SeatNumber as UCSN on [user].id = UCSN.UserID \n ' +
             'inner join UserInfo as UI on [user].UserInfoID = UI.id \n ' +
