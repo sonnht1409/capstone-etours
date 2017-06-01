@@ -43,6 +43,8 @@ io.on('connection', function(socket) {
     });
 
     socket.on('getTouristList', function(params) {
+        console.log("get tourist list params: ")
+        console.log(params)
         var tourInstanceID = params.tourInstanceID;
         var coachID = params.coachID;
         var getTouristListQuery = 'select [user].id as UserID,UI.Fullname, UCSN.SeatNumber, TSTT.Status \n ' +
