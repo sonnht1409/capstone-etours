@@ -70,9 +70,9 @@ io.on('connection', function(socket) {
                 }
             }
             io.emit('chat message', message);
-            io.emit('getTouristList', {
+            io.emit('getTouristList', JSON.stringify({
                 touristList: touristList
-            })
+            }))
         })
     });
 
@@ -114,13 +114,13 @@ io.on('connection', function(socket) {
                             }
 
                             io.emit('chat message', getTouristMessage);
-                            io.emit('Scan', {
+                            io.emit('Scan', JSON.stringify({
                                 status: status,
                                 fullname: UserInfo.fullname,
                                 UserID: UserInfo.UserID,
                                 SeatNumber: UserInfo.SeatNumber,
                                 TouristStatus: UserInfo.TouristStatus
-                            })
+                            }))
                         })
 
                         // update tourist status 
