@@ -50,7 +50,7 @@ io.on('connection', function(socket) {
         console.log(clientParams)
         var tourInstanceID = clientParams.tourInstanceID;
         var coachID = clientParams.coachID;
-        var getTouristListQuery = 'select [user].id as UserID,UI.Fullname, UCSN.SeatNumber, TSTT.Status \n ' +
+        var getTouristListQuery = 'select [user].id as UserID,UI.Fullname, UCSN.SeatNumber, TSTT.Status, TSTT.ID as StatusID \n ' +
             'from [user] inner join User_Coach_SeatNumber as UCSN on [user].id = UCSN.UserID \n ' +
             'inner join UserInfo as UI on [user].UserInfoID = UI.id \n ' +
             'inner join TouristStatus as TSTT on [user].TouristStatus = TSTT.ID \n' +
@@ -114,13 +114,13 @@ io.on('connection', function(socket) {
                             }
 
                             io.emit('chat message', getTouristMessage);
-                            io.emit('Scan', JSON.stringify({
+                            io.emit('Scan', JSON.stringify {
                                 status: status,
                                 fullname: UserInfo.fullname,
                                 UserID: UserInfo.UserID,
                                 SeatNumber: UserInfo.SeatNumber,
                                 TouristStatus: UserInfo.TouristStatus
-                            }))
+                            })
                         })
 
                         // update tourist status 
