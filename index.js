@@ -205,9 +205,7 @@ io.on('connection', function(socket) {
             }
             loggedUser.status = status;
             loggedUser.logStatus = logStatus;
-            io.emit('Web Login', {
-                loggedUser: loggedUser
-            })
+            io.emit('Web Login', loggedUser)
             io.emit('chat message', message);
 
         })
