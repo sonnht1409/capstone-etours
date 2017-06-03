@@ -2,7 +2,7 @@ const app = require('express')();
 var http = require('http').Server(app);
 const io = require('socket.io')(http);
 var port = 8080;
-
+const bodyParser = require('body-parser')
 var path = require('path');
 var appDir = path.dirname(require.main.filename);
 
@@ -20,6 +20,8 @@ const connection = new sql.ConnectionPool({
 
 
 })
+
+app.use(bodyParser.urlencoded({ extended: true }))
 
 connection.connect(err => {
     if (err) {
@@ -149,8 +151,9 @@ io.on('connection', function(socket) {
     });
 
     socket.on('Web Login', function(params) {
-        var username = params.username;
-        var password = params.password;
+        var clientParams = JSON.parse(params);
+        var username = clientParams.username;
+        var password = clientParams.password;
         var authenicateQuery =
             "select fullname, [user].id as UserID, role.ID as RoleID, role" +
             ", [user].IsActive as UserActive, role.IsActive as RoleActive " +
@@ -191,17 +194,18 @@ io.on('connection', function(socket) {
                 }
 
             }
-
+            io.emit('Web Login', {
+                loggedUser: loggedUser,
+                status: status
+            })
             io.emit('chat message', message);
 
         })
     })
 
-    app.post('/authenicate', function(req, res) {
-        console.log(req.body.params);
-        res.end(req.body.params);
-    })
+
 });
+
 
 http.listen(port, function() {
     console.log('listening on *:' + port);
