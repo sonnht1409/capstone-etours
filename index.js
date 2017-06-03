@@ -203,10 +203,10 @@ io.on('connection', function(socket) {
                 }
 
             }
+            loggedUser.status = status;
+            loggedUser.logStatus = logStatus;
             io.emit('Web Login', {
-                loggedUser: loggedUser,
-                status: status,
-                logStatus: logStatus
+                loggedUser: loggedUser
             })
             io.emit('chat message', message);
 
