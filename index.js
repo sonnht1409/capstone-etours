@@ -157,7 +157,7 @@ io.on('connection', function(socket) {
             "from [user] \n" +
             "inner join UserInfo on [user].UserInfoID = UserInfo.ID \n" +
             "inner join Role on [user].RoleID = Role.ID \n" +
-            "where username ='" + username + "' and password='" + password;
+            "where username ='" + username + "' and password='" + password + "'";
         console.log(authenicateQuery)
         var message = "";
         var status = ""
