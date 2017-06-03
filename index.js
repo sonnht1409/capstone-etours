@@ -153,10 +153,10 @@ io.on('connection', function(socket) {
         var password = clientParams.password;
         var authenicateQuery =
             "select fullname, [user].id as UserID, role.ID as RoleID, role" +
-            ", [user].IsActive as UserActive, role.IsActive as RoleActive " +
-            "from [user]" +
-            "inner join UserInfo on [user].UserInfoID = UserInfo.ID" +
-            "inner join Role on [user].RoleID = Role.ID" +
+            ", [user].IsActive as UserActive, role.IsActive as RoleActive \n" +
+            "from [user] \n" +
+            "inner join UserInfo on [user].UserInfoID = UserInfo.ID \n" +
+            "inner join Role on [user].RoleID = Role.ID \n" +
             "where username ='" + username + "' and password='" + password;
         var message = "";
         var status = ""
