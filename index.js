@@ -2,7 +2,6 @@ const app = require('express')();
 var http = require('http').Server(app);
 const io = require('socket.io')(http);
 var port = 8080;
-const bodyParser = require('body-parser')
 var path = require('path');
 var appDir = path.dirname(require.main.filename);
 
@@ -20,8 +19,6 @@ const connection = new sql.ConnectionPool({
 
 
 })
-
-app.use(bodyParser.urlencoded({ extended: true }))
 
 connection.connect(err => {
     if (err) {
