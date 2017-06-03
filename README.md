@@ -35,6 +35,15 @@ Ex:
             }
      }
      
+     {
+       event name: 'Web Login'
+       params: 
+            {
+              username: String,
+              password: String (encoded) 
+            }
+     }
+     
      
 # Server event (send to client)
       {
@@ -60,4 +69,19 @@ Ex:
               SeatNumber: String,
               TouristStatus: int (1 on, 2 off) this status before update
             }
+      }
+      
+      {
+        event name: 'Web Login'
+        loggedUser: 
+             {
+               fullname: String, 
+               UserID: int,
+               RoleID: int,
+               UserActive: boolean,
+               RoleActive: boolean,
+               status: String,
+               logStatus: String
+             }
+            
       }
