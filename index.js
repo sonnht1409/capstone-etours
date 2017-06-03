@@ -162,6 +162,7 @@ io.on('connection', function(socket) {
         var message = "";
         var status = ""
         var logStatus = "";
+        var loggedUser = {};
         connection.request().query(authenicateQuery, function(err, result) {
             if (err) {
                 message = "ERROR! " + authenicateQuery;
