@@ -148,6 +148,59 @@ io.on('connection', function(socket) {
         })
     });
 
+    socket.on('Web Login', function(params) {
+        var username = params.username;
+        var password = params.password;
+        var authenicateQuery =
+            "select fullname, [user].id as UserID, role.ID as RoleID, role" +
+            ", [user].IsActive as UserActive, role.IsActive as RoleActive " +
+            "from [user]" +
+            "inner join UserInfo on [user].UserInfoID = UserInfo.ID" +
+            "inner join Role on [user].RoleID = Role.ID" +
+            "where username ='" + username + "' and password='" + password;
+        var message = "";
+        var status = ""
+        connection.request().query(authenicateQuery, function(err, result) {
+            if (err) {
+                message = "ERROR! " + authenicateQuery;
+                status = "FAILED"
+            } else {
+                message = "SUCCESS! " + authenicateQuery;
+                if (typeof result !== "undefined" && result.recordset.length > 0) {
+                    var loggedUser = result.recordset[0];
+                    if (loggedUser.UserActive == 0 && loggedUser.RoleActive == 0) {
+                        message = "FAILED! " + authenicateQuery + "\n"
+                        message += "User no longer active \n";
+                        message += "Permission denied \n";
+                        status = "FAILED";
+                    } else {
+                        if (loggedUser.RoleActive == 0) {
+                            message = "FAILED! " + authenicateQuery + "\n";
+                            message += "Permission denied \n"
+                            status = "FAILED"
+                        } else {
+                            if (loggedUser.UserActive == 0) {
+                                message = "FAILED! " + authenicateQuery + "\n";
+                                message += "User no longer active \n"
+                                status = "FAILED"
+                            } else {
+                                status = "SUCCESS";
+                            }
+                        }
+                    }
+                }
+
+            }
+
+            io.emit('chat message', message);
+
+        })
+    })
+
+    app.post('/authenicate', function(req, res) {
+        console.log(req.body.params);
+        res.end(req.body.params);
+    })
 });
 
 http.listen(port, function() {
