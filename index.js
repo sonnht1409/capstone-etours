@@ -153,18 +153,20 @@ io.on('connection', function(socket) {
         var password = clientParams.password;
         var authenicateQuery =
             "select fullname, [user].id as UserID, role.ID as RoleID, role" +
-            ", [user].IsActive as UserActive, role.IsActive as RoleActive \n" +
-            "from [user] \n" +
-            "inner join UserInfo on [user].UserInfoID = UserInfo.ID \n" +
-            "inner join Role on [user].RoleID = Role.ID \n" +
+            ", [user].IsActive as UserActive, role.IsActive as RoleActive \n " +
+            "from [user] \n " +
+            "inner join UserInfo on [user].UserInfoID = UserInfo.ID \n " +
+            "inner join Role on [user].RoleID = Role.ID \n " +
             "where username ='" + username + "' and password='" + password + "'";
         console.log(authenicateQuery)
         var message = "";
         var status = ""
+        var logStatus = "";
         connection.request().query(authenicateQuery, function(err, result) {
             if (err) {
                 message = "ERROR! " + authenicateQuery;
                 status = "FAILED"
+                logStatus = "BUG"
             } else {
                 message = "SUCCESS! " + authenicateQuery;
                 if (typeof result !== "undefined" && result.recordset.length > 0) {
@@ -174,27 +176,36 @@ io.on('connection', function(socket) {
                         message += "User no longer active \n";
                         message += "Permission denied \n";
                         status = "FAILED";
+                        logStatus = "User no longer active & permission denied"
                     } else {
                         if (loggedUser.RoleActive == 0) {
                             message = "FAILED! " + authenicateQuery + "\n";
                             message += "Permission denied \n"
                             status = "FAILED"
+                            logStatus = "Permission denied";
                         } else {
                             if (loggedUser.UserActive == 0) {
                                 message = "FAILED! " + authenicateQuery + "\n";
                                 message += "User no longer active \n"
                                 status = "FAILED"
+                                logStatus = "User no longer active"
                             } else {
                                 status = "SUCCESS";
+                                logStatus = "Username and Password match, User is active"
                             }
                         }
                     }
+                } else {
+                    message = "FAILED " + authenicateQuery;
+                    status = "FAILED"
+                    logStatus = "Wrong username or password"
                 }
 
             }
             io.emit('Web Login', {
                 loggedUser: loggedUser,
-                status: status
+                status: status,
+                logStatus: logStatus
             })
             io.emit('chat message', message);
 
