@@ -203,8 +203,16 @@ io.on('connection', function(socket) {
                 }
 
             }
-            loggedUser.status = status;
-            loggedUser.logStatus = logStatus;
+            if (typeof loggedUser === "undefined") {
+                loggedUser = {
+                    logStatus: logStatus,
+                    status: status
+                }
+            } else {
+                loggedUser.status = status;
+                loggedUser.logStatus = logStatus;
+            }
+
             io.emit('Web Login', JSON.stringify(loggedUser))
             io.emit('chat message', message);
 
