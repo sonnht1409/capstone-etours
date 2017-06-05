@@ -224,6 +224,7 @@ io.on('connection', function(socket) {
         var clientParams = JSON.parse(params);
         console.log(clientParams)
         io.emit('chat message', 'gps has sent')
+        io.emit('chat message', 'latitude is: ' + clientParams.lat + ' and longitude is: ' + clientParams.long)
     })
 
 });
