@@ -44,6 +44,17 @@ Ex:
             }
      }
      
+     {
+      event name: 'Mobile sent GPS'
+      params: 
+            {
+              tourInstanceID: int,
+              coachID: int,
+              userID: int,
+              lat: float
+              long: float
+            }
+     }
      
 # Server event (send to client)
       {
@@ -84,4 +95,12 @@ Ex:
                logStatus: String
              }
             
+      }
+      
+      {
+        event name: 'Mobile sent GPS'
+        data: 
+            {
+              implement late
+            }
       }
