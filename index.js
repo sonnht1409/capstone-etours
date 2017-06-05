@@ -220,6 +220,12 @@ io.on('connection', function(socket) {
     })
 
 
+    socket.on('Mobile Sent GPS', function(params) {
+        var clientParams = JSON.parse(params);
+        console.log(clientParams)
+        io.emit('chat message', 'gps has sent')
+    })
+
 });
 
 
