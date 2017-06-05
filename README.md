@@ -1,5 +1,5 @@
 # API URL
-http://52.187.181.75:8080/
+http://52.187.17.228:8080/
 # casptone-etours
 This project for our graduation
 # event-name api 
