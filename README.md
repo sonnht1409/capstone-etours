@@ -54,7 +54,7 @@ Ex:
      }
      
      {
-      event name: 'Mobile sent GPS'
+      event name: 'Mobile Sent GPS'
       params: 
             {
               tourInstanceID: int,
