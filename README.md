@@ -45,6 +45,15 @@ Ex:
      }
      
      {
+       event name: 'Mobile Login'
+       params: 
+            {
+              username: String,
+              password: String (encoded) 
+            }
+     }
+     
+     {
       event name: 'Mobile sent GPS'
       params: 
             {
@@ -89,6 +98,23 @@ Ex:
                fullname: String, 
                UserID: int,
                RoleID: int,
+               UserActive: boolean,
+               RoleActive: boolean,
+               status: String,
+               logStatus: String
+             }
+            
+      }
+      
+      {
+        event name: 'Mobile Login'
+        loggedUser: 
+             {
+               fullname: String, 
+               UserID: int,
+               RoleID: int,
+               TourInstanceID: int,
+               CoachID: int,
                UserActive: boolean,
                RoleActive: boolean,
                status: String,
