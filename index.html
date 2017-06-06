@@ -25,7 +25,11 @@
                 socket.emit('Scan', {
                     cardCode: 'ET000001',
                     tourInstanceID: 3
-                })*/
+                })
+                socket.emit('Mobile Login', JSON.stringify({
+                    username: 'tourguide1',
+                    password: '40bd001563085fc35165329ea1ff5c5ecbdbbeef'
+                }))*/
                 $('#m').val('');
                 return false;
             });

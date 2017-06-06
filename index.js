@@ -227,6 +227,77 @@ io.on('connection', function(socket) {
         io.emit('chat message', 'latitude is: ' + clientParams.lat + ' and longitude is: ' + clientParams.long)
     })
 
+    socket.on('Mobile Login', function(params) {
+        var clientParams = JSON.parse(params);
+        var username = clientParams.username;
+        var password = clientParams.password;
+        var authenicateQuery =
+            "select fullname, CoachID, TourInstanceID, [user].id as UserID, role.ID as RoleID, role" +
+            ", [user].IsActive as UserActive, role.IsActive as RoleActive \n " +
+            "from [user] \n " +
+            "inner join UserInfo on [user].UserInfoID = UserInfo.ID \n " +
+            "inner join Role on [user].RoleID = Role.ID \n " +
+            "inner join User_Coach_SeatNumber as UCSN on [user].id = UCSN.UserID \n" +
+            "where username ='" + username + "' and password='" + password + "'";
+        var message = "";
+        var status = "";
+        var logStatus = "";
+        var loggedUser = {};
+        connection.request().query(authenicateQuery, function(err, result) {
+            if (err) {
+                message = "ERROR! " + authenicateQuery;
+                status = "FAILED"
+                logStatus = "BUG"
+            } else {
+                message = "SUCCESS! " + authenicateQuery;
+                if (typeof result !== "undefined" && result.recordset.length > 0) {
+                    var loggedUser = result.recordset[0];
+                    if (loggedUser.UserActive == 0 && loggedUser.RoleActive == 0) {
+                        message = "FAILED! " + authenicateQuery + "\n"
+                        message += "User no longer active \n";
+                        message += "Permission denied \n";
+                        status = "FAILED";
+                        logStatus = "User no longer active & permission denied"
+                    } else {
+                        if (loggedUser.RoleActive == 0) {
+                            message = "FAILED! " + authenicateQuery + "\n";
+                            message += "Permission denied \n"
+                            status = "FAILED"
+                            logStatus = "Permission denied";
+                        } else {
+                            if (loggedUser.UserActive == 0) {
+                                message = "FAILED! " + authenicateQuery + "\n";
+                                message += "User no longer active \n"
+                                status = "FAILED"
+                                logStatus = "User no longer active"
+                            } else {
+                                status = "SUCCESS";
+                                logStatus = "Username and Password match, User is active"
+                            }
+                        }
+                    }
+                } else {
+                    message = "FAILED " + authenicateQuery;
+                    status = "FAILED"
+                    logStatus = "Wrong username or password"
+                }
+            }
+            if (typeof loggedUser === "undefined") {
+                loggedUser = {
+                    logStatus: logStatus,
+                    status: status
+                }
+            } else {
+                loggedUser.status = status;
+                loggedUser.logStatus = logStatus;
+            }
+
+            io.emit('Mobile Login', JSON.stringify(loggedUser))
+            io.emit('chat message', message);
+        })
+
+
+    })
 });
 
 
