@@ -29,6 +29,18 @@
                 socket.emit('Mobile Login', JSON.stringify({
                     username: 'tourguide1',
                     password: '40bd001563085fc35165329ea1ff5c5ecbdbbeef'
+                }))
+                socket.emit('Mobile Sent GPS', JSON.stringify({
+                    userID: 1,
+                    tourInstanceID: 3,
+                    coachID: 1,
+                    lat: 16.0294362,
+                    long: 108.2216732
+
+                }))
+                socket.emit('Web Get GPS', JSON.stringify({
+                    tourInstanceID: 3,
+                    roleID: 1
                 }))*/
                 $('#m').val('');
                 return false;
@@ -37,6 +49,7 @@
                 $('#messages').append($('<li>').text(msg));
                 window.scrollTo(0, document.body.scrollHeight);
             });
+            /*
             socket.on('getTouristList', function(result) {
                 console.log(result)
             })
@@ -45,6 +58,9 @@
                 console.log(result)
             })
 
+            socket.on('Web Get GPS', function(result) {
+                console.log(JSON.parse(result));
+            }) */
         });
     </script>
 </body>

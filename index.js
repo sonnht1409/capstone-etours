@@ -225,7 +225,43 @@ io.on('connection', function(socket) {
         console.log(clientParams)
         io.emit('chat message', 'gps has sent')
         io.emit('chat message', 'latitude is: ' + clientParams.lat + ' and longitude is: ' + clientParams.long)
+        var updateGpsQuery = "update [user] set latitude= " + clientParams.lat + ", longitude=" + clientParams.long +
+            " where [user].id=" + clientParams.userID;
+        console.log(updateGpsQuery)
+        var message = ""
+        connection.request().query(updateGpsQuery, function(err, result) {
+            if (err) {
+                message = "ERROR! " + updateGpsQuery;
+            } else {
+                message = "SUCCESS " + updateGpsQuery;
+            }
+            io.emit('chat message', message);
+        })
     })
+
+    socket.on('Web Get GPS', function(params) {
+        var clientParams = JSON.parse(params);
+        var message = "";
+        var getGpsQuery = "select [user].id as UserID,latitude, longitude \n " +
+            "from [user] where TourInstanceID = " + clientParams.tourInstanceID + " and RoleID=" + clientParams.roleID;
+        var message = ""
+        var gpsResult = {
+            gpsList: []
+        };
+        connection.request().query(getGpsQuery, function(err, result) {
+            if (err) {
+                message = "ERROR! " + getGpsQuery;
+            } else {
+                message = "SUCCESS! " + getGpsQuery;
+                if (typeof result !== "undefined" && result.recordset.length > 0) {
+                    gpsResult.gpsList = result.recordset;
+                }
+            }
+
+            io.emit('chat message', message);
+            io.emit('Web Get GPS', JSON.stringify(gpsResult));
+        })
+    });
 
     socket.on('Mobile Login', function(params) {
         var clientParams = JSON.parse(params);
