@@ -140,7 +140,7 @@ Ex:
       }
       
       {
-        event name: 'Mobile Get GPS'
+        event name: 'Web Get GPS'
         data:
             {
               gpsList: array[{
