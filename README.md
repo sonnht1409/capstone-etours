@@ -65,6 +65,14 @@ Ex:
             }
      }
      
+     {
+      event name: 'Web Get GPS'
+      params:
+            {
+              tourInstanceID: int,
+              roleID: int
+            }
+     }
 # Server event (send to client)
       {
         event name: 'getTouristList',
@@ -128,5 +136,18 @@ Ex:
         data: 
             {
               implement late
+            }
+      }
+      
+      {
+        event name: 'Mobile Get GPS'
+        data:
+            {
+              gpsList: array[{
+                             userID: int,
+                             latitutde: float
+                             longitude: float
+                           
+                             }]                
             }
       }
