@@ -69,7 +69,7 @@ io.on('connection', function(socket) {
                 }
             }
             io.emit('chat message', message);
-            io.emit('getTouristList', JSON.stringify({
+            socket.emit('getTouristList', JSON.stringify({
                 touristList: touristList
             }))
         })
@@ -113,7 +113,7 @@ io.on('connection', function(socket) {
                             }
 
                             io.emit('chat message', getTouristMessage);
-                            io.emit('Scan', JSON.stringify({
+                            socket.emit('Scan', JSON.stringify({
                                 status: status,
                                 fullname: UserInfo.fullname,
                                 UserID: UserInfo.UserID,
@@ -213,7 +213,7 @@ io.on('connection', function(socket) {
                 loggedUser.logStatus = logStatus;
             }
 
-            io.emit('Web Login', JSON.stringify(loggedUser))
+            socket.emit('Web Login', JSON.stringify(loggedUser))
             io.emit('chat message', message);
 
         })
@@ -259,7 +259,7 @@ io.on('connection', function(socket) {
             }
 
             io.emit('chat message', message);
-            io.emit('Web Get GPS', JSON.stringify(gpsResult));
+            socket.emit('Web Get GPS', JSON.stringify(gpsResult));
         })
     });
 
@@ -328,7 +328,7 @@ io.on('connection', function(socket) {
                 loggedUser.logStatus = logStatus;
             }
 
-            io.emit('Mobile Login', JSON.stringify(loggedUser))
+            socket.emit('Mobile Login', JSON.stringify(loggedUser))
             io.emit('chat message', message);
         })
 
