@@ -243,7 +243,7 @@ io.on('connection', function(socket) {
         var clientParams = JSON.parse(params);
         var message = "";
         var getGpsQuery = "select [user].id as UserID,latitude, longitude, UserInfo.* \n " +
-            "from [user] inner join UserInfo on [user].UserInfoID = UserInfo.ID +\n " +
+            "from [user] inner join UserInfo on [user].UserInfoID = UserInfo.ID \n " +
             "where TourInstanceID = " + clientParams.tourInstanceID + " and RoleID=" + clientParams.roleID;
         var message = ""
         var gpsResult = {
