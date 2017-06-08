@@ -1,5 +1,12 @@
 # API URL
 http://52.187.17.228:8080/
+
+# Database server
+etours.database.windows.net
+password: $Son01627335534
+azure: phuongtase61553@fpt.edu.vn
+password: Anhphuong11
+
 # casptone-etours
 This project for our graduation
 # event-name api 
