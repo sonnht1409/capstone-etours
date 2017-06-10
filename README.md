@@ -206,7 +206,10 @@ Ex:
               gpsList: array[{
                              userID: int,
                              latitutde: float
-                             longitude: float
+                             longitude: float,
+                             fullname: string,
+                             phoneNumber: string,
+                             tourName: string
                            
                              }]                
             }
