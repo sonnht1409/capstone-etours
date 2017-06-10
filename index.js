@@ -485,14 +485,14 @@ io.on('connection', (socket) => {
             "(" + clientParams.lat + "," + clientParams.long + ",'" + insertDate + "'," + clientParams.userID + ")"
 
         var message = "";
-        /*connection.request().query(addPickUpLocationQuery, (err, result) => {
+        connection.request().query(addPickUpLocationQuery, (err, result) => {
             if (err) {
                 message = "ERROR! " + addPickUpLocationQuery;
             } else {
                 message = "SUCCESS! " + addPickUpLocationQuery;
             }
             io.emit('chat message', message)
-        }) */
+        })
         var notification = ""
         var locationDetail = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + clientParams.lat + ',' + clientParams.long;
 
