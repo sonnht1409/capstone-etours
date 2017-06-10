@@ -481,8 +481,9 @@ io.on('connection', (socket) => {
         var insertDate = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() +
             " " + date.getHours() + ":" + date.getMinutes() + ":" + "00.000";
 
-        var addPickUpLocationQuery = "INSERT into PickUp (Latitude,Longitude,PickUpTime,UserID) \nVALUES" +
-            "(" + clientParams.lat + "," + clientParams.long + ",'" + insertDate + "'," + clientParams.userID + ")"
+        var addPickUpLocationQuery = "INSERT into PickUp (Latitude,Longitude,PickUpTime,UserID,TourInstanceID) \nVALUES" +
+            "(" + clientParams.lat + "," + clientParams.long + ",'" + insertDate + "'," +
+            clientParams.userID + "," + clientParams.tourInstanceID + ")"
 
         var message = "";
         connection.request().query(addPickUpLocationQuery, (err, result) => {
