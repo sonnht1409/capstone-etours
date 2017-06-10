@@ -242,8 +242,10 @@ io.on('connection', (socket) => {
     socket.on('Web Get GPS', (params) => {
         var clientParams = JSON.parse(params);
         var message = "";
-        var getGpsQuery = "select [user].id as UserID,latitude, longitude, UserInfo.* \n " +
-            "from [user] inner join UserInfo on [user].UserInfoID = UserInfo.ID \n " +
+        var getGpsQuery = "select [user].id as UserID,latitude, longitude,  UserInfo.Fullname, UserInfo.PhoneNumber, Tour.Name \n" +
+            "from [user] inner join UserInfo on [user].UserInfoID = UserInfo.ID \n" +
+            "inner join TourInstance on TourInstance.ID=[user].TourInstanceID \n" +
+            "inner join Tour on TourInstance.TourID = Tour.ID \n" +
             "where TourInstanceID = " + clientParams.tourInstanceID + " and RoleID=" + clientParams.roleID;
         var message = ""
         var gpsResult = {
