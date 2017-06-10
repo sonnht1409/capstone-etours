@@ -41,6 +41,9 @@
                 socket.emit('Web Get GPS', JSON.stringify({
                     tourInstanceID: 3,
                     roleID: 1
+                }))
+                socket.emit('Get Visit Place Location', JSON.stringify({
+                    tourInstanceID: 3
                 }))*/
                 $('#m').val('');
                 return false;
@@ -60,7 +63,10 @@
 
             socket.on('Web Get GPS', function(result) {
                 console.log(JSON.parse(result));
-            }) */
+            }) 
+            socket.on('Get Visit Place Location', function(data) {
+                console.log(JSON.parse(data));
+            })*/
         });
     </script>
 </body>

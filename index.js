@@ -335,6 +335,29 @@ io.on('connection', function(socket) {
 
 
     })
+
+    socket.on('Get Visit Place Location', function(params) {
+        var clientParams = JSON.parse(params);
+        var getVisitPlaceLocationQuery = "select VisitingPlace.Name, VisitingPlace.latitude, VisitingPlace.longitude,TVP.priority \n " +
+            "from TourInstance inner join Tour_VisitingPlace as TVP on TourInstance.TourID = TVP.TourID \n " +
+            "inner join VisitingPlace on TVP.VisitingPlaceID = VisitingPlace.ID \n" +
+            "where TourInstance.ID =" + clientParams.tourInstanceID + " and VisitingPlace.IsActive=1";
+        console.log(getVisitPlaceLocationQuery);
+        var message = ""
+        var data = {};
+        connection.request().query(getVisitPlaceLocationQuery, (err, result) => {
+            if (err) {
+                message = "ERROR! " + getVisitPlaceLocationQuery
+            } else {
+                message = "SUCCESS! " + getVisitPlaceLocationQuery
+                if (typeof result !== "undefined" && result.recordset.length > 0) {
+                    data.visitingPlaceList = result.recordset;
+                }
+            }
+            socket.emit('Get Visit Place Location', JSON.stringify(data))
+            io.emit('chat message', message)
+        })
+    })
 });
 
 
