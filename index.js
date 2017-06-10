@@ -406,7 +406,7 @@ io.on('connection', (socket) => {
 
     })
 
-    socket.on('Update Place List', (params) => {
+    socket.on('Update Place', (params) => {
         var clientParams = JSON.parse(params);
         var updatePlaceQuery = "update Place set name=N'" + clientParams.name + "' \n" +
             "where id=" + clientParams.placeID;
