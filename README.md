@@ -88,6 +88,51 @@ Ex:
               tourInstanceID: int
             }
      }
+     
+## CRUD
+
+     {
+      event name: 'Get Place List'
+      params: 
+            {
+              IsActive: boolean    
+            }
+     }
+      
+     {
+      event name: 'Create Place'
+      params: 
+            {
+              Name: string    
+            }
+     
+     }
+     
+     {
+      event name: 'Update Place'
+      params: 
+            {
+             Name: string,
+             ID: int
+            }
+     }
+     
+     {
+      event name: 'Remove Place'
+      params:
+            {
+             ID: int
+            }
+     }
+     
+     {
+      event name: 'Reactive Place'
+      params: 
+            {
+             ID: int     
+            }
+     } 
+     
 # Server event (send to client)
       {
         event name: 'getTouristList',
@@ -177,5 +222,49 @@ Ex:
                                           longitude: float
                                           priority: int
                                       }]  
+            }
+      }
+## CRUD
+      {
+        event name: 'Create Place'
+        data: 
+            {
+                  status: string
+            }
+      }
+      
+      {
+        event name: 'Update Place'
+        data: 
+            {
+                  status: string
+            }
+      }
+      
+      {
+        event name: 'Remove Place'
+        data: 
+            {
+                  status: string
+            }
+      }
+      
+      {
+        event name: 'Reactive Place'
+        data: 
+            {
+                  status: string
+            }
+      }
+      
+      {
+        event name: 'Get Place List'
+        data: 
+            {
+                  placeList: array[{
+                                    id: int,
+                                    name: string
+                                    isActive: boolean
+                                   }]
             }
       }
