@@ -89,6 +89,20 @@ Ex:
             }
      }
      
+     {
+      event name: 'Mobile Send Pick Up Location'
+      params: 
+            {
+              tourInstanceID: int,
+              coachID: int,
+              userID: int,
+              hour: int,
+              min: int,
+              lat: float,
+              long: float     
+            }
+     }
+     
 ## CRUD
 
      {
@@ -227,6 +241,26 @@ Ex:
                                       }]  
             }
       }
+      
+      {
+        event name: 'Mobile Receiver Pick Up Notification'    
+        data: 
+            {
+             tourInstanceID: int,
+             coachID: int,
+             receiverID: int,
+             lat: float,
+             long: float,
+             hour: int,
+             min: int,
+             date: int,
+             month: int,
+             year: int,
+             notification: string
+            }
+        ### Note: only process when user received this event have UserID = receiverID, tourInstanceID = tourInstanceID, coachID=coachID    
+      }
+      
 ## CRUD
       {
         event name: 'Create Place'
