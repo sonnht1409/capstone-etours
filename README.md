@@ -80,6 +80,14 @@ Ex:
               roleID: int
             }
      }
+
+     {
+      event name: 'Get Visit Place Location'
+      params:
+            {
+              tourInstanceID: int
+            }
+     }
 # Server event (send to client)
       {
         event name: 'getTouristList',
@@ -156,5 +164,18 @@ Ex:
                              longitude: float
                            
                              }]                
+            }
+      }
+      
+      {
+        event name: 'Get Visit Place Location'
+        data: 
+            {
+             visitingPlaceList: array[{
+                                          Name: string
+                                          latitude: float
+                                          longitude: float
+                                          priority: int
+                                      }]  
             }
       }
