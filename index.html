@@ -45,6 +45,9 @@
                 socket.emit('Get Visit Place Location', JSON.stringify({
                     tourInstanceID: 3
                 }))*/
+                socket.emit('Create Place', JSON.stringify({
+                    Name: 'TP Hồ Chí Minh'
+                }))
                 $('#m').val('');
                 return false;
             });

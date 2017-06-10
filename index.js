@@ -25,23 +25,23 @@ connection.connect(err => {
         console.log("have error");
         console.log(err)
     } else {
-        io.on('connection', function(socket) {
+        io.on('connection', (socket) => {
             io.emit('chat message', 'database connected');
         })
 
     }
 })
 
-app.get('/', function(req, res) {
+app.get('/', (req, res) => {
     res.sendFile(appDir + '/index.html');
 });
 
-io.on('connection', function(socket) {
-    socket.on('chat message', function(msg) {
+io.on('connection', (socket) => {
+    socket.on('chat message', (msg) => {
         io.emit('chat message', msg);
     });
 
-    socket.on('getTouristList', function(params) {
+    socket.on('getTouristList', (params) => {
         console.log("params from client")
         console.log(params)
         var clientParams = JSON.parse(params);
@@ -56,7 +56,7 @@ io.on('connection', function(socket) {
             'where [user].RoleID = 3 and [user].TourInstanceID = ' + tourInstanceID +
             ' and UCSN.CoachID= ' + coachID + ' and [user].isActive = 1';
         console.log(getTouristListQuery);
-        connection.request().query(getTouristListQuery, function(err, result) {
+        connection.request().query(getTouristListQuery, (err, result) => {
             var message = "";
             var touristList = [];
             if (err) {
@@ -75,7 +75,7 @@ io.on('connection', function(socket) {
         })
     });
 
-    socket.on('Scan', function(params) {
+    socket.on('Scan', (params) => {
         var clientParams = JSON.parse(params)
         var cardCode = clientParams.cardCode;
         console.log("code: " + cardCode)
@@ -83,7 +83,7 @@ io.on('connection', function(socket) {
         var getUserQuery = "select tourInstanceID, UserID from Card where Code='" + cardCode + "'";
         console.log(getUserQuery);
         var UserInfo = {};
-        connection.request().query(getUserQuery, function(err, result) {
+        connection.request().query(getUserQuery, (err, result) => {
             var message = "";
             var status = "FAILED";
             if (err) {
@@ -102,7 +102,7 @@ io.on('connection', function(socket) {
                             "from [user] inner join User_Coach_SeatNumber as UCSN on [user].id = UCSN.UserID \n " +
                             "inner join UserInfo as UI on [user].UserInfoID = UI.id \n " +
                             "where [user].id = " + UserID;
-                        connection.request().query(getTouristInfoQuery, function(err, result) {
+                        connection.request().query(getTouristInfoQuery, (err, result) => {
                             if (err) {
                                 getTouristMessage = "ERROR! " + getTouristInfoQuery;
                             } else {
@@ -129,7 +129,7 @@ io.on('connection', function(socket) {
                             "else \n" +
                             "update [user] set TouristStatus = 2 where id =" + UserID;
                         var updateMessage = "";
-                        connection.request().query(updateTouristStatusQuery, function(err, result) {
+                        connection.request().query(updateTouristStatusQuery, (err, result) => {
                             if (err) {
                                 updateMessage = "ERROR! " + updateTouristStatusQuery;
                             } else {
@@ -147,7 +147,7 @@ io.on('connection', function(socket) {
         })
     });
 
-    socket.on('Web Login', function(params) {
+    socket.on('Web Login', (params) => {
         var clientParams = JSON.parse(params);
         var username = clientParams.username;
         var password = clientParams.password;
@@ -163,7 +163,7 @@ io.on('connection', function(socket) {
         var status = ""
         var logStatus = "";
         var loggedUser = {};
-        connection.request().query(authenicateQuery, function(err, result) {
+        connection.request().query(authenicateQuery, (err, result) => {
             if (err) {
                 message = "ERROR! " + authenicateQuery;
                 status = "FAILED"
@@ -220,7 +220,7 @@ io.on('connection', function(socket) {
     })
 
 
-    socket.on('Mobile Sent GPS', function(params) {
+    socket.on('Mobile Sent GPS', (params) => {
         var clientParams = JSON.parse(params);
         console.log(clientParams)
         io.emit('chat message', 'gps has sent')
@@ -229,7 +229,7 @@ io.on('connection', function(socket) {
             " where [user].id=" + clientParams.userID;
         console.log(updateGpsQuery)
         var message = ""
-        connection.request().query(updateGpsQuery, function(err, result) {
+        connection.request().query(updateGpsQuery, (err, result) => {
             if (err) {
                 message = "ERROR! " + updateGpsQuery;
             } else {
@@ -239,7 +239,7 @@ io.on('connection', function(socket) {
         })
     })
 
-    socket.on('Web Get GPS', function(params) {
+    socket.on('Web Get GPS', (params) => {
         var clientParams = JSON.parse(params);
         var message = "";
         var getGpsQuery = "select [user].id as UserID,latitude, longitude, UserInfo.* \n " +
@@ -249,7 +249,7 @@ io.on('connection', function(socket) {
         var gpsResult = {
             gpsList: []
         };
-        connection.request().query(getGpsQuery, function(err, result) {
+        connection.request().query(getGpsQuery, (err, result) => {
             if (err) {
                 message = "ERROR! " + getGpsQuery;
             } else {
@@ -264,7 +264,7 @@ io.on('connection', function(socket) {
         })
     });
 
-    socket.on('Mobile Login', function(params) {
+    socket.on('Mobile Login', (params) => {
         var clientParams = JSON.parse(params);
         var username = clientParams.username;
         var password = clientParams.password;
@@ -280,7 +280,7 @@ io.on('connection', function(socket) {
         var status = "";
         var logStatus = "";
         var loggedUser = {};
-        connection.request().query(authenicateQuery, function(err, result) {
+        connection.request().query(authenicateQuery, (err, result) => {
             if (err) {
                 message = "ERROR! " + authenicateQuery;
                 status = "FAILED"
@@ -336,7 +336,7 @@ io.on('connection', function(socket) {
 
     })
 
-    socket.on('Get Visit Place Location', function(params) {
+    socket.on('Get Visit Place Location', (params) => {
         var clientParams = JSON.parse(params);
         var getVisitPlaceLocationQuery = "select VisitingPlace.Name, VisitingPlace.latitude, VisitingPlace.longitude,TVP.priority \n " +
             "from TourInstance inner join Tour_VisitingPlace as TVP on TourInstance.TourID = TVP.TourID \n " +
@@ -344,7 +344,9 @@ io.on('connection', function(socket) {
             "where TourInstance.ID =" + clientParams.tourInstanceID + " and VisitingPlace.IsActive=1";
         console.log(getVisitPlaceLocationQuery);
         var message = ""
-        var data = {};
+        var data = {
+            visitingPlaceList: []
+        };
         connection.request().query(getVisitPlaceLocationQuery, (err, result) => {
             if (err) {
                 message = "ERROR! " + getVisitPlaceLocationQuery
@@ -358,9 +360,117 @@ io.on('connection', function(socket) {
             io.emit('chat message', message)
         })
     })
+
+    socket.on('Create Place', (params) => {
+        var clientParams = JSON.parse(params);
+        var insertPlaceQuery = "Insert into Place (Name,IsActive) VALUES (N'" + clientParams.Name + "',1)";
+        var message = "";
+        var status = "";
+        connection.request().query(insertPlaceQuery, (err, result) => {
+            if (err) {
+                message = "ERROR! " + insertPlaceQuery
+                status = "FAILED"
+            } else {
+                message = "SUCCESS! " + insertPlaceQuery;
+                status = "SUCCESS"
+            }
+            socket.emit('Create Place', JSON.stringify({
+                status: status
+
+            }))
+            io.emit('chat message', message)
+        })
+
+    })
+
+    socket.on('Get Place List', (params) => {
+        var clientParams = JSON.parse(params);
+        var getPlaceListQuery = "select * from Place where IsActive=" + clientParams.isActive;
+        var message = "";
+        var data = {
+            placeList: []
+        };
+        connection.request().query(getPlaceListQuery, (err, result) => {
+            if (err) {
+                message = "ERROR! " + getPlaceListQuery
+            } else {
+                message = "SUCCESS! " + getPlaceListQuery;
+                if (typeof result !== "undefined" && result.recordset.length > 0) {
+                    data.placeList = result.recordset;
+                }
+            }
+
+            socket.emit('Get Place List', JSON.stringify(data));
+            io.emit('chat message', message);
+        })
+
+    })
+
+    socket.on('Update Place List', (params) => {
+        var clientParams = JSON.parse(params);
+        var updatePlaceQuery = "update Place set name=N'" + clientParams.name + "' \n" +
+            "where id=" + clientParams.placeID;
+        var message = "";
+        var status = ""
+        connection.request().query(updatePlaceQuery, (err, result) => {
+            if (err) {
+                message = "ERROR! " + updatePlaceQuery;
+                status = "FAILED"
+            } else {
+                message = "SUCCESS! " + updatePlaceQuery;
+                status = "SUCCESS"
+            }
+            socket.emit('Update Place List', JSON.stringify({
+                status: status
+            }))
+            io.emit('chat message', message)
+        })
+    })
+
+    socket.on('Remove Place', (params) => {
+        var clientParams = JSON.parse(params);
+        var deactivePlaceQuery = "update Place set isActive=0 where id=" + clientParams.placeID;
+        var message = "";
+        var status = ""
+        connection.request().query(deactivePlaceQuery, (err, result) => {
+            if (err) {
+                message = "ERROR! " + deactivePlaceQuery;
+                status = "FAILED"
+            } else {
+                message = "SUCCESS " + deactivePlaceQuery;
+                status = "SUCCESS"
+            }
+
+            socket.emit('Remove Place', JSON.stringify({
+                status: status
+            }))
+            io.emit('chat message', message)
+        })
+    })
+
+    socket.on('Reactive Place', (params) => {
+        var clientParams = JSON.parse(params);
+        var reactivePlaceQuery = "update Place set isActive=1 where id=" + clientParams.placeID;
+        var message = "";
+        var status = "";
+        connection.request().query(reactivePlaceQuery, (err, result) => {
+            if (err) {
+                message = "ERROR! " + reactivePlaceQuery;
+                status = "FAILED"
+            } else {
+                message = "SUCCESS! " + reactivePlaceQuery;
+                status = "SUCCESS"
+
+            }
+            socket.emit('Reactive Place', JSON.stringify({
+                status: status
+            }))
+            io.emit('chat message', message)
+        })
+    })
 });
 
 
-http.listen(port, function() {
+http.listen(port, () => {
     console.log('listening on *:' + port);
 });
