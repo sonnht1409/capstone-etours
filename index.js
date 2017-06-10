@@ -1,6 +1,7 @@
 const app = require('express')();
 var http = require('http').Server(app);
 const io = require('socket.io')(http);
+var mapDetailRequest = require('sync-request');
 var port = 8080;
 var path = require('path');
 var appDir = path.dirname(require.main.filename);
@@ -468,6 +469,108 @@ io.on('connection', (socket) => {
                 status: status
             }))
             io.emit('chat message', message)
+        })
+    })
+
+    socket.on('Mobile Send Pick Up Location', (params) => {
+        var clientParams = JSON.parse(params);
+        var date = new Date();
+        date.setHours((clientParams.hour) + 7);
+        date.setMinutes(clientParams.min);
+
+        var insertDate = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() +
+            " " + date.getHours() + ":" + date.getMinutes() + ":" + "00.000";
+
+        var addPickUpLocationQuery = "INSERT into PickUp (Latitude,Longitude,PickUpTime,UserID) \nVALUES" +
+            "(" + clientParams.lat + "," + clientParams.long + ",'" + insertDate + "'," + clientParams.userID + ")"
+
+        var message = "";
+        /*connection.request().query(addPickUpLocationQuery, (err, result) => {
+            if (err) {
+                message = "ERROR! " + addPickUpLocationQuery;
+            } else {
+                message = "SUCCESS! " + addPickUpLocationQuery;
+            }
+            io.emit('chat message', message)
+        }) */
+        var notification = ""
+        var locationDetail = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + clientParams.lat + ',' + clientParams.long;
+
+        var response = mapDetailRequest('get', locationDetail);
+        var addressResult = JSON.parse(response.getBody('utf8'));
+
+
+        var pickUpAddress = ""
+        for (var i = 0; i < 4; i++) {
+            pickUpAddress += addressResult.results[0].address_components[i].short_name + ", ";
+        }
+        pickUpAddress += addressResult.results[0].address_components[4].short_name
+        console.log(pickUpAddress)
+        var getDriverAndTourguideInfoQuery = "select Fullname, PhoneNumber, [user].id, Coach.LicensePlate \n" +
+            "from [user] inner join UserInfo on [user].UserInfoID=UserInfo.id \n" +
+            "inner join User_Coach_SeatNumber as UCSN on [user].id = UCSN.UserID \n" +
+            "inner join Coach on UCSN.CoachID = Coach.ID \n" +
+            "where [user].RoleID = 1 or [user].RoleID=2 and [user].TourInstanceID =" + clientParams.tourInstanceID + "and UCSN.CoachID=" + clientParams.coachID + " \n" +
+            "order by RoleID"
+        message = "";
+        var userList = [];
+        var notificationContent = {};
+        connection.request().query(getDriverAndTourguideInfoQuery, (err, result) => {
+            if (err) {
+                message = "ERROR! " + getDriverAndTourguideInfoQuery
+            } else {
+                message = "SUCCESS! " + getDriverAndTourguideInfoQuery;
+                if (typeof result !== "undefined" && result.recordset.length > 0) {
+                    userList = result.recordset;
+                    notification +=
+                        "Thông báo đổi địa điểm đón! \n" +
+                        "Xin chào " + userList[0].Fullname + ", xe mang biển số: " + userList[0].LicensePlate + ". \n" +
+                        "Hướng dẫn viên " + userList[1].Fullname + " đã thay đổi địa điểm đón tiếp theo trong lịch trình." +
+                        "Địa điểm mới là: " + pickUpAddress + ". \n" +
+                        "Vào lúc" + date.getHours() + " giờ " + date.getMinutes() + " phút, \n" +
+                        "ngày " + date.getDate() + " tháng " + (date.getMonth() + 1) + " năm " + date.getFullYear() + ". \n" +
+                        "Vui lòng ấn nút Điểm Đón Tiếp Theo để nhìn trên bản đồ."
+
+
+
+                    notificationContent = {
+                        senderID: userList[1].id,
+                        receiverID: userList[0].id,
+                        type: 1
+                    }
+                }
+
+
+            }
+
+            io.emit('chat message', message);
+            message = "";
+            if (typeof notificationContent !== "undefined") {
+                var insertNotificationQuery = "INSERT into Notification (Message,Type,SenderID,ReceiverID) \n VALUES " +
+                    "(N'" + notification + "'," + notificationContent.type + "," +
+                    notificationContent.senderID + "," + notificationContent.receiverID + ")"
+                connection.request().query(insertNotificationQuery, (err, result) => {
+                    if (err) {
+                        message = "ERROR! " + insertNotificationQuery;
+                    } else {
+                        message = "SUCCESS! " + insertNotificationQuery;
+                    }
+                    io.emit('chat message', message);
+                    socket.broadcast.emit('Mobile Receiver Pick Up Notification', JSON.stringify({
+                        tourInstanceID: clientParams.tourInstanceID,
+                        coachID: clientParams.coachID,
+                        receiverID: notificationContent.receiverID,
+                        lat: clientParams.lat,
+                        long: clientParams.long,
+                        hour: date.getHours(),
+                        min: date.getMinutes(),
+                        date: date.getDate(),
+                        month: date.getMonth() + 1,
+                        year: date.getFullYear(),
+                        notification: notification
+                    }))
+                })
+            }
         })
     })
 });
