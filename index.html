@@ -47,7 +47,7 @@
                 }))
                 socket.emit('Create Place', JSON.stringify({
                     Name: 'TP Hồ Chí Minh'
-                }))*/
+                }))
                 socket.emit('Mobile Send Pick Up Location', JSON.stringify({
                     tourInstanceID: 3,
                     coachID: 1,
@@ -56,7 +56,7 @@
                     min: 30,
                     lat: 16.0028779,
                     long: 108.2644913
-                }))
+                }))*/
                 $('#m').val('');
                 return false;
             });
@@ -78,10 +78,10 @@
             }) 
             socket.on('Get Visit Place Location', function(data) {
                 console.log(JSON.parse(data));
-            })*/
+            })
             socket.on('Mobile Receiver Pick Up Notification', function(data) {
                 console.log(JSON.parse(data));
-            })
+            })*/
         });
     </script>
 </body>
