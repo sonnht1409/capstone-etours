@@ -312,7 +312,7 @@ Ex:
        data: 
             {
               array [{
-                     array[{
+                     tourTimeScheduleList: array[{
                               TourInstanceDetailId: int
                               TourTime: string
                               VisitPlaceName: string
