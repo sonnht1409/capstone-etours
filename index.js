@@ -475,6 +475,7 @@ io.on('connection', (socket) => {
     socket.on('Mobile Send Pick Up Location', (params) => {
         var clientParams = JSON.parse(params);
         var date = new Date();
+        console.log(date)
         date.setHours((clientParams.hour) + 7);
         date.setMinutes(clientParams.min);
 
