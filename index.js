@@ -511,7 +511,6 @@ io.on('connection', (socket) => {
             pickUpAddress += addressResult.results[0].address_components[i].short_name + ", ";
         }
         pickUpAddress += addressResult.results[0].address_components[4].short_name
-        console.log(pickUpAddress)
         var getDriverAndTourguideInfoQuery = "select Fullname, PhoneNumber, [user].id, Coach.LicensePlate \n" +
             "from [user] inner join UserInfo on [user].UserInfoID=UserInfo.id \n" +
             "inner join User_Coach_SeatNumber as UCSN on [user].id = UCSN.UserID \n" +
@@ -612,7 +611,7 @@ io.on('connection', (socket) => {
                             data.push({
                                 tourTimeScheduleList: tourTimeScheduleList
                             })
-                            console.log(data.scheduleList)
+
                             tourTimeScheduleList = [];
                         }
                         marker = i;
