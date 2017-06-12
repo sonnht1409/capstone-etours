@@ -472,17 +472,13 @@ io.on('connection', (socket) => {
 
     socket.on('Mobile Send Pick Up Location', (params) => {
         var clientParams = JSON.parse(params);
-        var date = new Date();
-        console.log('original date')
-        console.log(date)
+        var date = new Date(); //new date from UTC 00
+
         var hour = date.getHours()
-        date.setHours((hour + 7));
-        console.log('offset timezone')
-        console.log(date);
-        date.setHours(clientParams.hour);
+        date.setHours((hour + 7)); // move it to UTC +07
+
+        date.setHours(clientParams.hour); //set to pick up time in UTC +07
         date.setMinutes(clientParams.min);
-        console.log('after')
-        console.log(date);
 
         var insertDate = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() +
             " " + date.getHours() + ":" + date.getMinutes() + ":" + "00.000";
