@@ -473,6 +473,7 @@ io.on('connection', (socket) => {
     socket.on('Mobile Send Pick Up Location', (params) => {
         var clientParams = JSON.parse(params);
         var date = new Date();
+        console.log(date)
         console.log(date.getTimezoneOffset())
         console.log(clientParams.hour)
         console.log(clientParams.min);
