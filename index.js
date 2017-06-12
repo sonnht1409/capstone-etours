@@ -476,8 +476,12 @@ io.on('connection', (socket) => {
         var clientParams = JSON.parse(params);
         var date = new Date();
         console.log(date)
+        console.log(clientParams.hour)
+        console.log(clientParams.min);
         date.setHours((clientParams.hour) + 7);
         date.setMinutes(clientParams.min);
+        console.log('after')
+        console.log(date);
 
         var insertDate = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() +
             " " + date.getHours() + ":" + date.getMinutes() + ":" + "00.000";
