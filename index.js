@@ -423,7 +423,7 @@ io.on('connection', (socket) => {
                 message = "SUCCESS! " + updatePlaceQuery;
                 status = "SUCCESS"
             }
-            socket.emit('Update Place List', JSON.stringify({
+            socket.emit('Update Place', JSON.stringify({
                 status: status
             }))
             io.emit('chat message', message)
@@ -633,6 +633,94 @@ io.on('connection', (socket) => {
             }
             io.emit('chat message', message)
             socket.emit('Mobile Get Schedule', JSON.stringify(data));
+        })
+    })
+
+    socket.on('Create Visit Place', (params) => {
+        var clientParams = JSON.parse(params);
+        var insertVisitPlaceQuery = "Insert into VisitingPlace (Name,IsActive,Latitude,Longitude) \n" +
+            "VALUES (N'" + clientParams.Name + "',1," + clientParams.latitude + "," + clientParams.longitude + ")";
+        var message = "";
+        var status = "";
+        connection.request().query(insertVisitPlaceQuery, (err, result) => {
+            if (err) {
+                message = "ERROR! " + insertVisitPlaceQuery
+                status = "FAILED"
+            } else {
+                message = "SUCCESS! " + insertVisitPlaceQuery;
+                status = "SUCCESS"
+            }
+            socket.emit('Create Visit Place', JSON.stringify({
+                status: status
+
+            }))
+            io.emit('chat message', message)
+        })
+
+    })
+
+    socket.on('Update Visit Place', (params) => {
+        var clientParams = JSON.parse(params);
+        var updateVisitPlaceQuery = "update VisitingPlace set name=N'" + clientParams.name + "', \n" +
+            "Latitude=" + clientParams.latitude + ", \n" +
+            "Longitude=" + clientParams.longitude + ", \n" +
+            "where id=" + clientParams.placeID;
+        var message = "";
+        var status = ""
+        connection.request().query(updateVisitPlaceQuery, (err, result) => {
+            if (err) {
+                message = "ERROR! " + updateVisitPlaceQuery;
+                status = "FAILED"
+            } else {
+                message = "SUCCESS! " + updateVisitPlaceQuery;
+                status = "SUCCESS"
+            }
+            socket.emit('Update Visit Place', JSON.stringify({
+                status: status
+            }))
+            io.emit('chat message', message)
+        })
+    })
+
+    socket.on('Remove Visit Place', (params) => {
+        var clientParams = JSON.parse(params);
+        var deactiveVisitPlaceQuery = "update VisitingPlace set isActive=0 where id=" + clientParams.visitPlaceID;
+        var message = "";
+        var status = ""
+        connection.request().query(deactiveVisitPlaceQuery, (err, result) => {
+            if (err) {
+                message = "ERROR! " + deactiveVisitPlaceQuery;
+                status = "FAILED"
+            } else {
+                message = "SUCCESS " + deactiveVisitPlaceQuery;
+                status = "SUCCESS"
+            }
+
+            socket.emit('Remove Visit Place', JSON.stringify({
+                status: status
+            }))
+            io.emit('chat message', message)
+        })
+    })
+
+    socket.on('Reactive Visit Place', (params) => {
+        var clientParams = JSON.parse(params);
+        var reactiveVisitPlaceQuery = "update VisitingPlace set isActive=1 where id=" + clientParams.visitPlaceID;
+        var message = "";
+        var status = "";
+        connection.request().query(reactiveVisitPlaceQuery, (err, result) => {
+            if (err) {
+                message = "ERROR! " + reactiveVisitPlaceQuery;
+                status = "FAILED"
+            } else {
+                message = "SUCCESS! " + reactiveVisitPlaceQuery;
+                status = "SUCCESS"
+
+            }
+            socket.emit('Reactive Visit Place', JSON.stringify({
+                status: status
+            }))
+            io.emit('chat message', message)
         })
     })
 });
