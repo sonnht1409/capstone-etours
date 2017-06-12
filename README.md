@@ -133,7 +133,7 @@ Ex:
       params: 
             {
              Name: string,
-             ID: int
+             placeID: int
             }
      }
      
@@ -141,7 +141,7 @@ Ex:
       event name: 'Remove Place'
       params:
             {
-             ID: int
+             placeID: int
             }
      }
      
@@ -149,7 +149,47 @@ Ex:
       event name: 'Reactive Place'
       params: 
             {
-             ID: int     
+             placeID: int     
+            }
+     } 
+     
+     ve: boolean    
+            }
+     }
+      
+     {
+      event name: 'Create Visit Place'
+      params: 
+            {
+              Name: string    
+              latitude: float
+              longitude: float
+            }
+     
+     }
+     
+     {
+      event name: 'Update Visit Place'
+      params: 
+            {
+             Name: string,
+             visitPlaceID: int
+            }
+     }
+     
+     {
+      event name: 'Remove Visit Place'
+      params:
+            {
+             visitPlaceID: int
+            }
+     }
+     
+     {
+      event name: 'Reactive Visit Place'
+      params: 
+            {
+             visitPlaceID: int     
             }
      } 
      
@@ -327,6 +367,53 @@ Ex:
                                     id: int,
                                     name: string
                                     isActive: boolean
+                                   }]
+            }
+      }
+      
+      {
+        event name: 'Create Visit Place'
+        data: 
+            {
+                  status: string
+            }
+      }
+      
+      {
+        event name: 'Update Visit Place'
+        data: 
+            {
+                  status: string
+            }
+      }
+      
+      {
+        event name: 'Remove Visit Place'
+        data: 
+            {
+                  status: string
+            }
+      }
+      
+      {
+        event name: 'Reactive Visit Place'
+        data: 
+            {
+                  status: string
+            }
+      }
+      
+      
+      {
+        event name: 'Get Visit Place List'
+        data: 
+            {
+                  placeList: array[{
+                                    ID: int,
+                                    Name: string
+                                    IsActive: boolean
+                                    Latitude:: float
+                                    Longitude: float
                                    }]
             }
       }
