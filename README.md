@@ -102,7 +102,13 @@ Ex:
               long: float     
             }
      }
-     
+     {
+      event name: Mobile Get Schedule
+      params: 
+            {
+             tourInstanceID: int     
+            }
+     }
 ## CRUD
 
      {
@@ -261,6 +267,25 @@ Ex:
         ### Note: only process when user received this event have UserID = receiverID, tourInstanceID = tourInstanceID, coachID=coachID    
       }
       
+      {
+       event name: Mobile Get Schedule
+       data: 
+            {
+              array [{
+                     array[{
+                              TourInstanceDetailId: int
+                              TourTime: string
+                              VisitPlaceName: string
+                              VisitingPlaceID: int
+                              StartTime: datetime
+                              EndTime: datetime
+                              Activity: string
+                              Latitude: float
+                              Longitude: float
+                         }]
+                  }]
+            }
+      }
 ## CRUD
       {
         event name: 'Create Place'
