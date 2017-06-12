@@ -43,11 +43,9 @@ io.on('connection', (socket) => {
     });
 
     socket.on('getTouristList', (params) => {
-        console.log("params from client")
-        console.log(params)
+
         var clientParams = JSON.parse(params);
-        console.log("parsed params")
-        console.log(clientParams)
+
         var tourInstanceID = clientParams.tourInstanceID;
         var coachID = clientParams.coachID;
         var getTouristListQuery = 'select [user].id as UserID,UI.Fullname, UCSN.SeatNumber, TSTT.Status \n ' +
@@ -56,7 +54,7 @@ io.on('connection', (socket) => {
             'inner join TouristStatus as TSTT on [user].TouristStatus = TSTT.ID \n' +
             'where [user].RoleID = 3 and [user].TourInstanceID = ' + tourInstanceID +
             ' and UCSN.CoachID= ' + coachID + ' and [user].isActive = 1';
-        console.log(getTouristListQuery);
+
         connection.request().query(getTouristListQuery, (err, result) => {
             var message = "";
             var touristList = [];
@@ -66,7 +64,7 @@ io.on('connection', (socket) => {
                 message = "SUCCESS! " + getTouristListQuery;
                 if (typeof result !== "undefined" && result.recordset.length > 0) {
                     touristList = result.recordset;
-                    console.log(touristList);
+
                 }
             }
             io.emit('chat message', message);
@@ -79,10 +77,10 @@ io.on('connection', (socket) => {
     socket.on('Scan', (params) => {
         var clientParams = JSON.parse(params)
         var cardCode = clientParams.cardCode;
-        console.log("code: " + cardCode)
+
         var tourInstanceID = clientParams.tourInstanceID;
         var getUserQuery = "select tourInstanceID, UserID from Card where Code='" + cardCode + "'";
-        console.log(getUserQuery);
+
         var UserInfo = {};
         connection.request().query(getUserQuery, (err, result) => {
             var message = "";
@@ -92,7 +90,7 @@ io.on('connection', (socket) => {
             } else {
                 message = "SUCCESS! " + getUserQuery;
                 if (typeof result !== "undefined" && result.recordset.length > 0) {
-                    console.log(result)
+
                     if (tourInstanceID == result.recordset[0].tourInstanceID) {
                         status = "SUCCESS";
                         var UserID = result.recordset[0].UserID
@@ -159,7 +157,7 @@ io.on('connection', (socket) => {
             "inner join UserInfo on [user].UserInfoID = UserInfo.ID \n " +
             "inner join Role on [user].RoleID = Role.ID \n " +
             "where username ='" + username + "' and password='" + password + "'";
-        console.log(authenicateQuery)
+
         var message = "";
         var status = ""
         var logStatus = "";
@@ -223,12 +221,12 @@ io.on('connection', (socket) => {
 
     socket.on('Mobile Sent GPS', (params) => {
         var clientParams = JSON.parse(params);
-        console.log(clientParams)
+
         io.emit('chat message', 'gps has sent')
         io.emit('chat message', 'latitude is: ' + clientParams.lat + ' and longitude is: ' + clientParams.long)
         var updateGpsQuery = "update [user] set latitude= " + clientParams.lat + ", longitude=" + clientParams.long +
             " where [user].id=" + clientParams.userID;
-        console.log(updateGpsQuery)
+
         var message = ""
         connection.request().query(updateGpsQuery, (err, result) => {
             if (err) {
@@ -345,7 +343,7 @@ io.on('connection', (socket) => {
             "from TourInstance inner join Tour_VisitingPlace as TVP on TourInstance.TourID = TVP.TourID \n " +
             "inner join VisitingPlace on TVP.VisitingPlaceID = VisitingPlace.ID \n" +
             "where TourInstance.ID =" + clientParams.tourInstanceID + " and VisitingPlace.IsActive=1";
-        console.log(getVisitPlaceLocationQuery);
+
         var message = ""
         var data = {
             visitingPlaceList: []
@@ -475,7 +473,7 @@ io.on('connection', (socket) => {
     socket.on('Mobile Send Pick Up Location', (params) => {
         var clientParams = JSON.parse(params);
         var date = new Date();
-        console.log(date)
+        console.log(date.getTimezoneOffset())
         console.log(clientParams.hour)
         console.log(clientParams.min);
         date.setHours((clientParams.hour) + 7);
