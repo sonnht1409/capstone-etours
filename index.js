@@ -574,6 +574,67 @@ io.on('connection', (socket) => {
             }
         })
     })
+
+    socket.on('Mobile Get Schedule', (params) => {
+        var clientParams = JSON.parse(params);
+        var getScheduleQuery = "select Schedule.StartTime, Schedule.EndTime, Activity, VisitingPlaceID, \n" +
+            "VisitingPlace.Name as VisitPlaceName,TourTime, Latitude,Longitude, TourInstanceDetailId \n" +
+            "from Schedule inner join TourInstance_Detail as TID on Schedule.TourInstanceDetailId=TID.id \n" +
+            "inner join TourInstance on TID.TourInstanceID = TourInstance.ID \n" +
+            "inner join TourInstance_Status as TIS on TourInstance.Status = TIS.ID \n" +
+            "inner join Tour on TourInstance.TourID = Tour.ID \n" +
+            "left join VisitingPlace on VisitingPlaceID = VisitingPlace.ID \n" +
+            "where TourInstanceID =" + clientParams.tourInstanceID + " \n" +
+            "order by TourInstanceDetailId,Schedule.StartTime, Schedule.EndTime"
+
+        var message = "";
+        var data = [];
+
+        connection.request().query(getScheduleQuery, (err, result) => {
+            if (err) {
+                message = "ERROR! " + getScheduleQuery;
+            } else {
+                message = "SUCCCESS! " + getScheduleQuery;
+                if (typeof result !== "undefined" && result.recordset.length > 0) {
+                    var tourTimeScheduleList = [];
+                    var scheduleList = result.recordset;
+
+                    var marker = 0;
+                    for (var i = 0; i < scheduleList.length - 1; i++) {
+                        tourTimeScheduleList.push(scheduleList[i])
+
+                        if (scheduleList[i].TourInstanceDetailId != scheduleList[i + 1].TourInstanceDetailId) {
+                            data.push({
+                                tourTimeScheduleList: tourTimeScheduleList
+                            })
+                            console.log(data.scheduleList)
+                            tourTimeScheduleList = [];
+                        }
+                        marker = i;
+                    }
+
+                    if (scheduleList[marker].TourInstanceDetailId != scheduleList[marker + 1].TourInstanceDetailId) {
+                        data.push({
+                            tourTimeScheduleList: tourTimeScheduleList
+                        })
+                        tourTimeScheduleList = [];
+                        tourTimeScheduleList.push(scheduleList[marker + 1])
+                        data.push({
+                            tourTimeScheduleList: tourTimeScheduleList
+                        })
+                    } else {
+                        tourTimeScheduleList.push(scheduleList[marker + 1]);
+                        data.push({
+                            tourTimeScheduleList: tourTimeScheduleList
+                        })
+                    }
+
+                }
+            }
+            io.emit('chat message', message)
+            socket.emit('Mobile Get Schedule', JSON.stringify(data));
+        })
+    })
 });
 
 
