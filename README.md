@@ -1,6 +1,9 @@
 # API URL
 http://52.187.17.228:8080/
 
+# Tool Test Socket event 
+http://amritb.github.io/socketio-client-tool/
+
 # Database server
 etours.database.windows.net
 password: $Son01627335534
