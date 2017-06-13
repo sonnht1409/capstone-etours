@@ -109,6 +109,16 @@ Ex:
              tourInstanceID: int     
             }
      }
+     
+     {
+      event name: 'Mobile Get Others Location'
+      params: 
+            {
+              tourInstanceID: int,
+              coachID: int,
+              roleID: int (0 if want to select all, other to select specific role)     
+            }
+     }
 ## CRUD
 
      {
@@ -193,15 +203,7 @@ Ex:
             }
      } 
      
-     {
-      event name: 'Mobile Get Others Location'
-      params: 
-            {
-              tourInstanceID: int,
-              coachID: int,
-              roleID: int (0 if want to select all, other to select specific role)     
-            }
-     }
+     
 # Server event (send to client)
       {
         event name: 'getTouristList',
