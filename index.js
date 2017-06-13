@@ -786,7 +786,7 @@ io.on('connection', (socket) => {
                 }
             }
             io.emit('chat message', message);
-            socket.emit('Mobile Get Others Location', JSON.stringify(data));
+            socket.emit('Mobile Get Others Location', data);
         })
     })
 });
