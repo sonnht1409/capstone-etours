@@ -193,6 +193,15 @@ Ex:
             }
      } 
      
+     {
+      event name: 'Mobile Get Others Location'
+      params: 
+            {
+              tourInstanceID: int,
+              coachID: int,
+              roleID: int (0 if want to select all, other to select specific role)     
+            }
+     }
 # Server event (send to client)
       {
         event name: 'getTouristList',
@@ -326,6 +335,23 @@ Ex:
                   }]
             }
       }
+      
+      {
+        event name: 'Mobile Get Others Location'     
+        data: 
+            {
+                  userLocationList: array[{
+                                            Fullname: string
+                                            Latitude: float
+                                            Longitude: float
+                                            PhoneNumber: string
+                                            role: string
+                                            SeatNumber: string
+                                            UserID: int
+                                          }]
+            }
+      }
+      
 ## CRUD
       {
         event name: 'Create Place'
