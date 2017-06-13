@@ -347,7 +347,8 @@ io.on('connection', (socket) => {
         var getVisitPlaceLocationQuery = "select VisitingPlace.Name, VisitingPlace.latitude, VisitingPlace.longitude,TVP.priority \n " +
             "from TourInstance inner join Tour_VisitingPlace as TVP on TourInstance.TourID = TVP.TourID \n " +
             "inner join VisitingPlace on TVP.VisitingPlaceID = VisitingPlace.ID \n" +
-            "where TourInstance.ID =" + clientParams.tourInstanceID + " and VisitingPlace.IsActive=1";
+            "where TourInstance.ID =" + clientParams.tourInstanceID + " and VisitingPlace.IsActive=1 \n" +
+            "order by priority";
 
         var message = ""
         var data = {
