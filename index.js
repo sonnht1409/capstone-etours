@@ -50,7 +50,7 @@ io.on('connection', (socket) => {
         var coachID = clientParams.coachID;
         var getTouristListQuery = 'select [user].id as UserID,UI.Fullname, UCSN.SeatNumber, TSTT.Status \n ' +
             'from [user] inner join User_Coach_SeatNumber as UCSN on [user].id = UCSN.UserID \n ' +
-            'inner join UserInfo as UI on [user].UserInfoID = UI.id \n ' +
+            'inner join UserInfo as UI on [user].ID = UI.UserID \n ' +
             'inner join TouristStatus as TSTT on [user].TouristStatus = TSTT.ID \n' +
             'where [user].RoleID = 3 and [user].TourInstanceID = ' + tourInstanceID +
             ' and UCSN.CoachID= ' + coachID + ' and [user].isActive = 1';
@@ -99,7 +99,7 @@ io.on('connection', (socket) => {
                         // get tourist status to response
                         var getTouristInfoQuery = "select fullname, [user].id as UserID, SeatNumber, TouristStatus \n " +
                             "from [user] inner join User_Coach_SeatNumber as UCSN on [user].id = UCSN.UserID \n " +
-                            "inner join UserInfo as UI on [user].UserInfoID = UI.id \n " +
+                            "inner join UserInfo as UI on [user].ID = UI.Userid \n " +
                             "where [user].id = " + UserID;
                         connection.request().query(getTouristInfoQuery, (err, result) => {
                             if (err) {
@@ -154,7 +154,7 @@ io.on('connection', (socket) => {
             "select fullname, [user].id as UserID, role.ID as RoleID, role" +
             ", [user].IsActive as UserActive, role.IsActive as RoleActive \n " +
             "from [user] \n " +
-            "inner join UserInfo on [user].UserInfoID = UserInfo.ID \n " +
+            "inner join UserInfo on [user].ID = UserInfo.UserID \n " +
             "inner join Role on [user].RoleID = Role.ID \n " +
             "where username ='" + username + "' and password='" + password + "'";
 
@@ -242,10 +242,15 @@ io.on('connection', (socket) => {
         var clientParams = JSON.parse(params);
         var message = "";
         var getGpsQuery = "select [user].id as UserID,latitude, longitude,  UserInfo.Fullname, UserInfo.PhoneNumber, Tour.Name as TourName \n" +
-            "from [user] inner join UserInfo on [user].UserInfoID = UserInfo.ID \n" +
+            "from [user] inner join UserInfo on [user].ID = UserInfo.UserID \n" +
             "inner join TourInstance on TourInstance.ID=[user].TourInstanceID \n" +
-            "inner join Tour on TourInstance.TourID = Tour.ID \n" +
-            "where TourInstanceID = " + clientParams.tourInstanceID + " and RoleID=" + clientParams.roleID;
+            "inner join Tour on TourInstance.TourID = Tour.ID \n"
+        if (clientParams.roleID == 0) {
+            getGpsQuery += "where TourInstanceID =" + clientParams.tourInstanceID
+        } else {
+            getGpsQuery += "where TourInstanceID = " + clientParams.tourInstanceID + " and RoleID=" + clientParams.roleID;
+        }
+
         var message = ""
         var gpsResult = {
             gpsList: []
@@ -273,7 +278,7 @@ io.on('connection', (socket) => {
             "select fullname, CoachID, TourInstanceID, [user].id as UserID, role.ID as RoleID, role" +
             ", [user].IsActive as UserActive, role.IsActive as RoleActive \n " +
             "from [user] \n " +
-            "inner join UserInfo on [user].UserInfoID = UserInfo.ID \n " +
+            "inner join UserInfo on [user].ID = UserInfo.UserID \n " +
             "inner join Role on [user].RoleID = Role.ID \n " +
             "inner join User_Coach_SeatNumber as UCSN on [user].id = UCSN.UserID \n" +
             "where username ='" + username + "' and password='" + password + "'";
@@ -512,7 +517,7 @@ io.on('connection', (socket) => {
             pickUpAddress = "UNKNOW"
         }
         var getDriverAndTourguideInfoQuery = "select Fullname, PhoneNumber, [user].id, Coach.LicensePlate \n" +
-            "from [user] inner join UserInfo on [user].UserInfoID=UserInfo.id \n" +
+            "from [user] inner join UserInfo on [user].ID=UserInfo.UserID \n" +
             "inner join User_Coach_SeatNumber as UCSN on [user].id = UCSN.UserID \n" +
             "inner join Coach on UCSN.CoachID = Coach.ID \n" +
             "where [user].RoleID = 1 or [user].RoleID=2 and [user].TourInstanceID =" + clientParams.tourInstanceID + "and UCSN.CoachID=" + clientParams.coachID + " \n" +
@@ -751,6 +756,11 @@ io.on('connection', (socket) => {
 
     })
 
+
+    socket.on('Mobile Get Others Location', (params) => {
+        var clientParams = JSON.parse(params);
+        var getGpsQuery = ""
+    })
 });
 
 
