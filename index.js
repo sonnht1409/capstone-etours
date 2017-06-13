@@ -759,7 +759,34 @@ io.on('connection', (socket) => {
 
     socket.on('Mobile Get Others Location', (params) => {
         var clientParams = JSON.parse(params);
-        var getGpsQuery = ""
+        var getGpsQuery = "select Latitude, Longitude, Fullname, PhoneNumber, Role.role, SeatNumber, [user].ID  \n" +
+            "from [user] inner join UserInfo on [user].ID = UserInfo.UserID \n" +
+            "inner join User_Coach_SeatNumber as UCSN on [user].ID = UCSN.UserID \n" +
+            "inner join Coach on UCSN.CoachID = Coach.ID \n" +
+            "inner join Role on [user].RoleID = Role.ID \n" +
+            "Where [user].TourInstanceID =" + clientParams.tourInstanceID + " and CoachID = " + clientParams.coachID;
+        if (clientParams.roleID != 0) {
+            getGpsQuery += " and RoleID=" + clientParams.roleID + " \n" +
+                "Order by SeatNumber";
+        } else {
+            getGpsQuery += "\n Order by SeatNumber"
+        }
+        var message = "";
+        var data = {
+            userLocationList: []
+        };
+        connection.request().query(getGpsQuery, (err, result) => {
+            if (err) {
+                message = "ERROR! " + getGpsQuery
+            } else {
+                message = "SUCCESS! " + getGpsQuery;
+                if (typeof result !== "undefined" && result.recordset.length > 0) {
+                    data.userLocationList = result.recordset;
+                }
+            }
+            io.emit('chat message', message);
+            socket.emit('Mobile Get Others Location', JSON.stringify(data));
+        })
     })
 });
 

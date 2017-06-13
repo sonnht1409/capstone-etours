@@ -59,6 +59,12 @@
                 }))
                 socket.emit('Mobile Get Schedule', JSON.stringify({
                     tourInstanceID: 3
+                }))
+
+                socket.emit('Mobile Get Others Location', JSON.stringify({
+                    tourInstanceID: 3,
+                    coachID: 1,
+                    roleID: 0
                 }))*/
                 $('#m').val('');
                 return false;
@@ -86,6 +92,10 @@
                 console.log(JSON.parse(data));
             })
             socket.on('Mobile Get Schedule', function(data) {
+                console.log(JSON.parse(data));
+            })
+
+            socket.on('Mobile Get Others Location', function(data) {
                 console.log(JSON.parse(data));
             })*/
 
