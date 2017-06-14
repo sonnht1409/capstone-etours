@@ -99,7 +99,7 @@ io.on('connection', (socket) => {
                         // get tourist status to response
                         var getTouristInfoQuery = "select fullname, [user].id as UserID, SeatNumber, TouristStatus \n " +
                             "from [user] inner join User_Coach_SeatNumber as UCSN on [user].id = UCSN.UserID \n " +
-                            "inner join UserInfo as UI on [user].ID = UI.Userid \n " +
+                            "inner join UserInfo as UI on [user].ID = UI.UserID \n " +
                             "where [user].id = " + UserID;
                         connection.request().query(getTouristInfoQuery, (err, result) => {
                             if (err) {
