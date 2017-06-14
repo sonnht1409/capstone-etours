@@ -768,9 +768,10 @@ io.on('connection', (socket) => {
             "Where [user].TourInstanceID =" + clientParams.tourInstanceID + " and CoachID = " + clientParams.coachID;
         if (clientParams.roleID != 0) {
             getGpsQuery += " and RoleID=" + clientParams.roleID + " \n" +
-                "Order by SeatNumber";
+                "Order by RoleID,SeatNumber";
         } else {
-            getGpsQuery += "\n Order by SeatNumber"
+            getGpsQuery += " and RoleID <>" + clientParams.currentRoleID + "\n"
+            getGpsQuery += "Order by RoleID,SeatNumber"
         }
         var message = "";
         var data = {
