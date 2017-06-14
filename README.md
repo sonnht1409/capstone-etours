@@ -119,7 +119,8 @@ Ex:
             {
               tourInstanceID: int,
               coachID: int,
-              roleID: int (0 if want to select all, other to select specific role)     
+              roleID: int (0 if want to select all, other to select specific role),
+              currentRoleID: int (role of device which sent event to server)
             }
      }
 ## CRUD
