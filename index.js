@@ -760,7 +760,7 @@ io.on('connection', (socket) => {
 
     socket.on('Mobile Get Others Location', (params) => {
         var clientParams = JSON.parse(params);
-        var getGpsQuery = "select Latitude, Longitude, Fullname, PhoneNumber, Role.role, SeatNumber, [user].ID  \n" +
+        var getGpsQuery = "select Latitude, Longitude, Fullname, PhoneNumber, Role.role, SeatNumber, [user].ID as UserID \n" +
             "from [user] inner join UserInfo on [user].ID = UserInfo.UserID \n" +
             "inner join User_Coach_SeatNumber as UCSN on [user].ID = UCSN.UserID \n" +
             "inner join Coach on UCSN.CoachID = Coach.ID \n" +
