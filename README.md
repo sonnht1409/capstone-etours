@@ -279,12 +279,14 @@ Ex:
         data:
             {
               gpsList: array[{
-                             userID: int,
+                             UserID: int,
                              latitutde: float
                              longitude: float,
-                             fullname: string,
-                             phoneNumber: string,
-                             tourName: string
+                             Fullname: string,
+                             PhoneNumber: string,
+                             TourName: string,
+                             RoleID: int
+                             
                            
                              }]                
             }
