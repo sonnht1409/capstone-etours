@@ -790,6 +790,43 @@ io.on('connection', (socket) => {
             socket.emit('Mobile Get Others Location', JSON.stringify(data));
         })
     })
+
+    socket.on('Mobile Gather Tourist', (params) => {
+        var clientParams = JSON.parse(params);
+        var message = "Khẩn cấp! Xin quý hành khách nhanh chóng đến điểm tập trung ngay bây giờ.";
+        var queryMEssage = "";
+        if (clientParams.userList.length == 0 || typeof clientParams.userList === "undefined") {
+            var getTouristListQuery = "select [user].ID as UserID \n" +
+                "from [user] inner join User_Coach_SeatNumber as UCSN on [user].ID = UCSN.UserID \n" +
+                "where [user].TourInstanceID=" + clientParams.tourInstanceID + " and RoleID = 3 and CoachID = " + clientParams.coachID;
+            connection.request().query(getTouristListQuery, (err, result) => {
+                var userList = [];
+                if (err) {
+                    queryMEssage = "ERROR! " + getTouristListQuery;
+                } else {
+                    queryMEssage = "SUCCESS! " + getTouristListQuery;
+                    if (typeof result !== "undefined" && result.recordset.length > 0) {
+                        userList = result.recordset;
+                    }
+                }
+                io.emit('chat message', queryMEssage);
+                socket.broadcast.emit('Mobile Gather Tourist', JSON.stringify({
+                    tourInstanceID: clientParams.tourInstanceID,
+                    coachID: clientParams.coachID,
+                    userList: userList,
+                    message: message
+                }))
+            })
+        } else {
+            socket.broadcast.emit('Mobile Gather Tourist', JSON.stringify({
+                tourInstanceID: clientParams.tourInstanceID,
+                coachID: clientParams.coachID,
+                userList: clientParams.userList,
+                message: message
+            }))
+        }
+    })
+
 });
 
 
