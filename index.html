@@ -65,12 +65,12 @@
                     tourInstanceID: 3,
                     coachID: 1,
                     roleID: 0
-                }))*/
+                }))
                 socket.emit('Mobile Gather Tourist', JSON.stringify({
                     tourInstanceID: 3,
                     coachID: 1,
                     userList: []
-                }))
+                }))*/
                 $('#m').val('');
                 return false;
             });
@@ -102,10 +102,10 @@
 
             socket.on('Mobile Get Others Location', function(data) {
                 console.log(JSON.parse(data));
-            })*/
+            })
             socket.on('Mobile Gather Tourist', function(data) {
                 console.log(JSON.parse(data))
-            })
+            }) */
         });
     </script>
 </body>
