@@ -123,6 +123,16 @@ Ex:
               currentRoleID: int (role of device which sent event to server)
             }
      }
+     
+     {
+      event name: 'Mobile Gather Tourist'
+      params: 
+            {
+              tourInstanceID: int,
+              coachID: int,
+              userList: array of UserID, if null or empty mean send to all tourist
+            }
+     }
 ## CRUD
 
      {
@@ -359,6 +369,18 @@ Ex:
                                           }]
             }
       }
+      
+      {
+      event name: 'Mobile Gather Tourist'
+      data: 
+            {
+              tourInstanceID: int,
+              coachID: int,
+              userList: array of UserID,
+              message: string
+              
+            }
+     }
       
 ## CRUD
       {
