@@ -794,7 +794,7 @@ io.on('connection', (socket) => {
     socket.on('Mobile Gather Tourist', (params) => {
         var clientParams = JSON.parse(params);
 
-        var message = "Khẩn cấp! Xin quý hành khách nhanh chóng đến điểm tập trung ngay bây giờ.";
+        var message = "Xin quý hành khách vui lòng đến điểm tập trung!";
         var queryMEssage = "";
         if (typeof clientParams.userList === "undefined" || clientParams.userList.length == 0) {
             var getTouristListQuery = "select [user].ID as UserID \n" +
