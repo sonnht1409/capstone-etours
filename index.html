@@ -70,6 +70,9 @@
                     tourInstanceID: 3,
                     coachID: 1,
                     userList: []
+                }))
+                socket.emit('Mobile Login By Card', JSON.stringify({
+                    cardCode: 'ET000001'
                 }))*/
                 $('#m').val('');
                 return false;
@@ -105,7 +108,10 @@
             })
             socket.on('Mobile Gather Tourist', function(data) {
                 console.log(JSON.parse(data))
-            }) */
+            }) 
+            socket.on('Mobile Login By Card', function(data) {
+                console.log(JSON.parse(data));
+            })*/
         });
     </script>
 </body>

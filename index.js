@@ -830,6 +830,74 @@ io.on('connection', (socket) => {
         }
     })
 
+    socket.on('Mobile Login By Card', (params) => {
+        var clientParams = JSON.parse(params);
+        var authenicateQuery =
+            "select fullname, CoachID, [user].TourInstanceID, [user].id as UserID, role.ID as RoleID, role" +
+            ", [user].IsActive as UserActive, role.IsActive as RoleActive \n " +
+            "from Card inner join [user] on Card.UserID = [user].id \n " +
+            "inner join UserInfo on [user].ID = UserInfo.UserID \n " +
+            "inner join Role on [user].RoleID = Role.ID \n " +
+            "inner join User_Coach_SeatNumber as UCSN on [user].id = UCSN.UserID \n" +
+            "where Card.Code='" + clientParams.cardCode + "'";
+        console.log(authenicateQuery)
+        var message = "";
+        var status = "";
+        var logStatus = "";
+        var loggedUser = {};
+        connection.request().query(authenicateQuery, (err, result) => {
+            if (err) {
+                message = "ERROR! " + authenicateQuery;
+                status = "FAILED"
+                logStatus = "BUG"
+            } else {
+                message = "SUCCESS! " + authenicateQuery;
+                if (typeof result !== "undefined" && result.recordset.length > 0) {
+                    var loggedUser = result.recordset[0];
+                    if (loggedUser.UserActive == 0 && loggedUser.RoleActive == 0) {
+                        message = "FAILED! " + authenicateQuery + "\n"
+                        message += "User no longer active \n";
+                        message += "Permission denied \n";
+                        status = "FAILED";
+                        logStatus = "User no longer active & permission denied"
+                    } else {
+                        if (loggedUser.RoleActive == 0) {
+                            message = "FAILED! " + authenicateQuery + "\n";
+                            message += "Permission denied \n"
+                            status = "FAILED"
+                            logStatus = "Permission denied";
+                        } else {
+                            if (loggedUser.UserActive == 0) {
+                                message = "FAILED! " + authenicateQuery + "\n";
+                                message += "User no longer active \n"
+                                status = "FAILED"
+                                logStatus = "User no longer active"
+                            } else {
+                                status = "SUCCESS";
+                                logStatus = "Username and Password match, User is active"
+                            }
+                        }
+                    }
+                } else {
+                    message = "FAILED " + authenicateQuery;
+                    status = "FAILED"
+                    logStatus = "Wrong username or password"
+                }
+            }
+            if (typeof loggedUser === "undefined") {
+                loggedUser = {
+                    logStatus: logStatus,
+                    status: status
+                }
+            } else {
+                loggedUser.status = status;
+                loggedUser.logStatus = logStatus;
+            }
+
+            socket.emit('Mobile Login By Card', JSON.stringify(loggedUser));
+        })
+    })
+
 });
 
 
