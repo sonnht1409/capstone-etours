@@ -133,6 +133,14 @@ Ex:
               userList: array of UserID, if null or empty mean send to all tourist
             }
      }
+     
+     {
+      event name: 'Mobile Login By Card'
+      params:
+            {
+             carcCode: string
+            }
+     }
 ## CRUD
 
      {
@@ -381,7 +389,23 @@ Ex:
               
             }
      }
-      
+     
+     {
+        event name: 'Mobile Login By Card'
+        loggedUser: 
+             {
+               fullname: String, 
+               UserID: int,
+               RoleID: int,
+               TourInstanceID: int,
+               CoachID: int,
+               UserActive: boolean,
+               RoleActive: boolean,
+               status: String,
+               logStatus: String
+             }
+            
+      }
 ## CRUD
       {
         event name: 'Create Place'
