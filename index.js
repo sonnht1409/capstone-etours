@@ -5,6 +5,10 @@ var mapDetailRequest = require('sync-request');
 var port = 8080;
 var path = require('path');
 var appDir = path.dirname(require.main.filename);
+const statusMessageError = "ERROR! ";
+const statusMessageSuccess = "SUCCESS! ";
+const statusFailed = "FAILED";
+const statusSuccess = "SUCCESS"
 
 const sql = require('mssql');
 
@@ -59,9 +63,9 @@ io.on('connection', (socket) => {
             var message = "";
             var touristList = [];
             if (err) {
-                message = "ERROR! " + getTouristListQuery;
+                message = statusMessageError + getTouristListQuery;
             } else {
-                message = "SUCCESS! " + getTouristListQuery;
+                message = statusMessageSuccess + getTouristListQuery;
                 if (typeof result !== "undefined" && result.recordset.length > 0) {
                     touristList = result.recordset;
 
@@ -84,15 +88,15 @@ io.on('connection', (socket) => {
         var UserInfo = {};
         connection.request().query(getUserQuery, (err, result) => {
             var message = "";
-            var status = "FAILED";
+            var status = statusFailed;
             if (err) {
-                message = "ERROR! " + getUserQuery;
+                message = statusMessageError + getUserQuery;
             } else {
-                message = "SUCCESS! " + getUserQuery;
+                message = statusMessageSuccess + getUserQuery;
                 if (typeof result !== "undefined" && result.recordset.length > 0) {
 
                     if (tourInstanceID == result.recordset[0].tourInstanceID) {
-                        status = "SUCCESS";
+                        status = statusSuccess;
                         var UserID = result.recordset[0].UserID
                         var getTouristMessage = "";
 
@@ -103,9 +107,9 @@ io.on('connection', (socket) => {
                             "where [user].id = " + UserID;
                         connection.request().query(getTouristInfoQuery, (err, result) => {
                             if (err) {
-                                getTouristMessage = "ERROR! " + getTouristInfoQuery;
+                                getTouristMessage = statusMessageError + getTouristInfoQuery;
                             } else {
-                                getTouristMessage = "SUCCESS! " + getTouristInfoQuery;
+                                getTouristMessage = statusMessageSuccess + getTouristInfoQuery;
                                 if (typeof result !== "undefined" && result.recordset.length > 0) {
                                     UserInfo = result.recordset[0];
                                 }
@@ -130,9 +134,9 @@ io.on('connection', (socket) => {
                         var updateMessage = "";
                         connection.request().query(updateTouristStatusQuery, (err, result) => {
                             if (err) {
-                                updateMessage = "ERROR! " + updateTouristStatusQuery;
+                                updateMessage = statusMessageError + updateTouristStatusQuery;
                             } else {
-                                updateMessage = "SUCCESS! " + updateTouristStatusQuery;
+                                updateMessage = statusMessageSuccess + updateTouristStatusQuery;
                             }
                             io.emit('chat message', updateMessage);
                         })
@@ -164,40 +168,40 @@ io.on('connection', (socket) => {
         var loggedUser = {};
         connection.request().query(authenicateQuery, (err, result) => {
             if (err) {
-                message = "ERROR! " + authenicateQuery;
-                status = "FAILED"
+                message = statusMessageError + authenicateQuery;
+                status = statusFailed
                 logStatus = "BUG"
             } else {
-                message = "SUCCESS! " + authenicateQuery;
+                message = statusMessageSuccess + authenicateQuery;
                 if (typeof result !== "undefined" && result.recordset.length > 0) {
                     var loggedUser = result.recordset[0];
                     if (loggedUser.UserActive == 0 && loggedUser.RoleActive == 0) {
                         message = "FAILED! " + authenicateQuery + "\n"
                         message += "User no longer active \n";
                         message += "Permission denied \n";
-                        status = "FAILED";
+                        status = statusFailed;
                         logStatus = "User no longer active & permission denied"
                     } else {
                         if (loggedUser.RoleActive == 0) {
                             message = "FAILED! " + authenicateQuery + "\n";
                             message += "Permission denied \n"
-                            status = "FAILED"
+                            status = statusFailed
                             logStatus = "Permission denied";
                         } else {
                             if (loggedUser.UserActive == 0) {
                                 message = "FAILED! " + authenicateQuery + "\n";
                                 message += "User no longer active \n"
-                                status = "FAILED"
+                                status = statusFailed
                                 logStatus = "User no longer active"
                             } else {
-                                status = "SUCCESS";
+                                status = statusSuccess;
                                 logStatus = "Username and Password match, User is active"
                             }
                         }
                     }
                 } else {
                     message = "FAILED " + authenicateQuery;
-                    status = "FAILED"
+                    status = statusFailed
                     logStatus = "Wrong username or password"
                 }
 
@@ -230,7 +234,7 @@ io.on('connection', (socket) => {
         var message = ""
         connection.request().query(updateGpsQuery, (err, result) => {
             if (err) {
-                message = "ERROR! " + updateGpsQuery;
+                message = statusMessageError + updateGpsQuery;
             } else {
                 message = "SUCCESS " + updateGpsQuery;
             }
@@ -257,9 +261,9 @@ io.on('connection', (socket) => {
         };
         connection.request().query(getGpsQuery, (err, result) => {
             if (err) {
-                message = "ERROR! " + getGpsQuery;
+                message = statusMessageError + getGpsQuery;
             } else {
-                message = "SUCCESS! " + getGpsQuery;
+                message = statusMessageSuccess + getGpsQuery;
                 if (typeof result !== "undefined" && result.recordset.length > 0) {
                     gpsResult.gpsList = result.recordset;
                 }
@@ -288,40 +292,40 @@ io.on('connection', (socket) => {
         var loggedUser = {};
         connection.request().query(authenicateQuery, (err, result) => {
             if (err) {
-                message = "ERROR! " + authenicateQuery;
-                status = "FAILED"
+                message = statusMessageError + authenicateQuery;
+                status = statusFailed
                 logStatus = "BUG"
             } else {
-                message = "SUCCESS! " + authenicateQuery;
+                message = statusMessageSuccess + authenicateQuery;
                 if (typeof result !== "undefined" && result.recordset.length > 0) {
                     var loggedUser = result.recordset[0];
                     if (loggedUser.UserActive == 0 && loggedUser.RoleActive == 0) {
                         message = "FAILED! " + authenicateQuery + "\n"
                         message += "User no longer active \n";
                         message += "Permission denied \n";
-                        status = "FAILED";
+                        status = statusFailed;
                         logStatus = "User no longer active & permission denied"
                     } else {
                         if (loggedUser.RoleActive == 0) {
                             message = "FAILED! " + authenicateQuery + "\n";
                             message += "Permission denied \n"
-                            status = "FAILED"
+                            status = statusFailed
                             logStatus = "Permission denied";
                         } else {
                             if (loggedUser.UserActive == 0) {
                                 message = "FAILED! " + authenicateQuery + "\n";
                                 message += "User no longer active \n"
-                                status = "FAILED"
+                                status = statusFailed
                                 logStatus = "User no longer active"
                             } else {
-                                status = "SUCCESS";
+                                status = statusSuccess;
                                 logStatus = "Username and Password match, User is active"
                             }
                         }
                     }
                 } else {
                     message = "FAILED " + authenicateQuery;
-                    status = "FAILED"
+                    status = statusFailed
                     logStatus = "Wrong username or password"
                 }
             }
@@ -356,9 +360,9 @@ io.on('connection', (socket) => {
         };
         connection.request().query(getVisitPlaceLocationQuery, (err, result) => {
             if (err) {
-                message = "ERROR! " + getVisitPlaceLocationQuery
+                message = statusMessageError + getVisitPlaceLocationQuery
             } else {
-                message = "SUCCESS! " + getVisitPlaceLocationQuery
+                message = statusMessageSuccess + getVisitPlaceLocationQuery
                 if (typeof result !== "undefined" && result.recordset.length > 0) {
                     data.visitingPlaceList = result.recordset;
                 }
@@ -375,11 +379,11 @@ io.on('connection', (socket) => {
         var status = "";
         connection.request().query(insertPlaceQuery, (err, result) => {
             if (err) {
-                message = "ERROR! " + insertPlaceQuery
-                status = "FAILED"
+                message = statusMessageError + insertPlaceQuery
+                status = statusFailed
             } else {
-                message = "SUCCESS! " + insertPlaceQuery;
-                status = "SUCCESS"
+                message = statusMessageSuccess + insertPlaceQuery;
+                status = statusSuccess
             }
             socket.emit('Create Place', JSON.stringify({
                 status: status
@@ -399,9 +403,9 @@ io.on('connection', (socket) => {
         };
         connection.request().query(getPlaceListQuery, (err, result) => {
             if (err) {
-                message = "ERROR! " + getPlaceListQuery
+                message = statusMessageError + getPlaceListQuery
             } else {
-                message = "SUCCESS! " + getPlaceListQuery;
+                message = statusMessageSuccess + getPlaceListQuery;
                 if (typeof result !== "undefined" && result.recordset.length > 0) {
                     data.placeList = result.recordset;
                 }
@@ -421,11 +425,11 @@ io.on('connection', (socket) => {
         var status = ""
         connection.request().query(updatePlaceQuery, (err, result) => {
             if (err) {
-                message = "ERROR! " + updatePlaceQuery;
-                status = "FAILED"
+                message = statusMessageError + updatePlaceQuery;
+                status = statusFailed
             } else {
-                message = "SUCCESS! " + updatePlaceQuery;
-                status = "SUCCESS"
+                message = statusMessageSuccess + updatePlaceQuery;
+                status = statusSuccess
             }
             socket.emit('Update Place', JSON.stringify({
                 status: status
@@ -441,11 +445,11 @@ io.on('connection', (socket) => {
         var status = ""
         connection.request().query(deactivePlaceQuery, (err, result) => {
             if (err) {
-                message = "ERROR! " + deactivePlaceQuery;
-                status = "FAILED"
+                message = statusMessageError + deactivePlaceQuery;
+                status = statusFailed
             } else {
                 message = "SUCCESS " + deactivePlaceQuery;
-                status = "SUCCESS"
+                status = statusSuccess
             }
 
             socket.emit('Remove Place', JSON.stringify({
@@ -462,11 +466,11 @@ io.on('connection', (socket) => {
         var status = "";
         connection.request().query(reactivePlaceQuery, (err, result) => {
             if (err) {
-                message = "ERROR! " + reactivePlaceQuery;
-                status = "FAILED"
+                message = statusMessageError + reactivePlaceQuery;
+                status = statusFailed
             } else {
-                message = "SUCCESS! " + reactivePlaceQuery;
-                status = "SUCCESS"
+                message = statusMessageSuccess + reactivePlaceQuery;
+                status = statusSuccess
 
             }
             socket.emit('Reactive Place', JSON.stringify({
@@ -496,9 +500,9 @@ io.on('connection', (socket) => {
         var message = "";
         connection.request().query(addPickUpLocationQuery, (err, result) => {
             if (err) {
-                message = "ERROR! " + addPickUpLocationQuery;
+                message = statusMessageError + addPickUpLocationQuery;
             } else {
-                message = "SUCCESS! " + addPickUpLocationQuery;
+                message = statusMessageSuccess + addPickUpLocationQuery;
             }
             io.emit('chat message', message)
         })
@@ -528,9 +532,9 @@ io.on('connection', (socket) => {
         var notificationContent = {};
         connection.request().query(getDriverAndTourguideInfoQuery, (err, result) => {
             if (err) {
-                message = "ERROR! " + getDriverAndTourguideInfoQuery
+                message = statusMessageError + getDriverAndTourguideInfoQuery
             } else {
-                message = "SUCCESS! " + getDriverAndTourguideInfoQuery;
+                message = statusMessageSuccess + getDriverAndTourguideInfoQuery;
                 if (typeof result !== "undefined" && result.recordset.length > 0) {
                     userList = result.recordset;
                     notification +=
@@ -562,9 +566,9 @@ io.on('connection', (socket) => {
                     notificationContent.senderID + "," + notificationContent.receiverID + ")"
                 connection.request().query(insertNotificationQuery, (err, result) => {
                     if (err) {
-                        message = "ERROR! " + insertNotificationQuery;
+                        message = statusMessageError + insertNotificationQuery;
                     } else {
-                        message = "SUCCESS! " + insertNotificationQuery;
+                        message = statusMessageSuccess + insertNotificationQuery;
                     }
                     io.emit('chat message', message);
                     socket.broadcast.emit('Mobile Receiver Pick Up Notification', JSON.stringify({
@@ -602,9 +606,9 @@ io.on('connection', (socket) => {
 
         connection.request().query(getScheduleQuery, (err, result) => {
             if (err) {
-                message = "ERROR! " + getScheduleQuery;
+                message = statusMessageError + getScheduleQuery;
             } else {
-                message = "SUCCCESS! " + getScheduleQuery;
+                message = statusMessageSuccess + getScheduleQuery;
                 if (typeof result !== "undefined" && result.recordset.length > 0) {
                     var tourTimeScheduleList = [];
                     var scheduleList = result.recordset;
@@ -648,17 +652,18 @@ io.on('connection', (socket) => {
 
     socket.on('Create Visit Place', (params) => {
         var clientParams = JSON.parse(params);
-        var insertVisitPlaceQuery = "Insert into VisitingPlace (Name,IsActive,Latitude,Longitude) \n" +
-            "VALUES (N'" + clientParams.Name + "',1," + clientParams.latitude + "," + clientParams.longitude + ")";
+        var insertVisitPlaceQuery = "Insert into VisitingPlace (Name,IsActive,Latitude,Longitude,Type) \n" +
+            "VALUES (N'" + clientParams.Name + "',1," + clientParams.latitude + "," + clientParams.longitude + "," +
+            clientParams.typeID + ")";
         var message = "";
         var status = "";
         connection.request().query(insertVisitPlaceQuery, (err, result) => {
             if (err) {
-                message = "ERROR! " + insertVisitPlaceQuery
-                status = "FAILED"
+                message = statusMessageError + insertVisitPlaceQuery
+                status = statusFailed
             } else {
-                message = "SUCCESS! " + insertVisitPlaceQuery;
-                status = "SUCCESS"
+                message = statusMessageSuccess + insertVisitPlaceQuery;
+                status = statusSuccess
             }
             socket.emit('Create Visit Place', JSON.stringify({
                 status: status
@@ -674,16 +679,17 @@ io.on('connection', (socket) => {
         var updateVisitPlaceQuery = "update VisitingPlace set name=N'" + clientParams.name + "', \n" +
             "Latitude=" + clientParams.latitude + ", \n" +
             "Longitude=" + clientParams.longitude + ", \n" +
+            "Type =" + clientParams.typeID + " \n" +
             "where id=" + clientParams.placeID;
         var message = "";
         var status = ""
         connection.request().query(updateVisitPlaceQuery, (err, result) => {
             if (err) {
-                message = "ERROR! " + updateVisitPlaceQuery;
-                status = "FAILED"
+                message = statusMessageError + updateVisitPlaceQuery;
+                status = statusFailed
             } else {
-                message = "SUCCESS! " + updateVisitPlaceQuery;
-                status = "SUCCESS"
+                message = statusMessageSuccess + updateVisitPlaceQuery;
+                status = statusSuccess
             }
             socket.emit('Update Visit Place', JSON.stringify({
                 status: status
@@ -699,11 +705,11 @@ io.on('connection', (socket) => {
         var status = ""
         connection.request().query(deactiveVisitPlaceQuery, (err, result) => {
             if (err) {
-                message = "ERROR! " + deactiveVisitPlaceQuery;
-                status = "FAILED"
+                message = statusMessageError + deactiveVisitPlaceQuery;
+                status = statusFailed
             } else {
-                message = "SUCCESS " + deactiveVisitPlaceQuery;
-                status = "SUCCESS"
+                message = statusMessageSuccess + deactiveVisitPlaceQuery;
+                status = statusSuccess
             }
 
             socket.emit('Remove Visit Place', JSON.stringify({
@@ -720,11 +726,11 @@ io.on('connection', (socket) => {
         var status = "";
         connection.request().query(reactiveVisitPlaceQuery, (err, result) => {
             if (err) {
-                message = "ERROR! " + reactiveVisitPlaceQuery;
-                status = "FAILED"
+                message = statusMessageError + reactiveVisitPlaceQuery;
+                status = statusFailed
             } else {
-                message = "SUCCESS! " + reactiveVisitPlaceQuery;
-                status = "SUCCESS"
+                message = statusMessageSuccess + reactiveVisitPlaceQuery;
+                status = statusSuccess
 
             }
             socket.emit('Reactive Visit Place', JSON.stringify({
@@ -736,22 +742,26 @@ io.on('connection', (socket) => {
 
     socket.on('Get Visit Place List', (params) => {
         var clientParams = JSON.parse(params);
-        var getPlaceListQuery = "select * from VisitingPlace where IsActive=" + clientParams.isActive;
+        var getPlaceListQuery = "select VP.ID as visitPlaceID, VP.Name as visitPlaceName, " +
+            "Latitude,Longitude, Type as typeID, VPT.Name as typeName \n" +
+            "from VisitingPlace as VP inner join VisitingPlaceType as VPT on VP.Type=VPT.ID \n" +
+            "where VP.IsActive = " + clientParams.isActive + "\n" +
+            "order by typeID";
         var message = "";
-        var data = {
-            placeList: []
-        };
+        var visitingPlaceList = []
         connection.request().query(getPlaceListQuery, (err, result) => {
             if (err) {
-                message = "ERROR! " + getPlaceListQuery
+                message = statusMessageError + getPlaceListQuery
             } else {
-                message = "SUCCESS! " + getPlaceListQuery;
+                message = statusMessageSuccess + getPlaceListQuery;
                 if (typeof result !== "undefined" && result.recordset.length > 0) {
-                    data.placeList = result.recordset;
+                    visitingPlaceList = result.recordset;
                 }
             }
 
-            socket.emit('Get Visit Place List', JSON.stringify(data));
+            socket.emit('Get Visit Place List', JSON.stringify({
+                visitingPlaceList: visitingPlaceList
+            }));
             io.emit('chat message', message);
         })
 
@@ -779,9 +789,9 @@ io.on('connection', (socket) => {
         };
         connection.request().query(getGpsQuery, (err, result) => {
             if (err) {
-                message = "ERROR! " + getGpsQuery
+                message = statusMessageError + getGpsQuery
             } else {
-                message = "SUCCESS! " + getGpsQuery;
+                message = statusMessageSuccess + getGpsQuery;
                 if (typeof result !== "undefined" && result.recordset.length > 0) {
                     data.userLocationList = result.recordset;
                 }
@@ -804,9 +814,9 @@ io.on('connection', (socket) => {
             connection.request().query(getTouristListQuery, (err, result) => {
                 var userList = [];
                 if (err) {
-                    queryMEssage = "ERROR! " + getTouristListQuery;
+                    queryMEssage = statusMessageError + getTouristListQuery;
                 } else {
-                    queryMEssage = "SUCCESS! " + getTouristListQuery;
+                    queryMEssage = statusMessageSuccess + getTouristListQuery;
 
                     if (typeof result !== "undefined" && result.recordset.length > 0) {
                         userList = result.recordset;
@@ -847,40 +857,40 @@ io.on('connection', (socket) => {
         var loggedUser = {};
         connection.request().query(authenicateQuery, (err, result) => {
             if (err) {
-                message = "ERROR! " + authenicateQuery;
-                status = "FAILED"
+                message = statusMessageError + authenicateQuery;
+                status = statusFailed
                 logStatus = "BUG"
             } else {
-                message = "SUCCESS! " + authenicateQuery;
+                message = statusMessageSuccess + authenicateQuery;
                 if (typeof result !== "undefined" && result.recordset.length > 0) {
                     var loggedUser = result.recordset[0];
                     if (loggedUser.UserActive == 0 && loggedUser.RoleActive == 0) {
                         message = "FAILED! " + authenicateQuery + "\n"
                         message += "User no longer active \n";
                         message += "Permission denied \n";
-                        status = "FAILED";
+                        status = statusFailed;
                         logStatus = "User no longer active & permission denied"
                     } else {
                         if (loggedUser.RoleActive == 0) {
                             message = "FAILED! " + authenicateQuery + "\n";
                             message += "Permission denied \n"
-                            status = "FAILED"
+                            status = statusFailed
                             logStatus = "Permission denied";
                         } else {
                             if (loggedUser.UserActive == 0) {
                                 message = "FAILED! " + authenicateQuery + "\n";
                                 message += "User no longer active \n"
-                                status = "FAILED"
+                                status = statusFailed
                                 logStatus = "User no longer active"
                             } else {
-                                status = "SUCCESS";
+                                status = statusSuccess;
                                 logStatus = "Username and Password match, User is active"
                             }
                         }
                     }
                 } else {
                     message = "FAILED " + authenicateQuery;
-                    status = "FAILED"
+                    status = statusFailed
                     logStatus = "Wrong username or password"
                 }
             }
@@ -898,6 +908,111 @@ io.on('connection', (socket) => {
         })
     })
 
+    socket.on('Get Visit Place Type List', (params) => {
+        var clientParams = JSON.parse(params);
+        var getVisitPlaceTypeQuery = "select * from VisitingPlaceType where isActive=" + clientParams.isActive;
+        var message = "";
+        var visitingPlaceTypeList = [];
+        connection.request().query(getVisitPlaceTypeQuery, (err, result) => {
+            if (err) {
+                message = statusMessageError + getVisitPlaceTypeQuery;
+            } else {
+                message = statusMessageSuccess + getVisitPlaceTypeQuery;
+                if (typeof result !== "undefined" && result.recordset.length > 0) {
+                    visitingPlaceTypeList = result.recordset;
+                }
+            }
+            io.emit('chat message', message);
+            socket.emit('Get Visit Place Type List', JSON.stringify({
+                visitingPlaceTypeList: visitingPlaceTypeList
+            }))
+        })
+    })
+
+    socket.on('Create Visit Place Type', (params) => {
+        var clientParams = JSON.parse(params)
+        var createVisitPlaceTypeQuery = "INSERT into VisitingPlaceType (Name,IsActive) \n" +
+            "VALUES(N'" + clientParams.name + "',1)";
+        var message = "";
+        var status = "";
+        connection.request().query(createVisitPlaceTypeQuery, (err, result) => {
+            if (err) {
+                message = statusMessageError + createVisitPlaceTypeQuery
+                status = statusFailed
+            } else {
+                message = "SUCCESS " + createVisitPlaceTypeQuery;
+                status = statusSuccess
+            }
+            io.emit('chat message', message);
+            socket.emit('Create Visit Place Type', JSON.stringify({
+                status: status
+            }))
+        })
+    })
+
+    socket.on('Update Visit Place Type', (params) => {
+        var clientParams = JSON.parse(params);
+        var updateVisitPlaceTypeQuery = "UPDATE VisitingPlaceType set \n" +
+            "name=N'" + clientParams.name + " \n" +
+            "where ID=" + clientParams.visitingPlaceTypeID;
+        var message = "";
+        var status = "";
+        connection.request().query(updateVisitPlaceTypeQuery, (err, result) => {
+            if (err) {
+                message = statusMessageError + updateVisitPlaceTypeQuery
+                status = statusFailed;
+            } else {
+                message = statusMessageSuccess + updateVisitPlaceTypeQuery;
+                status = statusSuccess;
+            }
+            io.emit('chat message', message);
+            socket.emit('Update Visit Place Type', JSON.stringify({
+                status: status
+            }))
+        })
+    })
+
+    socket.on('Remove Visit Place Type', (params) => {
+        var clientParams = JSON.parse(params);
+        var removeVisitPlaceTypeQuery = "UPDATE VisitingPlaceType set IsActive=0 \n" +
+            "where ID=" + clientParams.visitingPlaceTypeID;
+        var message = "";
+        var status = "";
+        connection.request().query(removeVisitPlaceTypeQuery, (err, result) => {
+            if (err) {
+                message = statusMessageError + removeVisitPlaceTypeQuery
+                status = statusFailed
+            } else {
+                message = statusMessageSuccess + removeVisitPlaceTypeQuery;
+                status = statusSuccess;
+            }
+            io.emit('chat message', message);
+            socket.emit('Remove Visit Place Type', JSON.stringify({
+                status: status
+            }))
+        })
+    })
+
+    socket.on('Reactive Visit Place Type', (params) => {
+        var clientParams = JSON.parse(params);
+        var reactiveVisitPlaceTypeQuery = "UPDATE VisitingPlaceType set IsActive=1 \n" +
+            "where ID=" + clientParams.visitingPlaceTypeID;
+        var message = "";
+        var status = "";
+        connection.request().query(reactiveVisitPlaceTypeQuery, (err, result) => {
+            if (err) {
+                message = statusMessageError + reactiveVisitPlaceTypeQuery
+                status = statusFailed
+            } else {
+                message = statusMessageSuccess + reactiveVisitPlaceTypeQuery;
+                status = statusSuccess;
+            }
+            io.emit('chat message', message);
+            socket.emit('Reactive Visit Place Type', JSON.stringify({
+                status: status
+            }))
+        })
+    })
 });
 
 
