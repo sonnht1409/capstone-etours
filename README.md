@@ -185,45 +185,52 @@ Ex:
             }
      } 
      
-     ve: boolean    
-            }
-     }
-      
+         
      {
       event name: 'Create Visit Place'
       params: 
             {
-              Name: string    
-              latitude: float
-              longitude: float
+             name:string
+             latitude: float
+             longitude: float
+             typeID: int
+             visitPlaceID: int
             }
-     
      }
      
      {
       event name: 'Update Visit Place'
-      params: 
-            {
-             Name: string,
-             visitPlaceID: int
-            }
-     }
-     
-     {
-      event name: 'Remove Visit Place'
       params:
             {
-             visitPlaceID: int
+             name: string
+             latitude: float
+             longitude: float
+             typeID: int
+            }
+     }
+     {
+      event name: 'Remove Visit Place'
+      params: 
+            {
+              placeID: int    
             }
      }
      
      {
       event name: 'Reactive Visit Place'
-      params: 
+      params:
             {
-             visitPlaceID: int     
+              placeID: int     
             }
-     } 
+     }
+     
+     {
+      event name: 'Get Visit Place List'
+      params:
+            {
+             isActive: boolean     
+            }
+     }
      
      
 # Server event (send to client)
@@ -489,11 +496,13 @@ Ex:
         data: 
             {
                   placeList: array[{
-                                    ID: int,
-                                    Name: string
+                                    visitPlaceID: int,
+                                    visitPlaceName: string
                                     IsActive: boolean
                                     Latitude:: float
                                     Longitude: float
+                                    typeID: int
+                                    typeName: string
                                    }]
             }
       }
