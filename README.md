@@ -232,6 +232,55 @@ Ex:
             }
      }
      
+     {
+      event name: 'Get Visit Place Type List'
+      params: 
+            {
+             isActive: boolean     
+            }
+     }
+     
+     {
+      event name: 'Create Visit Place Type'
+      params:
+            {
+             name: string     
+            }
+     }
+     
+     {
+      event name: 'Update Visit Place Type'
+      params:
+            {
+             name: string
+             visitingPlaceTypeID: int
+            }
+     }
+     
+     {
+      event name: 'Remove Visit Place Type'
+      params:
+            {
+             visitingPlaceTypeID: int     
+            }
+     }
+     
+     {
+      event name: 'Reactive Visit Place Type'
+      params:
+            {
+             visitingPlaceTypeID: int     
+            }
+      }
+      
+      {
+       event name: 'Get Visit Place Type List'
+       params:
+            {
+              isActive: boolean    
+            }
+      }
+     
      
 # Server event (send to client)
       {
@@ -504,5 +553,49 @@ Ex:
                                     typeID: int
                                     typeName: string
                                    }]
+            }
+      }
+      
+      {
+      event name: 'Create Visit Place Type'
+      params:
+            {
+             status: string     
+            }
+     }
+     
+     {
+      event name: 'Update Visit Place Type'
+      params:
+            {
+             status: string
+            }
+     }
+     
+     {
+      event name: 'Remove Visit Place Type'
+      params:
+            {
+             status: string
+            }
+     }
+     
+     {
+      event name: 'Reactive Visit Place Type'
+      params:
+            {
+             status: string
+            }
+      }
+      
+      {
+       event name: 'Get Visit Place Type List'
+       params:
+            {
+              visitingPlaceTypeList: array[{    
+                                                ID: int
+                                                Name: string
+                                                IsActive: boolean
+                                          }]    
             }
       }
