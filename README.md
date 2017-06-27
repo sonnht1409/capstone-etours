@@ -164,7 +164,7 @@ Ex:
       event name: 'Update Place'
       params: 
             {
-             Name: string,
+             name: string,
              placeID: int
             }
      }
