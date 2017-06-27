@@ -236,7 +236,7 @@ io.on('connection', (socket) => {
             if (err) {
                 message = statusMessageError + updateGpsQuery;
             } else {
-                message = "SUCCESS " + updateGpsQuery;
+                message = statusMessageSuccess + updateGpsQuery;
             }
             io.emit('chat message', message);
         })
@@ -448,7 +448,7 @@ io.on('connection', (socket) => {
                 message = statusMessageError + deactivePlaceQuery;
                 status = statusFailed
             } else {
-                message = "SUCCESS " + deactivePlaceQuery;
+                message = statusMessageSuccess + deactivePlaceQuery;
                 status = statusSuccess
             }
 
@@ -653,7 +653,7 @@ io.on('connection', (socket) => {
     socket.on('Create Visit Place', (params) => {
         var clientParams = JSON.parse(params);
         var insertVisitPlaceQuery = "Insert into VisitingPlace (Name,IsActive,Latitude,Longitude,Type) \n" +
-            "VALUES (N'" + clientParams.Name + "',1," + clientParams.latitude + "," + clientParams.longitude + "," +
+            "VALUES (N'" + clientParams.name + "',1," + clientParams.latitude + "," + clientParams.longitude + "," +
             clientParams.typeID + ")";
         var message = "";
         var status = "";
@@ -940,7 +940,7 @@ io.on('connection', (socket) => {
                 message = statusMessageError + createVisitPlaceTypeQuery
                 status = statusFailed
             } else {
-                message = "SUCCESS " + createVisitPlaceTypeQuery;
+                message = statusMessageSuccess + createVisitPlaceTypeQuery;
                 status = statusSuccess
             }
             io.emit('chat message', message);
