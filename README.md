@@ -194,7 +194,7 @@ Ex:
              latitude: float
              longitude: float
              typeID: int
-             visitPlaceID: int
+             
             }
      }
      
@@ -206,6 +206,7 @@ Ex:
              latitude: float
              longitude: float
              typeID: int
+             visitPlaceID: int
             }
      }
      {
