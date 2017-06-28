@@ -591,7 +591,7 @@ io.on('connection', (socket) => {
 
     socket.on('Mobile Get Schedule', (params) => {
         var clientParams = JSON.parse(params);
-        var getScheduleQuery = "select Schedule.StartTime, Schedule.EndTime, Activity, VisitingPlaceID, \n" +
+        var getScheduleQuery = "select Schedule.ID as scheduleID,Schedule.StartTime, Schedule.EndTime, Activity, VisitingPlaceID, \n" +
             "VisitingPlace.Name as VisitPlaceName,TourTime, Latitude,Longitude, TourInstanceDetailId \n" +
             "from Schedule inner join TourInstance_Detail as TID on Schedule.TourInstanceDetailId=TID.id \n" +
             "inner join TourInstance on TID.TourInstanceID = TourInstance.ID \n" +
@@ -742,7 +742,7 @@ io.on('connection', (socket) => {
 
     socket.on('Get Visit Place List', (params) => {
         var clientParams = JSON.parse(params);
-        var getPlaceListQuery = "select VP.ID as visitPlaceID, VP.Name as visitPlaceName, " +
+        var getPlaceListQuery = "select VP.ID as visitPlaceID, VP.Name as visitPlaceName, VP.isActive" +
             "Latitude,Longitude, Type as typeID, VPT.Name as typeName \n" +
             "from VisitingPlace as VP inner join VisitingPlaceType as VPT on VP.Type=VPT.ID \n" +
             "where VP.IsActive = " + clientParams.isActive + "\n" +
@@ -953,7 +953,7 @@ io.on('connection', (socket) => {
     socket.on('Update Visit Place Type', (params) => {
         var clientParams = JSON.parse(params);
         var updateVisitPlaceTypeQuery = "UPDATE VisitingPlaceType set \n" +
-            "name=N'" + clientParams.name + " \n" +
+            "name=N'" + clientParams.name + "' \n" +
             "where ID=" + clientParams.visitingPlaceTypeID;
         var message = "";
         var status = "";
@@ -1012,6 +1012,10 @@ io.on('connection', (socket) => {
                 status: status
             }))
         })
+    })
+
+    socket.on('reschedule', (params) => {
+
     })
 });
 
