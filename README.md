@@ -138,7 +138,7 @@ Ex:
       event name: 'Mobile Login By Card'
       params:
             {
-             carcCode: string
+             cardCode: string
             }
      }
 ## CRUD
