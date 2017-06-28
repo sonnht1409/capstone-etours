@@ -841,7 +841,9 @@ io.on('connection', (socket) => {
     })
 
     socket.on('Mobile Login By Card', (params) => {
+        console.log(params)
         var clientParams = JSON.parse(params);
+        console.log(clientParams)
         var authenicateQuery =
             "select fullname, CoachID, [user].TourInstanceID, [user].id as UserID, role.ID as RoleID, role" +
             ", [user].IsActive as UserActive, role.IsActive as RoleActive \n " +
