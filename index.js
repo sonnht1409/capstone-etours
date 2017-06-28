@@ -1052,7 +1052,10 @@ io.on('connection', (socket) => {
                                     latitude: result.recordset[0].Latitude,
                                     longitude: result.recordset[0].Longitude,
                                     hour: date.getHours(),
-                                    min: date.getMinutes()
+                                    min: date.getMinutes(),
+                                    date: date.getDate(),
+                                    month: (date.getMonth() + 1),
+                                    year: date.getFullYear()
                                 }
                             }
                         }
