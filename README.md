@@ -150,6 +150,39 @@ Ex:
               coachID: int
             }
       }
+      
+      {
+       event name: 'Reschedule Time'
+       params:
+            {
+              scheduleList: array object, ex: [{
+                    scheduleID: 9,
+                    startYear: 2017,
+                    startMonth: 6 (đúng với tháng hiện tại),
+                    startDate: 1,
+                    startHour: 6,
+                    startMin: 15,
+                    endYear: 2017,
+                    endMonth: 6,
+                    endDate: 1,
+                    endHour: 6,
+                    endMin: 30
+                }, {
+                    scheduleID: 1,
+                    startYear: 2017,
+                    startMonth: 6 (đúng với tháng hiện tại),
+                    startDate: 1,
+                    startHour: 7,
+                    startMin: 15,
+                    endYear: 2017,
+                    endMonth: 6,
+                    endDate: 1,
+                    endHour: 9,
+                    endMin: 30
+                }]
+              
+            }
+      }
 ## CRUD
 
      {
