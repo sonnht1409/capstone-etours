@@ -1017,7 +1017,49 @@ io.on('connection', (socket) => {
     })
 
     socket.on('Reschedule Time', (params) => {
-        var clientParams
+        var clientParams = JSON.parse(params);
+        var scheduleList = clientParams.scheduleList;
+        scheduleList.forEach(function(element) {
+            if (element.startMonth < 10) {
+                element.startMonth = "0" + element.startMonth
+            }
+            if (element.startDate < 10) {
+                element.startDate = "0" + element.startDate
+            }
+            if (element.endDate < 10) {
+                element.endDate = "0" + element.endDate
+            }
+            if (element.endMonth < 10) {
+                element.endMonth = "0" + element.endMonth
+            }
+            if (element.startHour < 10) {
+                element.startHour = "0" + element.startHour
+            }
+            if (element.startMin < 10) {
+                element.startMin = "0" + element.startMin;
+            }
+            if (element.endHour < 10) {
+                element.endHour = "0" + element.endHour
+            }
+            if (element.endMin < 10) {
+                element.endMin = "0" + element.endMin
+            }
+            var updateScheduleQuery = "UPDATE Schedule set \n" +
+                "startTime='" + element.startYear + "-" + element.startMonth + "-" + element.startDate + " " + element.startHour + ":" + element.startMin + ":00.000', \n" +
+                "endTime='" + element.endYear + "-" + element.endMonth + "-" + element.endDate + " " + element.endHour + ":" + element.endMin + ":00.000' \n" +
+                "where id=" + element.scheduleID
+
+            var message = "";
+            connection.request().query(updateScheduleQuery, (err, result) => {
+                if (err) {
+                    message = statusMessageError + updateScheduleQuery;
+                } else {
+                    message = statusMessageSuccess + updateScheduleQuery
+                }
+                io.emit('chat message', message)
+            })
+        }, this);
+
     })
 
     socket.on('Driver Get Next Pick Up', (params) => {

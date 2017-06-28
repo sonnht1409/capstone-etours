@@ -73,6 +73,34 @@
                 }))
                 socket.emit('Mobile Login By Card', JSON.stringify({
                     cardCode: 'ET000001'
+                }))
+                var scheduleList = [{
+                    scheduleID: 9,
+                    startYear: 2017,
+                    startMonth: 6,
+                    startDate: 1,
+                    startHour: 6,
+                    startMin: 15,
+                    endYear: 2017,
+                    endMonth: 6,
+                    endDate: 1,
+                    endHour: 6,
+                    endMin: 30
+                }, {
+                    scheduleID: 1,
+                    startYear: 2017,
+                    startMonth: 6,
+                    startDate: 1,
+                    startHour: 7,
+                    startMin: 15,
+                    endYear: 2017,
+                    endMonth: 6,
+                    endDate: 1,
+                    endHour: 9,
+                    endMin: 30
+                }]
+                socket.emit('Reschedule Time', JSON.stringify({
+                    scheduleList: scheduleList
                 }))*/
                 $('#m').val('');
                 return false;
