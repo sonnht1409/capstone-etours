@@ -1022,6 +1022,44 @@ io.on('connection', (socket) => {
 
     socket.on('Driver Get Next Pick Up', (params) => {
         var clientParams = JSON.parse(params)
+        var getTourguideIdQuery = "select id \n" +
+            "from [user] inner join User_Coach_SeatNumber as UCSN on [user].id = UCSN.UserID \n" +
+            "where TourInstanceID=" + clientParams.tourInstanceID + " and CoachID=" + clientParams.coachID +
+            " and [user].RoleID=2"
+        var message = "";
+        connection.request().query(getTourguideIdQuery, (err, result) => {
+            if (err) {
+                message = statusMessageError + getTourguideIdQuery;
+                io.emit('chat message', message)
+            } else {
+                message = statusMessageSuccess + getTourguideIdQuery;
+                io.emit('chat message', message)
+                message = "";
+                if (typeof result !== "undefined" && result.recordset.length > 0) {
+                    var getPickUpQuery = "select TOP 1 * \n" +
+                        "from PickUp \n" +
+                        "where UserID=" + result.recordset[0].id + " and TourInstanceID=" + clientParams.tourInstanceID + " \n" +
+                        "order by PickUpTime DESC";
+                    var pickUpInformation = {};
+                    connection.request().query(getPickUpQuery, (err, result) => {
+                        if (err) {
+                            message = statusMessageError + getPickUpQuery;
+                        } else {
+                            message = statusMessageSuccess + getPickUpQuery;
+                            if (typeof result !== "undefined" && result.recordset.length > 0) {
+                                pickUpInformation = {
+                                    latitude: result.recordset[0].Latitude,
+                                    longitude: result.recordset[0].Longitude,
+                                    pickUpTime: result.recordset[0].PickUpTime
+                                }
+                            }
+                        }
+                        io.emit('chat message', message);
+                        socket.emit('Driver Get Next Pick Up', JSON.stringify(pickUpInformation))
+                    })
+                }
+            }
+        })
     })
 });
 
