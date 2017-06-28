@@ -141,6 +141,15 @@ Ex:
              cardCode: string
             }
      }
+     
+     {
+       event name: 'Driver Get Next Pick Up'
+       params: 
+            {
+              tourInstanceID: int,
+              coachID: int
+            }
+      }
 ## CRUD
 
      {
@@ -282,7 +291,7 @@ Ex:
             }
       }
      
-     
+      
 # Server event (send to client)
       {
         event name: 'getTouristList',
@@ -463,6 +472,21 @@ Ex:
              }
             
       }
+      
+      {
+       event name: 'Driver Get Next Pick Up'
+       data: 
+            {
+              latitude: float
+              longitude: float
+              hour: int
+              min: int
+              date: int
+              month: int
+              year: int
+            }
+      }
+      
 ## CRUD
       {
         event name: 'Create Place'
