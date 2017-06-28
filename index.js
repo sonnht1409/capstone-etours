@@ -742,7 +742,7 @@ io.on('connection', (socket) => {
 
     socket.on('Get Visit Place List', (params) => {
         var clientParams = JSON.parse(params);
-        var getPlaceListQuery = "select VP.ID as visitPlaceID, VP.Name as visitPlaceName, VP.isActive" +
+        var getPlaceListQuery = "select VP.ID as visitPlaceID, VP.Name as visitPlaceName, VP.isActive," +
             "Latitude,Longitude, Type as typeID, VPT.Name as typeName \n" +
             "from VisitingPlace as VP inner join VisitingPlaceType as VPT on VP.Type=VPT.ID \n" +
             "where VP.IsActive = " + clientParams.isActive + "\n" +
@@ -1016,8 +1016,12 @@ io.on('connection', (socket) => {
         })
     })
 
-    socket.on('reschedule', (params) => {
+    socket.on('Reschedule Time', (params) => {
+        var clientParams
+    })
 
+    socket.on('Driver Get Next Pick Up', (params) => {
+        var clientParams = JSON.parse(params)
     })
 });
 
