@@ -125,12 +125,12 @@ Ex:
      }
      
      {
-      event name: 'Mobile Gather Tourist'
+      event name: 'Mobile Gather Tourist'
       params: 
             {
               tourInstanceID: int,
               coachID: int,
-              userList: array of UserID, if null or empty mean send to all tourist
+              userList: array of UserID (if null or empty mean send to all tourist)
             }
      }
      
