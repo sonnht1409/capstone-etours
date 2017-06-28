@@ -903,7 +903,7 @@ io.on('connection', (socket) => {
                 loggedUser.status = status;
                 loggedUser.logStatus = logStatus;
             }
-
+            io.emit('chat message', message)
             socket.emit('Mobile Login By Card', JSON.stringify(loggedUser));
         })
     })
