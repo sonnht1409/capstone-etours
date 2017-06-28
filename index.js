@@ -893,7 +893,7 @@ io.on('connection', (socket) => {
                 } else {
                     message = "FAILED " + authenicateQuery;
                     status = statusFailed
-                    logStatus = "Wrong username or password"
+                    logStatus = "Wrong Card"
                 }
             }
             if (typeof loggedUser === "undefined") {
