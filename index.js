@@ -1022,7 +1022,7 @@ io.on('connection', (socket) => {
 
     socket.on('Driver Get Next Pick Up', (params) => {
         var clientParams = JSON.parse(params)
-        var getTourguideIdQuery = "select id \n" +
+        var getTourguideIdQuery = "select [user].id \n" +
             "from [user] inner join User_Coach_SeatNumber as UCSN on [user].id = UCSN.UserID \n" +
             "where TourInstanceID=" + clientParams.tourInstanceID + " and CoachID=" + clientParams.coachID +
             " and [user].RoleID=2"
