@@ -1083,12 +1083,14 @@ io.on('connection', (socket) => {
                         "where UserID=" + result.recordset[0].id + " and TourInstanceID=" + clientParams.tourInstanceID + " \n" +
                         "order by PickUpTime DESC";
                     var pickUpInformation = {};
+                    console.log(getPickUpQuery)
                     connection.request().query(getPickUpQuery, (err, result) => {
                         if (err) {
                             message = statusMessageError + getPickUpQuery;
                         } else {
                             message = statusMessageSuccess + getPickUpQuery;
                             if (typeof result !== "undefined" && result.recordset.length > 0) {
+                                console.log(result.recordset);
                                 var pickUpTime = result.recordset[0].pickUpTime;
                                 var date = new Date(pickUpTime.toString())
                                 pickUpInformation = {
