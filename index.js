@@ -1081,7 +1081,7 @@ io.on('connection', (socket) => {
                     var getPickUpQuery = "select TOP 1 * \n" +
                         "from PickUp \n" +
                         "where UserID=" + result.recordset[0].id + " and TourInstanceID=" + clientParams.tourInstanceID + " \n" +
-                        "order by PickUpTime DESC";
+                        "order by AddedTime DESC";
                     var pickUpInformation = {};
 
                     connection.request().query(getPickUpQuery, (err, result) => {
