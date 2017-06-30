@@ -1089,6 +1089,7 @@ io.on('connection', (socket) => {
                         } else {
                             message = statusMessageSuccess + getPickUpQuery;
                             if (typeof result !== "undefined" && result.recordset.length > 0) {
+                                var pickUpTime = result.recordset[0].pickUpTime;
                                 var date = new Date(pickUpTime)
                                 pickUpInformation = {
                                     latitude: result.recordset[0].Latitude,
