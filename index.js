@@ -31,7 +31,7 @@ connection.connect(err => {
         console.log(err)
     } else {
         io.on('connection', (socket) => {
-            socket.broadcast.emit('chat message', 'database connected');
+            io.emit('chat message', 'database connected');
         })
 
     }
@@ -43,7 +43,7 @@ app.get('/', (req, res) => {
 
 io.on('connection', (socket) => {
     socket.on('chat message', (msg) => {
-        socket.broadcast.emit('chat message', msg);
+        io.emit('chat message', msg);
     });
 
     socket.on('getTouristList', (params) => {
@@ -71,7 +71,7 @@ io.on('connection', (socket) => {
 
                 }
             }
-            socket.broadcast.emit('chat message', message);
+            io.emit('chat message', message);
             socket.emit('getTouristList', JSON.stringify({
                 touristList: touristList
             }))
@@ -115,7 +115,7 @@ io.on('connection', (socket) => {
                                 }
                             }
 
-                            socket.broadcast.emit('chat message', getTouristMessage);
+                            io.emit('chat message', getTouristMessage);
                             socket.emit('Scan', JSON.stringify({
                                 status: status,
                                 fullname: UserInfo.fullname,
@@ -138,14 +138,14 @@ io.on('connection', (socket) => {
                             } else {
                                 updateMessage = statusMessageSuccess + updateTouristStatusQuery;
                             }
-                            socket.broadcast.emit('chat message', updateMessage);
+                            io.emit('chat message', updateMessage);
                         })
 
 
                     }
                 }
             }
-            socket.broadcast.emit('chat message', message)
+            io.emit('chat message', message)
 
         })
     });
@@ -217,7 +217,7 @@ io.on('connection', (socket) => {
             }
 
             socket.emit('Web Login', JSON.stringify(loggedUser))
-            socket.broadcast.emit('chat message', message);
+            io.emit('chat message', message);
 
         })
     })
@@ -226,8 +226,8 @@ io.on('connection', (socket) => {
     socket.on('Mobile Sent GPS', (params) => {
         var clientParams = JSON.parse(params);
 
-        socket.broadcast.emit('chat message', 'gps has sent')
-        socket.broadcast.emit('chat message', 'latitude is: ' + clientParams.lat + ' and longitude is: ' + clientParams.long)
+        io.emit('chat message', 'gps has sent')
+        io.emit('chat message', 'latitude is: ' + clientParams.lat + ' and longitude is: ' + clientParams.long)
         var updateGpsQuery = "update [user] set latitude= " + clientParams.lat + ", longitude=" + clientParams.long +
             " where [user].id=" + clientParams.userID;
 
@@ -238,7 +238,7 @@ io.on('connection', (socket) => {
             } else {
                 message = statusMessageSuccess + updateGpsQuery;
             }
-            socket.broadcast.emit('chat message', message);
+            io.emit('chat message', message);
         })
     })
 
@@ -269,7 +269,7 @@ io.on('connection', (socket) => {
                 }
             }
 
-            socket.broadcast.emit('chat message', message);
+            io.emit('chat message', message);
             socket.emit('Web Get GPS', JSON.stringify(gpsResult));
         })
     });
@@ -340,7 +340,7 @@ io.on('connection', (socket) => {
             }
 
             socket.emit('Mobile Login', JSON.stringify(loggedUser))
-            socket.broadcast.emit('chat message', message);
+            io.emit('chat message', message);
         })
 
 
@@ -368,7 +368,7 @@ io.on('connection', (socket) => {
                 }
             }
             socket.emit('Get Visit Place Location', JSON.stringify(data))
-            socket.broadcast.emit('chat message', message)
+            io.emit('chat message', message)
         })
     })
 
@@ -389,7 +389,7 @@ io.on('connection', (socket) => {
                 status: status
 
             }))
-            socket.broadcast.emit('chat message', message)
+            io.emit('chat message', message)
         })
 
     })
@@ -412,7 +412,7 @@ io.on('connection', (socket) => {
             }
 
             socket.emit('Get Place List', JSON.stringify(data));
-            socket.broadcast.emit('chat message', message);
+            io.emit('chat message', message);
         })
 
     })
@@ -434,7 +434,7 @@ io.on('connection', (socket) => {
             socket.emit('Update Place', JSON.stringify({
                 status: status
             }))
-            socket.broadcast.emit('chat message', message)
+            io.emit('chat message', message)
         })
     })
 
@@ -455,7 +455,7 @@ io.on('connection', (socket) => {
             socket.emit('Remove Place', JSON.stringify({
                 status: status
             }))
-            socket.broadcast.emit('chat message', message)
+            io.emit('chat message', message)
         })
     })
 
@@ -476,7 +476,7 @@ io.on('connection', (socket) => {
             socket.emit('Reactive Place', JSON.stringify({
                 status: status
             }))
-            socket.broadcast.emit('chat message', message)
+            io.emit('chat message', message)
         })
     })
 
@@ -504,7 +504,7 @@ io.on('connection', (socket) => {
             } else {
                 message = statusMessageSuccess + addPickUpLocationQuery;
             }
-            socket.broadcast.emit('chat message', message)
+            io.emit('chat message', message)
         })
         var notification = ""
         var locationDetail = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + clientParams.lat + ',' + clientParams.long;
@@ -558,7 +558,7 @@ io.on('connection', (socket) => {
 
             }
 
-            socket.broadcast.emit('chat message', message);
+            io.emit('chat message', message);
             message = "";
             if (typeof notificationContent !== "undefined") {
                 var insertNotificationQuery = "INSERT into Notification (Message,Type,SenderID,ReceiverID) \n VALUES " +
@@ -570,7 +570,7 @@ io.on('connection', (socket) => {
                     } else {
                         message = statusMessageSuccess + insertNotificationQuery;
                     }
-                    socket.broadcast.emit('chat message', message);
+                    io.emit('chat message', message);
                     socket.broadcast.emit('Mobile Receiver Pick Up Notification', JSON.stringify({
                         tourInstanceID: clientParams.tourInstanceID,
                         coachID: clientParams.coachID,
@@ -645,7 +645,7 @@ io.on('connection', (socket) => {
 
                 }
             }
-            socket.broadcast.emit('chat message', message)
+            io.emit('chat message', message)
             socket.emit('Mobile Get Schedule', JSON.stringify(data));
         })
     })
@@ -669,7 +669,7 @@ io.on('connection', (socket) => {
                 status: status
 
             }))
-            socket.broadcast.emit('chat message', message)
+            io.emit('chat message', message)
         })
 
     })
@@ -694,7 +694,7 @@ io.on('connection', (socket) => {
             socket.emit('Update Visit Place', JSON.stringify({
                 status: status
             }))
-            socket.broadcast.emit('chat message', message)
+            io.emit('chat message', message)
         })
     })
 
@@ -715,7 +715,7 @@ io.on('connection', (socket) => {
             socket.emit('Remove Visit Place', JSON.stringify({
                 status: status
             }))
-            socket.broadcast.emit('chat message', message)
+            io.emit('chat message', message)
         })
     })
 
@@ -736,7 +736,7 @@ io.on('connection', (socket) => {
             socket.emit('Reactive Visit Place', JSON.stringify({
                 status: status
             }))
-            socket.broadcast.emit('chat message', message)
+            io.emit('chat message', message)
         })
     })
 
@@ -762,7 +762,7 @@ io.on('connection', (socket) => {
             socket.emit('Get Visit Place List', JSON.stringify({
                 visitingPlaceList: visitingPlaceList
             }));
-            socket.broadcast.emit('chat message', message);
+            io.emit('chat message', message);
         })
 
     })
@@ -796,7 +796,7 @@ io.on('connection', (socket) => {
                     data.userLocationList = result.recordset;
                 }
             }
-            socket.broadcast.emit('chat message', message);
+            io.emit('chat message', message);
             socket.emit('Mobile Get Others Location', JSON.stringify(data));
         })
     })
@@ -822,7 +822,7 @@ io.on('connection', (socket) => {
                         userList = result.recordset;
                     }
                 }
-                socket.broadcast.emit('chat message', queryMEssage);
+                io.emit('chat message', queryMEssage);
                 socket.broadcast.emit('Mobile Gather Tourist', JSON.stringify({
                     tourInstanceID: clientParams.tourInstanceID,
                     coachID: clientParams.coachID,
@@ -905,7 +905,7 @@ io.on('connection', (socket) => {
                 loggedUser.status = status;
                 loggedUser.logStatus = logStatus;
             }
-            socket.broadcast.emit('chat message', message)
+            io.emit('chat message', message)
             socket.emit('Mobile Login By Card', JSON.stringify(loggedUser));
         })
     })
@@ -924,7 +924,7 @@ io.on('connection', (socket) => {
                     visitingPlaceTypeList = result.recordset;
                 }
             }
-            socket.broadcast.emit('chat message', message);
+            io.emit('chat message', message);
             socket.emit('Get Visit Place Type List', JSON.stringify({
                 visitingPlaceTypeList: visitingPlaceTypeList
             }))
@@ -945,7 +945,7 @@ io.on('connection', (socket) => {
                 message = statusMessageSuccess + createVisitPlaceTypeQuery;
                 status = statusSuccess
             }
-            socket.broadcast.emit('chat message', message);
+            io.emit('chat message', message);
             socket.emit('Create Visit Place Type', JSON.stringify({
                 status: status
             }))
@@ -967,7 +967,7 @@ io.on('connection', (socket) => {
                 message = statusMessageSuccess + updateVisitPlaceTypeQuery;
                 status = statusSuccess;
             }
-            socket.broadcast.emit('chat message', message);
+            io.emit('chat message', message);
             socket.emit('Update Visit Place Type', JSON.stringify({
                 status: status
             }))
@@ -988,7 +988,7 @@ io.on('connection', (socket) => {
                 message = statusMessageSuccess + removeVisitPlaceTypeQuery;
                 status = statusSuccess;
             }
-            socket.broadcast.emit('chat message', message);
+            io.emit('chat message', message);
             socket.emit('Remove Visit Place Type', JSON.stringify({
                 status: status
             }))
@@ -1009,7 +1009,7 @@ io.on('connection', (socket) => {
                 message = statusMessageSuccess + reactiveVisitPlaceTypeQuery;
                 status = statusSuccess;
             }
-            socket.broadcast.emit('chat message', message);
+            io.emit('chat message', message);
             socket.emit('Reactive Visit Place Type', JSON.stringify({
                 status: status
             }))
@@ -1056,7 +1056,7 @@ io.on('connection', (socket) => {
                 } else {
                     message = statusMessageSuccess + updateScheduleQuery
                 }
-                socket.broadcast.emit('chat message', message)
+                io.emit('chat message', message)
             })
         }, this);
 
@@ -1072,10 +1072,10 @@ io.on('connection', (socket) => {
         connection.request().query(getTourguideIdQuery, (err, result) => {
             if (err) {
                 message = statusMessageError + getTourguideIdQuery;
-                socket.broadcast.emit('chat message', message)
+                io.emit('chat message', message)
             } else {
                 message = statusMessageSuccess + getTourguideIdQuery;
-                socket.broadcast.emit('chat message', message)
+                io.emit('chat message', message)
                 message = "";
                 if (typeof result !== "undefined" && result.recordset.length > 0) {
                     var getPickUpQuery = "select TOP 1 * \n" +
@@ -1104,7 +1104,7 @@ io.on('connection', (socket) => {
                                 }
                             }
                         }
-                        socket.broadcast.emit('chat message', message);
+                        io.emit('chat message', message);
                         socket.emit('Driver Get Next Pick Up', JSON.stringify(pickUpInformation))
                     })
                 }
