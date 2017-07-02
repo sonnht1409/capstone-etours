@@ -106,6 +106,7 @@
                 return false;
             });
             socket.on('log message', function(msg) {
+                console.log(msg)
                 $('#messages').append($('<li>').text(msg));
                 window.scrollTo(0, document.body.scrollHeight);
             });
