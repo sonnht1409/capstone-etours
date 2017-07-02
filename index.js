@@ -30,9 +30,7 @@ connection.connect(err => {
         console.log("have error");
         console.log(err)
     } else {
-        io.on('connection', (socket) => {
-            io.emit('log message', 'database connected');
-        })
+
 
     }
 })
