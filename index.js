@@ -15,7 +15,7 @@ const sql = require('mssql');
 const connection = new sql.ConnectionPool({
     user: 'etours',
     password: "$Son01627335534",
-    server: "etours.database.windows.net",
+    server: "etours1.database.windows.net",
     driver: 'tedious',
     database: 'etours',
     options: {
