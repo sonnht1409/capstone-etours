@@ -18,7 +18,7 @@ Come with event name as String and the following is parameter(s) type.
 Ex: 
 
       {      
-         event-name: 'chat message',         
+         event-name: 'log message',         
          param: 
             {   
                message: String    
