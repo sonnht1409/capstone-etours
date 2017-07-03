@@ -50,10 +50,11 @@ io.on('connection', (socket) => {
 
         var tourInstanceID = clientParams.tourInstanceID;
         var coachID = clientParams.coachID;
-        var getTouristListQuery = 'select [user].id as UserID,UI.Fullname, UCSN.SeatNumber, TSTT.Status \n ' +
+        var getTouristListQuery = 'select [user].id as UserID,UI.Fullname, UCSN.SeatNumber, TSTT.Status,Card.Code as CardCode \n ' +
             'from [user] inner join User_Coach_SeatNumber as UCSN on [user].id = UCSN.UserID \n ' +
             'inner join UserInfo as UI on [user].ID = UI.UserID \n ' +
             'inner join TouristStatus as TSTT on [user].TouristStatus = TSTT.ID \n' +
+            'inner join Card on Card.UserID = [user].id' +
             'where [user].RoleID = 3 and [user].TourInstanceID = ' + tourInstanceID +
             ' and UCSN.CoachID= ' + coachID + ' and [user].isActive = 1';
 
