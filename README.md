@@ -335,6 +335,7 @@ Ex:
                                       Fullname: String, 
                                       SeatNumber: String, 
                                       TouristStatus: int (1 on, 2 off )
+                                      CardCode: String
                                     }] 
             }
       }
