@@ -1179,6 +1179,7 @@ io.on('connection', (socket) => {
             "where ReceiverID=0  \n" +
             "and Time>='" + dateStartTime + "' and Time<='" + dateEndTime + "' \n" +
             "order by Time DESC";
+        console.log(getNotificationQuery)
         var message = "";
         var notificationList = [];
         connection.request().query(getNotificationQuery, (err, result) => {
@@ -1190,7 +1191,7 @@ io.on('connection', (socket) => {
                     notificationList = result.recordset;
                 }
             }
-            console.log(notificationList)
+
             io.emit('log message', message);
             socket.emit('Web Get Notifications', JSON.stringify({
                 notificationList: notificationList
