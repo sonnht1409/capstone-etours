@@ -1160,7 +1160,7 @@ io.on('connection', (socket) => {
             }
             console.log(notificationList)
             io.emit('log message', message);
-            socket.emit('Mobile Get Notification', JSON.stringify({
+            socket.emit('Mobile Get Notifications', JSON.stringify({
                 notificationList: notificationList
             }))
         })
