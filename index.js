@@ -1175,7 +1175,14 @@ io.on('connection', (socket) => {
         date.setHours(hour)
         var dateStartTime = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " 00:00:00.000";
         var dateEndTime = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " 23:59:59.999";
-        var getNotificationQuery = "select message, time from Notification \n" +
+        var getNotificationQuery = "select message, time, fullname as sender, licensePlate, Tour.Name as tourName  \n" +
+            "from Notification \n" +
+            "inner join [user] on SenderID = [user].ID \n" +
+            "inner join UserInfo on SenderID=UserInfo.UserID \n" +
+            "inner join User_Coach_SeatNumber as UCSN on UCSN.UserID =SenderID \n" +
+            "inner join Coach on UCSN.CoachID = Coach.ID \n" +
+            "inner join TourInstance on [user].TourInstanceID=TourInstance.ID \n" +
+            "inner join Tour on TourInstance.TourID = Tour.ID \n" +
             "where ReceiverID=0  \n" +
             "and Time>='" + dateStartTime + "' and Time<='" + dateEndTime + "' \n" +
             "order by Time DESC";
