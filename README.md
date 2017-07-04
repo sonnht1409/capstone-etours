@@ -183,6 +183,25 @@ Ex:
               
             }
       }
+      
+      {
+       event name: 'Mobile Send Request'
+       params:
+            {
+                  message: string,
+                  type: int (2= đổi địa điểm, 3= thông báo sự cố),
+                  userID: int
+            }
+      }
+      
+      {
+       event name: 'Mobile Get Notifications' (hàm nhận lại những request mình đã gởi)
+       params:
+            {
+                 userID: int 
+            }
+      }
+      
 ## CRUD
 
      {
@@ -518,6 +537,17 @@ Ex:
               date: int
               month: int
               year: int
+            }
+      }
+      
+      {
+       event name: 'Mobile Get Notifications'
+       data:
+            {
+             notificationList: array [{
+                                          message: string
+                                          time: string (chưa +7 UTC)
+                                          }]
             }
       }
       
