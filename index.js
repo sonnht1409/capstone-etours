@@ -1158,6 +1158,7 @@ io.on('connection', (socket) => {
                     notificationList = result.recordset;
                 }
             }
+            console.log(notificationList)
             io.emit('log message', message);
             socket.emit('Mobile Get Notification', JSON.stringify({
                 notificationList: notificationList
