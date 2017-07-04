@@ -41,6 +41,7 @@ app.get('/', (req, res) => {
 
 io.on('connection', (socket) => {
     socket.on('log message', (msg) => {
+        console.log(msg)
         io.emit('log message', msg);
     });
 
@@ -1110,6 +1111,8 @@ io.on('connection', (socket) => {
             }
         })
     })
+
+
 });
 
 
