@@ -1133,6 +1133,7 @@ io.on('connection', (socket) => {
             }
             io.emit('log message', message);
             // push notification
+            socket.emit('Web Trigger Notification', JSON.stringify({}))
         })
     })
 
