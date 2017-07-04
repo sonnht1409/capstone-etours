@@ -1171,7 +1171,7 @@ io.on('connection', (socket) => {
                     }, this);
                 }
             }
-
+            console.log(notificationList)
             io.emit('log message', message);
             socket.emit('Mobile Get Notifications', JSON.stringify({
                 notificationList: notificationList
