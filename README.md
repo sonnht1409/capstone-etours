@@ -567,6 +567,10 @@ Ex:
              notificationList: array [{
                                           message: string
                                           time: string (chưa +7 UTC)
+                                          senderID: int
+                                          sender: string
+                                          licensePlate: string
+                                          tourName: string
                                           }]
             }
       }
