@@ -1112,6 +1112,61 @@ io.on('connection', (socket) => {
         })
     })
 
+    socket.on('Mobile Send Request', (params) => {
+        var clientParams = JSON.parse(params);
+        var header = "";
+        if (clientParams.type == 2) {
+            header = "Yêu cầu thay đổi lộ trình! \n"
+        }
+        if (clientParams.type == 3) {
+            header = "Thông báo sự cố! \n"
+        }
+        var insertNotificationQuery = "INSERT INTO Notification (Message,Type,SenderID,ReceiverID) \n" +
+            "VALUES(N'" + header + clientParams.message + "'," + clientParams.type + "," + clientParams.userID + ",0)";
+        var message = "";
+        connection.request().query(insertNotificationQuery, (err, result) => {
+            if (err) {
+                message = statusMessageError + insertNotificationQuery;
+            } else {
+                message = statusMessageSuccess + insertNotificationQuery;
+
+            }
+            io.emit('log message', message);
+            // push notification
+        })
+    })
+
+    socket.on('Mobile Get Notifications', (params) => {
+        var clientParams = JSON.parse(params);
+        var date = new Date();
+        var hour = date.getHours() + 7;
+        date.setHours(hour)
+        var dateStartTime = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " 00:00:00.000";
+        var dateEndTime = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " 23:59:59.999";
+        var getNotificationQuery = "select message, time from Notification \n" +
+            "where senderID=" + clientParams.userID + " \n" +
+            "and Time>='" + dateStartTime + "' and Time<='" + dateEndTime + "' \n" +
+            "order by Time DESC";
+        var message = "";
+        var notificationList = [];
+        connection.request().query(getNotificationQuery, (err, result) => {
+            if (err) {
+                message = statusMessageError + getNotificationQuery
+            } else {
+                message = statusMessageSuccess + getNotificationQuery
+                if (typeof result != "undefined" && result.recordset.length > 0) {
+                    notificationList = result.recordset;
+                }
+            }
+            io.emit('log message', message);
+            socket.emit('Mobile Get Notification', JSON.stringify({
+                notificationList: notificationList
+            }))
+        })
+
+
+    })
+
 
 });
 

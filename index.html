@@ -101,12 +101,20 @@
                 }]
                 socket.emit('Reschedule Time', JSON.stringify({
                     scheduleList: scheduleList
+                }))
+                socket.emit('Mobile Send Request', JSON.stringify({
+                    message: 'Tắc đường',
+                    type: 3,
+                    userID: 3
+                }))
+                socket.emit('Mobile Get Notifications', JSON.stringify({
+                    userID: 3
                 }))*/
                 $('#m').val('');
                 return false;
             });
             socket.on('log message', function(msg) {
-                console.log(msg)
+
                 $('#messages').append($('<li>').text(msg));
                 window.scrollTo(0, document.body.scrollHeight);
             });
@@ -139,6 +147,9 @@
                 console.log(JSON.parse(data))
             }) 
             socket.on('Mobile Login By Card', function(data) {
+                console.log(JSON.parse(data));
+            })
+            socket.on('Mobile Get Notifications', (data) => {
                 console.log(JSON.parse(data));
             })*/
         });
