@@ -1168,6 +1168,36 @@ io.on('connection', (socket) => {
 
     })
 
+    socket.on('Web Get Notifications', (params) => {
+        var clientParams = JSON.parse(params);
+        var date = new Date();
+        var hour = date.getHours() + 7;
+        date.setHours(hour)
+        var dateStartTime = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " 00:00:00.000";
+        var dateEndTime = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " 23:59:59.999";
+        var getNotificationQuery = "select message, time from Notification \n" +
+            "where ReceiverID=0  \n" +
+            "and Time>='" + dateStartTime + "' and Time<='" + dateEndTime + "' \n" +
+            "order by Time DESC";
+        var message = "";
+        var notificationList = [];
+        connection.request().query(getNotificationQuery, (err, result) => {
+            if (err) {
+                message = statusMessageError + getNotificationQuery
+            } else {
+                message = statusMessageSuccess + getNotificationQuery
+                if (typeof result != "undefined" && result.recordset.length > 0) {
+                    notificationList = result.recordset;
+                }
+            }
+            console.log(notificationList)
+            io.emit('log message', message);
+            socket.emit('Web Get Notifications', JSON.stringify({
+                notificationList: notificationList
+            }))
+        })
+    })
+
 
 });
 
