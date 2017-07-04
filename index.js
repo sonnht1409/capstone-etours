@@ -1175,7 +1175,7 @@ io.on('connection', (socket) => {
         date.setHours(hour)
         var dateStartTime = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " 00:00:00.000";
         var dateEndTime = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " 23:59:59.999";
-        var getNotificationQuery = "select message, time, fullname as sender, licensePlate, Tour.Name as tourName  \n" +
+        var getNotificationQuery = "select message, time, senderID,fullname as sender, licensePlate, Tour.Name as tourName  \n" +
             "from Notification \n" +
             "inner join [user] on SenderID = [user].ID \n" +
             "inner join UserInfo on SenderID=UserInfo.UserID \n" +
