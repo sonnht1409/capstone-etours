@@ -202,6 +202,15 @@ Ex:
             }
       }
       
+      {
+       event name: 'Web Get Notifications' 
+       params:
+            {
+                 no need
+            }
+      }
+      
+      
 ## CRUD
 
      {
@@ -550,6 +559,19 @@ Ex:
                                           }]
             }
       }
+      
+      {
+       event name: 'Web Get Notifications'
+       data:
+            {
+             notificationList: array [{
+                                          message: string
+                                          time: string (chưa +7 UTC)
+                                          }]
+            }
+      }
+      
+      
       
 ## CRUD
       {
