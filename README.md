@@ -575,6 +575,14 @@ Ex:
             }
       }
       
+      {
+       event name: 'Web Trigger Notification'
+       data: 
+            {
+              no data, after received this event, trigger notification & call 'Web Get Notifications' event
+            }
+      }
+      
       
       
 ## CRUD
