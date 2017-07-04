@@ -1157,9 +1157,21 @@ io.on('connection', (socket) => {
                 message = statusMessageSuccess + getNotificationQuery
                 if (typeof result != "undefined" && result.recordset.length > 0) {
                     notificationList = result.recordset;
+                    notificationList.forEach(function(element) {
+                        var date = new Date(element.time.toString())
+
+                        element.hour = date.getHours();
+                        element.min = date.getMinutes();
+                        element.year = date.getFullYear();
+                        element.month = date.getMonth() + 1;
+                        element.date = date.getDate();
+                        var messageArray = element.message.split("!")
+                        element.header = messageArray[0];
+                        element.content = messageArray[1];
+                    }, this);
                 }
             }
-            console.log(notificationList)
+
             io.emit('log message', message);
             socket.emit('Mobile Get Notifications', JSON.stringify({
                 notificationList: notificationList
