@@ -1194,7 +1194,7 @@ io.on('connection', (socket) => {
         if (clientParams.getAll == false) {
             queryPrefix += "top 1 "
         }
-        var getNotificationQuery = "message, time, senderID,fullname as sender, licensePlate, Tour.Name as tourName  \n" +
+        var getNotificationQuery = queryPrefix + "message, time, senderID,fullname as sender, licensePlate, Tour.Name as tourName  \n" +
             "from Notification \n" +
             "inner join [user] on SenderID = [user].ID \n" +
             "inner join UserInfo on SenderID=UserInfo.UserID \n" +
