@@ -206,7 +206,7 @@ Ex:
        event name: 'Web Get Notifications' 
        params:
             {
-                 no need
+                 getAll: boolean (true = get all notification, false = get newest)
             }
       }
       
@@ -587,7 +587,7 @@ Ex:
        event name: 'Web Trigger Notification'
        data: 
             {
-              no data, after received this event, trigger notification & call 'Web Get Notifications' event
+              no data, after received this event, call socket.emit('Web Get Notification') event with param getAll = false
             }
       }
       
