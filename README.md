@@ -476,6 +476,7 @@ Ex:
             {
               array [{
                      tourTimeScheduleList: array[{
+                              
                               TourInstanceDetailId: int
                               TourTime: string
                               VisitPlaceName: string
@@ -485,7 +486,7 @@ Ex:
                               Activity: string
                               Latitude: float
                               Longitude: float
-                         }]
+                         }]mo
                   }]
             }
       }
@@ -556,6 +557,13 @@ Ex:
              notificationList: array [{
                                           message: string
                                           time: string (chưa +7 UTC)
+                                          hour: int
+                                          min: int
+                                          year: int
+                                          month: int 
+                                          date: int
+                                          header: string
+                                          content: string
                                           }]
             }
       }
