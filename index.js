@@ -1147,6 +1147,7 @@ io.on('connection', (socket) => {
         var getNotificationQuery = "select message, time from Notification \n" +
             "where senderID=" + clientParams.userID + " \n" +
             "and Time>='" + dateStartTime + "' and Time<='" + dateEndTime + "' \n" +
+            "and Type=2 or Type=3 \n" +
             "order by Time DESC";
         var message = "";
         var notificationList = [];
@@ -1160,7 +1161,7 @@ io.on('connection', (socket) => {
                     notificationList.forEach(function(element) {
                         var date = new Date(element.time.toString())
 
-                        element.hour = date.getHours();
+                        element.hour = date.getHours() + 7; //off set to UTC +07
                         element.min = date.getMinutes();
                         element.year = date.getFullYear();
                         element.month = date.getMonth() + 1;
@@ -1198,6 +1199,7 @@ io.on('connection', (socket) => {
             "inner join Tour on TourInstance.TourID = Tour.ID \n" +
             "where ReceiverID=0  \n" +
             "and Time>='" + dateStartTime + "' and Time<='" + dateEndTime + "' \n" +
+            "and Type=2 or Type=3 \n" +
             "order by Time DESC";
         console.log(getNotificationQuery)
         var message = "";
