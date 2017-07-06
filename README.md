@@ -203,10 +203,26 @@ Ex:
       }
       
       {
+       event name: 'Mobile Get Received Notifications' 
+       params:
+            {
+                 userID: int 
+            }
+      }
+      
+      {
        event name: 'Web Get Notifications' 
        params:
             {
                  getAll: boolean (true = get all notification, false = get newest)
+            }
+      }
+      
+      {
+       event name: 'Read Notification' (both web and mobile use it
+       params:
+            {
+                 notificationID: int
             }
       }
       
@@ -555,7 +571,7 @@ Ex:
        data:
             {
              notificationList: array [{
-                                          NotificationID
+                                          notificationID: int
                                           message: string
                                           time: string (chưa +7 UTC)
                                           hour: int
@@ -565,6 +581,7 @@ Ex:
                                           date: int
                                           header: string
                                           content: string
+                                          isRead: bit
                                           }]
             }
       }
@@ -574,13 +591,14 @@ Ex:
        data:
             {
              notificationList: array [{
-                                          NotificationID
+                                          notificationID: int
                                           message: string
                                           time: string (chưa +7 UTC)
                                           senderID: int
                                           sender: string
                                           licensePlate: string
                                           tourName: string
+                                          isRead: bit
                                           }]
             }
       }
@@ -594,6 +612,23 @@ Ex:
       }
       
       
+       event name: 'Mobile Get Received Notifications' 
+       data:
+            {
+             notificationList: array [{
+                                          notificationID: int
+                                          message: string
+                                          messageType: string
+                                          time: string (chưa +7 UTC)
+                                          senderID: int
+                                          senderName: string
+                                          receiverID:int
+                                          receiverName: string                                         
+                                          isRead: bit
+                                          }]
+            }
+      }
+
       
 ## CRUD
       {
