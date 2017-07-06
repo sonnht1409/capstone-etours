@@ -1147,7 +1147,7 @@ io.on('connection', (socket) => {
         var getNotificationQuery = "select top 5 ID as NotificationID,message, time from Notification \n" +
             "where senderID=" + clientParams.userID + " \n" +
             "and Time>='" + dateStartTime + "' and Time<='" + dateEndTime + "' \n" +
-            "and Type=2 or Type=3 and IsRead=0 \n" +
+            "and Type=2 or Type=3 \n" +
             "order by Time DESC";
         var message = "";
         var notificationList = [];
@@ -1190,11 +1190,7 @@ io.on('connection', (socket) => {
         date.setHours(hour)
         var dateStartTime = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " 00:00:00.000";
         var dateEndTime = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " 23:59:59.999";
-        var queryPrefix = "select ";
-        if (clientParams.getAll == false) {
-            queryPrefix += "top 1 "
-        }
-        var getNotificationQuery = queryPrefix + "Notification.ID as NotificationID,message, time, senderID,fullname as sender, licensePlate, Tour.Name as tourName  \n" +
+        var getNotificationQuery = "select Notification.ID as NotificationID,message, time, senderID,fullname as sender, licensePlate, Tour.Name as tourName  \n" +
             "from Notification \n" +
             "inner join [user] on SenderID = [user].ID \n" +
             "inner join UserInfo on SenderID=UserInfo.UserID \n" +
@@ -1204,8 +1200,11 @@ io.on('connection', (socket) => {
             "inner join Tour on TourInstance.TourID = Tour.ID \n" +
             "where ReceiverID=0  \n" +
             "and Time>='" + dateStartTime + "' and Time<='" + dateEndTime + "' \n" +
-            "and Type=2 or Type=3 and IsRead=0 \n" +
-            "order by Time DESC";
+            "and Type=2 or Type=3 \n";
+        if (clientParams.getAll == false) {
+            getNotificationQuery += "and IsRead=0 \n"
+        }
+        getNotificationQuery += "order by Time DESC";
 
         var message = "";
         var notificationList = [];
