@@ -1144,7 +1144,7 @@ io.on('connection', (socket) => {
         date.setHours(hour)
         var dateStartTime = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " 00:00:00.000";
         var dateEndTime = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " 23:59:59.999";
-        var getNotificationQuery = "select top 5 ID as NotificationID,message, time from Notification \n" +
+        var getNotificationQuery = "select top 5 ID as notificationID,message, time, isRead from Notification \n" +
             "where senderID=" + clientParams.userID + " \n" +
             "and Time>='" + dateStartTime + "' and Time<='" + dateEndTime + "' \n" +
             "and Type=2 or Type=3 \n" +
@@ -1190,7 +1190,7 @@ io.on('connection', (socket) => {
         date.setHours(hour)
         var dateStartTime = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " 00:00:00.000";
         var dateEndTime = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " 23:59:59.999";
-        var getNotificationQuery = "select Notification.ID as NotificationID,message, time, senderID,fullname as sender, licensePlate, Tour.Name as tourName  \n" +
+        var getNotificationQuery = "select Notification.ID as notificationID,message, time, senderID,fullname as sender, licensePlate, isRead,Tour.Name as tourName  \n" +
             "from Notification \n" +
             "inner join [user] on SenderID = [user].ID \n" +
             "inner join UserInfo on SenderID=UserInfo.UserID \n" +
@@ -1225,7 +1225,57 @@ io.on('connection', (socket) => {
         })
     })
 
+    socket.on('Mobile Get Received Notifications', (params) => {
+        var clientParams = JSON.parse(params);
+        var date = new Date();
+        var hour = date.getHours() + 7;
+        date.setHours(hour)
+        var dateStartTime = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " 00:00:00.000";
+        var dateEndTime = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " 23:59:59.999";
+        var getNotificationQuery = "select Notification.ID as notificationID,message,NotificationType.name as messageType, time, senderID, \n" +
+            "UserInfo.Fullname as senderName, receiverID, UI.Fullname as receiverName,isRead \n" +
+            "from Notification \n" +
+            "inner join UserInfo on SenderID = UserInfo.UserID \n" +
+            "inner join UserInfo as UI on ReceiverID = UI.UserID \n" +
+            "inner join NotificationType on Type=NotificationType.ID \n" +
+            "where ReceiverID=" + clientParams.userID + " \n" +
+            "and Time>='" + dateStartTime + "' and Time<='" + dateEndTime + "' \n"
+        getNotificationQuery += "order by Time DESC";
 
+        var message = "";
+        var notificationList = [];
+        connection.request().query(getNotificationQuery, (err, result) => {
+            if (err) {
+                message = statusMessageError + getNotificationQuery
+            } else {
+                message = statusMessageSuccess + getNotificationQuery
+                if (typeof result != "undefined" && result.recordset.length > 0) {
+                    notificationList = result.recordset;
+                }
+            }
+
+            io.emit('log message', message);
+            socket.emit('Mobile Get Received Notifications', JSON.stringify({
+                notificationList: notificationList
+            }))
+        })
+    })
+
+    socket.on('Read Notification', (params) => {
+        var clientParams = JSON.parse(params);
+        var updateNotificationQuery = "UPDATE Notification set IsRead=1 \n" +
+            "where ID=" + clientParams.notificationID;
+        var message = "";
+        connection.request().query(updateNotificationQuery, (err, result) => {
+            if (err) {
+                message = statusMessageError + updateNotificationQuery
+            } else {
+                message = statusMessageSuccess + updateNotificationQuery;
+
+            }
+            io.emit('log message', message);
+        })
+    })
 });
 
 
