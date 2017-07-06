@@ -555,6 +555,7 @@ Ex:
        data:
             {
              notificationList: array [{
+                                          NotificationID
                                           message: string
                                           time: string (chưa +7 UTC)
                                           hour: int
@@ -573,6 +574,7 @@ Ex:
        data:
             {
              notificationList: array [{
+                                          NotificationID
                                           message: string
                                           time: string (chưa +7 UTC)
                                           senderID: int
