@@ -1144,7 +1144,7 @@ io.on('connection', (socket) => {
         date.setHours(hour)
         var dateStartTime = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " 00:00:00.000";
         var dateEndTime = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " 23:59:59.999";
-        var getNotificationQuery = "select top 5 ID as notificationID,message, time, isRead from Notification \n" +
+        var getNotificationQuery = "select top 15 ID as notificationID,message, time, isRead from Notification \n" +
             "where senderID=" + clientParams.userID + " \n" +
             "and Time>='" + dateStartTime + "' and Time<='" + dateEndTime + "' \n" +
             "and Type=2 or Type=3 \n" +
