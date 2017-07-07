@@ -1166,9 +1166,10 @@ io.on('connection', (socket) => {
                         element.year = date.getFullYear();
                         element.month = date.getMonth() + 1;
                         element.date = date.getDate();
-                        var messageArray = element.message.split("!")
+                        var messageArray = element.message.split("! \n")
                         element.header = messageArray[0];
                         element.content = messageArray[1];
+
                     }, this);
                 }
             }
