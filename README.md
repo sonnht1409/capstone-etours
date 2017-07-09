@@ -420,6 +420,7 @@ Ex:
                RoleID: int,
                TourInstanceID: int,
                CoachID: int,
+               LicensePlate,
                UserActive: boolean,
                RoleActive: boolean,
                status: String,
