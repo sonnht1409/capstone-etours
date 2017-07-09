@@ -279,12 +279,13 @@ io.on('connection', (socket) => {
         var username = clientParams.username;
         var password = clientParams.password;
         var authenicateQuery =
-            "select fullname, CoachID, TourInstanceID, [user].id as UserID, role.ID as RoleID, role" +
+            "select fullname, CoachID, Coach.LicensePlate, [user].TourInstanceID, [user].id as UserID, role.ID as RoleID, role" +
             ", [user].IsActive as UserActive, role.IsActive as RoleActive \n " +
             "from [user] \n " +
             "inner join UserInfo on [user].ID = UserInfo.UserID \n " +
             "inner join Role on [user].RoleID = Role.ID \n " +
             "inner join User_Coach_SeatNumber as UCSN on [user].id = UCSN.UserID \n" +
+            "inner join Coach on UCSN.CoachID=Coach.ID \n" +
             "where username ='" + username + "' and password='" + password + "'";
         var message = "";
         var status = "";
