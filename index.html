@@ -109,6 +109,10 @@
                 }))
                 socket.emit('Mobile Get Notifications', JSON.stringify({
                     userID: 3
+                }))
+                socket.emit('Web Login', JSON.stringify({
+                    username: "admin1",
+                    password: "40bd001563085fc35165329ea1ff5c5ecbdbbeef"
                 }))*/
                 $('#m').val('');
                 return false;
@@ -150,6 +154,10 @@
                 console.log(JSON.parse(data));
             })
             socket.on('Mobile Get Notifications', (data) => {
+                console.log(JSON.parse(data));
+            })
+
+            socket.on('Web Login', (data) => {
                 console.log(JSON.parse(data));
             })*/
         });
