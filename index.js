@@ -151,7 +151,7 @@
 
      socket.on('Web Login', (params) => {
          var clientParams = JSON.parse(params);
-         var User = require("./entities/User")
+         var User = require("./entities/user")
          var UserDAO = require("./dao/UserDAO")
          var user = new User();
          user.username = clientParams.username.toString();
