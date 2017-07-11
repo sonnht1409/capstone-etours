@@ -22,8 +22,8 @@
  const statusMessageSuccess = "SUCCESS! ";
  const statusFailed = "FAILED";
  const statusSuccess = "SUCCESS"
- var User = require(appDir + "/entities/User")
- var UserDAO = require(appDir + "/dao/UserDAO")
+ var User = require("./entities/User")
+ var UserDAO = require("./dao/UserDAO")
 
  connection.connect(err => {
      if (err) {
