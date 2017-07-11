@@ -6,7 +6,7 @@
  var port = 8080;
  var path = require('path');
  var appDir = path.dirname(require.main.filename);
-
+ console.log(appDir)
  const sql = require('mssql');
  const connection = new sql.ConnectionPool({
      user: 'etours',
@@ -22,8 +22,8 @@
  const statusMessageSuccess = "SUCCESS! ";
  const statusFailed = "FAILED";
  const statusSuccess = "SUCCESS"
- var User = require('./entities/User')
- var UserDAO = require('./dao/UserDAO')
+ var User = require(appDir + "/entities/User")
+ var UserDAO = require(appDir + "/dao/UserDAO")
 
  connection.connect(err => {
      if (err) {
@@ -1251,6 +1251,10 @@
      socket.on('Web Get Scan History', (params) => {
          var clientParams = JSON.parse(params);
          var getNotificationHistoryQuery = ""
+     })
+
+     socket.on('Get Coach Company List', (params) => {
+
      })
  });
 
