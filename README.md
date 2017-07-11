@@ -226,7 +226,16 @@ Ex:
             }
       }
       
-      
+      {
+       event name: 'Update Scan History'     
+       params:
+            {
+                 scheduleID: int
+                 tourist: int  (tourist ID)
+                 tourguide: int (tourguide ID)                  
+                 touristStatus: int (1 on, 2 off)
+            }
+      }
 ## CRUD
 
      {
