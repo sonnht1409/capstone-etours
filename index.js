@@ -1233,17 +1233,17 @@
                  message = statusMessageSuccess + insertScanHistoryQuery;
              }
              io.emit('log message', message)
-             var updatTouristStatusQuery = "UPDATE [user] set TouristStatus=" + clientParams.touristStatus + " \n" +
-                 "where [user].id=" + clientParams.tourist;
-             message = "";
-             connection.request().query(updateTouristStatusQuery, (err, result) => {
-                 if (err) {
-                     message = statusMessageError + updateTouristStatusQuery
-                 } else {
-                     message = statusMessageSuccess + updateTouristStatusQuery
-                 }
-                 io.emit('log message', message)
-             })
+                 /* var updatTouristStatusQuery = "UPDATE [user] set TouristStatus=" + clientParams.touristStatus + " \n" +
+                      "where [user].id=" + clientParams.tourist;
+                  message = "";
+                  connection.request().query(updateTouristStatusQuery, (err, result) => {
+                      if (err) {
+                          message = statusMessageError + updateTouristStatusQuery
+                      } else {
+                          message = statusMessageSuccess + updateTouristStatusQuery
+                      }
+                      io.emit('log message', message)
+                  }) */
          })
 
      })
