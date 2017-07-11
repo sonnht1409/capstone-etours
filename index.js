@@ -1256,7 +1256,109 @@
      })
 
      socket.on('Get Coach Company List', (params) => {
+         var clientParams = JSON.parse(params);
+         var getCoachCompanyQuery = "select * from CoachCompany where isActive=" + clientParams.isActive;
+         var message = "";
+         var coachCompanyList = [];
+         connection.request().query(getCoachCompanyQuery, (err, result) => {
+             if (err) {
+                 message = statusMessageError + getCoachCompanyQuery
+             } else {
+                 message = statusMessageSuccess + getCoachCompanyQuery
+                 if (typeof result !== "undefined" && result.recordset.length > 0) {
+                     coachCompanyList = result.recordset;
+                 }
+             }
 
+             io.emit('log message', message);
+             socket.emit('Get Coach Company List', JSON.stringify({
+                 coachCompanyList: coachCompanyList
+             }))
+         })
+     })
+
+     socket.on('Create Coach Company', (params) => {
+         var clientParams = JSON.parse(params);
+         var insertCoachCompanyQuery = "INSERT into CoachCompany (Name,IsActive) \n" +
+             "VALUES (N'" + clientParams.name + "',1)";
+         var message = "";
+         var status = "";
+         connection.request().query(insertCoachCompanyQuery, (err, result) => {
+             if (err) {
+                 message = statusMessageError + insertCoachCompanyQuery;
+                 status = statusFailed
+             } else {
+                 message = statusMessageSuccess + insertCoachCompanyQuery;
+                 status = statusSuccess
+             }
+             io.emit('log message', message)
+             socket.on('Create Coach Company', JSON.stringify({
+                 status: status
+             }))
+         })
+     })
+
+     socket.on('Update Coach Company', (params) => {
+         var clientParams = JSON.parse(params);
+         var updateCoachCompanyQuery = "UPDATE CoachCompany set name=N'" + clientParams.name + "' \n" +
+             "where id=" + clientParams.coachCompanyID;
+         var message = "";
+         var status = "";
+         connection.request().query(updateCoachCompanyQuery, (err, result) => {
+             if (err) {
+                 message = statusMessageError + updateCoachCompanyQuery
+                 status = statusFailed
+             } else {
+                 message = statusMessageSuccess + updateCoachCompanyQuery
+                 status = statusSuccess
+             }
+             io.emit('log message', message)
+             socket.emit('Update Coach Company', JSON.stringify({
+                 status: status
+             }))
+         })
+     })
+
+     socket.on('Remove Coach Company', (params) => {
+         var clientParams = JSON.parse(params);
+         var removeCoachCompanyQuery = "UPDATE CoachCompany set IsActive=0 \n" +
+             "where id=" + clientParams.coachCompanyID;
+         var message = "";
+         var status = "";
+         connection.request().query(removeCoachCompanyQuery, (err, result) => {
+             if (err) {
+                 message = statusMessageError + removeCoachCompanyQuery
+                 status = statusFailed
+             } else {
+                 message = statusMessageSuccess + removeCoachCompanyQuery
+                 status = statusSuccess
+             }
+
+             io.emit('log message', message)
+             socket.emit('Remove Coach Company', JSON.stringify({
+                 status: status
+             }))
+         })
+     })
+
+     socket.on('Reactive Coach Company', (params) => {
+         var clientParams = JSON.parse(params);
+         var reactiveCoachCompanyQuery = "UPDATE CoachCompany set IsACtive=1 \n" +
+             "where id=" + clientParams.coachCompanyID;
+         var message = "";
+         var status = "";
+         connection.request().query(reactiveCoachCompanyQuery, (err, result) => {
+             if (err) {
+                 message = statusMessageError + reactiveCoachCompanyQuery;
+                 status = statusFailed
+             } else {
+                 message = statusMessageSuccess + reactiveCoachCompanyQuery
+             }
+             io.emit('log message', message)
+             socket.emit('Reactive Coach Company', JSON.stringify({
+                 status: status
+             }))
+         })
      })
  });
 

@@ -378,7 +378,47 @@ Ex:
             }
       }
      
-      
+     {
+      event name: 'Get Coach Company List'     
+      params:
+            {
+               isActive: boolean   
+            }
+     }
+
+     {
+      event name: 'Create Coach Company'     
+      params:
+            {
+              name: string    
+            }
+     } 
+
+     {
+      event name: 'Update Coach Company'     
+      params:
+            {
+              name: string
+              coachCompanyID: int
+            }
+     }
+
+     {
+      event name: 'Remove Coach Company'
+      params:
+            {
+              coachCompanyID: int     
+            }     
+     }
+
+     {
+      event name: 'Reactive Coach Company'
+      params:
+            {
+              coachCompanyID: int     
+            }     
+     }
+
 # Server event (send to client)
       {
         event name: 'getTouristList',
@@ -737,7 +777,7 @@ Ex:
       
       {
       event name: 'Create Visit Place Type'
-      params:
+      data:
             {
              status: string     
             }
@@ -745,7 +785,7 @@ Ex:
      
      {
       event name: 'Update Visit Place Type'
-      params:
+      data:
             {
              status: string
             }
@@ -753,7 +793,7 @@ Ex:
      
      {
       event name: 'Remove Visit Place Type'
-      params:
+      data:
             {
              status: string
             }
@@ -761,7 +801,7 @@ Ex:
      
      {
       event name: 'Reactive Visit Place Type'
-      params:
+      data:
             {
              status: string
             }
@@ -769,7 +809,7 @@ Ex:
       
       {
        event name: 'Get Visit Place Type List'
-       params:
+       data:
             {
               visitingPlaceTypeList: array[{    
                                                 ID: int
@@ -777,4 +817,48 @@ Ex:
                                                 IsActive: boolean
                                           }]    
             }
+      }
+
+      {
+       event name: 'Get Coach Company List'
+       data:
+            {
+              coachCompanyList: array[{
+                                          ID: int
+                                          Name: string
+                                          IsActive: boolean
+                                     }]    
+            }
+      }
+
+      {
+       event name: 'Create Coach Company'
+       data:
+            {
+              status: string    
+            }     
+      }
+
+      {
+       event name: 'Update Coach Company'
+       data:
+            {
+              status: string    
+            }     
+      }
+
+      {
+       event name: 'Remove Coach Company'
+       data:
+            {
+              status: string    
+            }     
+      }
+
+      {
+       event name: 'Reactive Coach Company'
+       data:
+            {
+              status: string    
+            }     
       }
