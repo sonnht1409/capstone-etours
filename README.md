@@ -1,5 +1,6 @@
 # API URL
 http://52.187.117.134:8080/
+http://52.163.63.174:8080/
 
 # Tool Test Socket event 
 http://amritb.github.io/socketio-client-tool/
