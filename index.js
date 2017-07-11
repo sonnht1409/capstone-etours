@@ -22,8 +22,8 @@
  const statusMessageSuccess = "SUCCESS! ";
  const statusFailed = "FAILED";
  const statusSuccess = "SUCCESS"
- var User = require("./entities/User")
- var UserDAO = require("./dao/UserDAO")
+
+
 
  connection.connect(err => {
      if (err) {
@@ -151,6 +151,8 @@
 
      socket.on('Web Login', (params) => {
          var clientParams = JSON.parse(params);
+         var User = require("./entities/User")
+         var UserDAO = require("./dao/UserDAO")
          var user = new User();
          user.username = clientParams.username.toString();
          user.password = clientParams.password.toString();
