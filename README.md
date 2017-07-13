@@ -543,7 +543,7 @@ Ex:
             {
               array [{
                      tourTimeScheduleList: array[{
-                              
+                              scheduleID: int
                               TourInstanceDetailId: int
                               TourTime: string
                               VisitPlaceName: string
@@ -553,7 +553,7 @@ Ex:
                               Activity: string
                               Latitude: float
                               Longitude: float
-                         }]mo
+                         }]
                   }]
             }
       }
