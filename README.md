@@ -419,6 +419,55 @@ Ex:
             }     
      }
 
+     {
+      event name: 'Get Tour List'
+      params:
+            {
+              isActive: int     
+            }     
+     }
+
+     {
+      event name: 'Create Tour'
+      params:
+            {
+              name: string,
+              startPlaceID: int
+              destinationID: int
+              duration: string
+              description: string
+            }     
+     }
+
+     {
+      event name: 'Update Tour'
+      params:
+            {
+              name: string,
+              startPlaceID: int
+              destinationID: int
+              duration: string
+              description: string
+              tourID: int     
+            }     
+     }
+
+     {
+      event name: 'Remove Tour'
+      params:
+            {
+              tourID: int     
+            }     
+     }
+
+     {
+      event name: 'Reactive Tour'
+      params:
+            {
+              tourID: int     
+            }     
+     }
+
 # Server event (send to client)
       {
         event name: 'getTouristList',
@@ -862,3 +911,51 @@ Ex:
               status: string    
             }     
       }
+           {
+      event name: 'Get Tour List'
+      data:
+            {
+              tourList: array[{
+                              tourID: int  
+                              tourName: string
+                              startPlaceID: int
+                              startPlaceName: string
+                              destinationID: int
+                              destinationName: string
+                              duration: string
+                              description: string
+                              }]
+            }     
+     }
+
+     {
+      event name: 'Create Tour'
+      data:
+            {
+              status: string
+            }     
+     }
+
+     {
+      event name: 'Update Tour'
+      data:
+            {
+              status: string
+            }     
+     }
+
+     {
+      event name: 'Remove Tour'
+      data:
+            {
+              status: string
+            }     
+     }
+
+     {
+      event name: 'Reactive Tour'
+      data:
+            {
+              status: string
+            }     
+     }

@@ -1360,6 +1360,124 @@
              }))
          })
      })
+
+
+     socket.on('Create Tour', (params) => {
+         var clientParams = JSON.parse(params);
+         var insertTourQuery = "INSERT INTO Tour (Name,StartPlace,Destination,Duration,Description,IsActive) \n" +
+             "VALUES (N'" + clientParams.name + "'," + clientParams.startPlaceID + "," + clientParams.destinationID + ",N'" + clientParams.duration + "'," +
+             "N'" + clientParams.description + "',1)";
+         console.log(insertTourQuery)
+         var message = "";
+         var status = "";
+         connection.request().query(insertTourQuery, (err, result) => {
+             if (err) {
+                 message = statusMessageError + insertTourQuery;
+                 status = statusFailed
+             } else {
+                 message = statusMessageSuccess + insertTourQuery;
+                 status = statusSuccess
+             }
+             io.emit('log message', message)
+             socket.emit('Create Tour', JSON.stringify({
+                 status: status
+             }))
+         })
+     })
+
+     socket.on('Update Tour', (params) => {
+         var clientParams = JSON.parse(params);
+         var updateTourQuery = "UPDATE Tour set \n" +
+             "Name=N'" + clientParams.name + "', \n" +
+             "StartPlace=" + clientParams.startPlaceID + ", \n" +
+             "Destination=" + clientParams.destinationID + ",\n" +
+             "Duration=N'" + clientParams.duration + "', \n" +
+             "Description=N'" + clientParams.description + "' \n" +
+             "where ID=" + clientParams.tourID;
+         var message = "";
+         var status = "";
+         connection.request().query(updateTourQuery, (err, result) => {
+             if (err) {
+                 message = statusMessageError + updateTourQuery
+                 status = statusFailed
+             } else {
+                 message = statusMessageSuccess + updateTourQuery
+                 status = statusSuccess
+             }
+             io.emit('log message', message)
+             socket.emit('Update Tour', JSON.stringify({
+                 status: status
+             }))
+         })
+     })
+
+     socket.on('Remove Tour', (params) => {
+         var clientParams = JSON.parse(params);
+         var removeTourQuery = "UPDATE Tour set IsActive=0 where ID=" + clientParams.tourID;
+         var message = "";
+         var status = "";
+         connection.request().query(removeTourQuery, (err, result) => {
+             if (err) {
+                 message = statusMessageError + removeTourQuery
+                 status = statusFailed
+             } else {
+                 message = statusMessageSuccess + removeTourQuery
+                 status = statusSuccess
+             }
+             io.emit('log message', message);
+             socket.emit('Remove Tour', JSON.stringify({
+                 status: status
+             }))
+         })
+     })
+
+     socket.on('Reactive Tour', (params) => {
+         var clientParams = JSON.parse(params);
+         var reacTiveTourQuery = "UPDATE Tour set IsActive=1 where ID=" + clientParams.tourID;
+         var message = "";
+         var status = "";
+         connection.request().query(reacTiveTourQuery, (err, result) => {
+             if (err) {
+                 message = statusMessageError + removeTourQuery
+                 status = statusFailed
+             } else {
+                 message = statusMessageSuccess + removeTourQuery
+                 status = statusSuccess
+             }
+             io.emit('log message', message);
+             socket.emit('Reactive Tour', JSON.stringify({
+                 status: status
+             }))
+         })
+     })
+
+     socket.on('Get Tour List', (params) => {
+         var clientParams = JSON.parse(params);
+         var getTourListQuery = "select Tour.ID as tourID, Tour.Name as tourName, Tour.StartPlace as startPlaceID, \n" +
+             "StartPlace.Name as startPlaceName, Tour.Destination as destinationID, Destination.Name as destinationName, \n" +
+             "Tour.Duration as duration, Tour.Description as description \n" +
+             "from Tour \n" +
+             "inner join Place as StartPlace on Tour.StartPlace = StartPlace.ID \n" +
+             "inner join Place as Destination on Tour.Destination = Destination.ID \n" +
+             "where Tour.IsActive=" + clientParams.isActive;
+         var message = "";
+         var tourList = [];
+         connection.request().query(getTourListQuery, (err, result) => {
+             if (err) {
+                 message = statusMessageError + getTourListQuery;
+             } else {
+                 message = statusMessageSuccess + getTourListQuery;
+                 if (typeof result !== "undefined" && result.recordset.length > 0) {
+                     tourList = result.recordset;
+                 }
+
+             }
+             io.emit('log message', message);
+             socket.emit('Get Tour List', JSON.stringify({
+                 tourList: tourList
+             }))
+         })
+     })
  });
 
 

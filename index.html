@@ -113,6 +113,25 @@
                 socket.emit('Web Login', JSON.stringify({
                     username: "admin1",
                     password: "40bd001563085fc35165329ea1ff5c5ecbdbbeef"
+                }))
+                socket.emit('Create Tour', JSON.stringify({
+                    name: "Đà Nẵng - Huế",
+                    startPlaceID: 1,
+                    destinationID: 19,
+                    duration: "2 ngày 1 đêm",
+                    description: ""
+                }))
+                socket.emit('Update Tour', JSON.stringify({
+                    name: "Đà Nẵng - Huế",
+                    startPlaceID: 1,
+                    destinationID: 19,
+                    duration: "3 ngày 2 đêm",
+                    description: "",
+                    tourID: 2
+                }))
+
+                socket.emit('Get Tour List', JSON.stringify({
+                    isActive: 1
                 }))*/
                 $('#m').val('');
                 return false;
@@ -158,6 +177,15 @@
             })
 
             socket.on('Web Login', (data) => {
+                console.log(JSON.parse(data));
+            })
+            socket.on('Create Tour', (data) => {
+                console.log(JSON.parse(data));
+            })
+            socket.on('Update Tour', (data) => {
+                console.log(JSON.parse(data));
+            })
+            socket.on('Get Tour List', (data) => {
                 console.log(JSON.parse(data));
             })*/
         });
