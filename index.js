@@ -1468,7 +1468,7 @@
              "OnTotal=N'" + scanDataList[index].numberPerTotal + "', \n" +
              "TouristOff=N'" + scanDataList[index].listTouristOff + "', \n" +
              "Note=N'" + scanDataList[index].note + "' \n" +
-             "Where id=" + scanDataList[index].scheduleID;
+             "Where ScheduleID=" + scanDataList[index].scheduleID;
          connection.request().query(actionQuery, (err, result) => {
              if (err) {
                  message = statusMessageError + actionQuery;
