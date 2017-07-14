@@ -1292,7 +1292,7 @@
                  status = statusSuccess
              }
              io.emit('log message', message)
-             socket.on('Create Coach Company', JSON.stringify({
+             socket.emit('Create Coach Company', JSON.stringify({
                  status: status
              }))
          })
@@ -1353,6 +1353,7 @@
                  status = statusFailed
              } else {
                  message = statusMessageSuccess + reactiveCoachCompanyQuery
+                 status = statusSuccess
              }
              io.emit('log message', message)
              socket.emit('Reactive Coach Company', JSON.stringify({
