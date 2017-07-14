@@ -228,13 +228,24 @@ Ex:
       }
       
       {
-       event name: 'Update Scan History'     
+       event name: 'Get Scan History'     
        params:
             {
-                 scheduleID: int
-                 tourist: int  (tourist ID)
-                 tourguide: int (tourguide ID)                  
-                 touristStatus: int (1 on, 2 off)
+                 tourInstanceID:int
+            }
+      }
+
+      {
+       event name: 'Update Mobile Schedule'
+       params:
+            {
+                  scanDataList: array[{
+                                          scheduleID: int,
+                                          status: int,
+                                          numberPerTotal: string,
+                                          listTouristOff: string
+                                          note: string
+                                    }]
             }
       }
 ## CRUD
@@ -595,6 +606,7 @@ Ex:
                               scheduleID: int
                               TourInstanceDetailId: int
                               TourTime: string
+                              Status: int
                               VisitPlaceName: string
                               VisitingPlaceID: int
                               StartTime: datetime
@@ -729,7 +741,30 @@ Ex:
             }
       }
 
-      
+       {
+       event name: 'Get Scan History'     
+       data:
+            {
+                 tourInstanceID:int
+            }
+      }
+
+      {
+       event name: 'Update Mobile Schedule'
+       data:
+            {
+                  scanHistoryList: array [{
+                                           ScheduleID: int
+                                           OnTotal: string ( = numberPerTotal)
+                                           TouristOff:string (= listTouristOff)
+                                           Note: string
+                                           Status: int ( = progress )
+                                           VisitingPlaceID: int
+                                           VisitingPlaceName: string
+                                          }]
+            }
+      }
+
 ## CRUD
       {
         event name: 'Create Place'

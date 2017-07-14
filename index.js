@@ -224,12 +224,15 @@
          var password = clientParams.password;
          var authenicateQuery =
              "select fullname, CoachID, Coach.LicensePlate, [user].TourInstanceID, [user].id as UserID, role.ID as RoleID, role" +
-             ", [user].IsActive as UserActive, role.IsActive as RoleActive \n " +
+             ", [user].IsActive as UserActive, role.IsActive as RoleActive, \n " +
+             "Tour.Name as TourName, TourInstance.StartTime,TourInstance.EndTime \n" +
              "from [user] \n " +
              "inner join UserInfo on [user].ID = UserInfo.UserID \n " +
              "inner join Role on [user].RoleID = Role.ID \n " +
              "inner join User_Coach_SeatNumber as UCSN on [user].id = UCSN.UserID \n" +
              "inner join Coach on UCSN.CoachID=Coach.ID \n" +
+             "inner join TourInstance on [user].TourInstanceID=TourInstance.ID \n" +
+             "inner join Tour on TourInstance.TourID=Tour.ID \n" +
              "where username ='" + username + "' and password='" + password + "'";
          var message = "";
          var status = "";
@@ -537,7 +540,7 @@
      socket.on('Mobile Get Schedule', (params) => {
          var clientParams = JSON.parse(params);
          var getScheduleQuery = "select Schedule.ID as scheduleID,Schedule.StartTime, Schedule.EndTime, Activity, VisitingPlaceID, \n" +
-             "VisitingPlace.Name as VisitPlaceName,TourTime, Latitude,Longitude, TourInstanceDetailId \n" +
+             "VisitingPlace.Name as VisitPlaceName,Status,TourTime, Latitude,Longitude, TourInstanceDetailId \n" +
              "from Schedule inner join TourInstance_Detail as TID on Schedule.TourInstanceDetailId=TID.id \n" +
              "inner join TourInstance on TID.TourInstanceID = TourInstance.ID \n" +
              "inner join TourInstance_Status as TIS on TourInstance.Status = TIS.ID \n" +
@@ -1223,32 +1226,6 @@
          })
      })
 
-     socket.on('Update Scan History', (params) => {
-         var clientParams = JSON.parse(params);
-         var insertScanHistoryQuery = "INSERT into ScanHistory (ScheduleID,Tourist,TourGuide,TouristStatus) \n" +
-             "VALUES (" + clientParams.scheduleID + "," + clientParams.tourist + "," + clientParams.tourguide + "," + clientParams.touristStatus + ")";
-         var message = "";
-         connection.request().query(insertScanHistoryQuery, (err, result) => {
-             if (err) {
-                 message = statusMessageError + insertScanHistoryQuery;
-             } else {
-                 message = statusMessageSuccess + insertScanHistoryQuery;
-             }
-             io.emit('log message', message)
-                 /* var updatTouristStatusQuery = "UPDATE [user] set TouristStatus=" + clientParams.touristStatus + " \n" +
-                      "where [user].id=" + clientParams.tourist;
-                  message = "";
-                  connection.request().query(updateTouristStatusQuery, (err, result) => {
-                      if (err) {
-                          message = statusMessageError + updateTouristStatusQuery
-                      } else {
-                          message = statusMessageSuccess + updateTouristStatusQuery
-                      }
-                      io.emit('log message', message)
-                  }) */
-         })
-
-     })
 
      socket.on('Web Get Scan History', (params) => {
          var clientParams = JSON.parse(params);
@@ -1479,7 +1456,87 @@
              }))
          })
      })
- });
+
+     var searchAndActionBySchedule = (scanDataList, index, callback) => {
+
+         if (index == scanDataList.length) {
+             callback();
+             return;
+         }
+         var message = "";
+         var actionQuery = "UPDATE ScanHistory set \n" +
+             "OnTotal=N'" + scanDataList[index].numberPerTotal + "', \n" +
+             "TouristOff=N'" + scanDataList[index].listTouristOff + "', \n" +
+             "Note=N'" + scanDataList[index].note + "' \n" +
+             "Where id=" + scanDataList[index].scheduleID;
+         connection.request().query(actionQuery, (err, result) => {
+             if (err) {
+                 message = statusMessageError + actionQuery;
+                 io.emit('log message', message);
+             } else {
+                 message = statusMessageSuccess + actionQuery;
+                 io.emit('log message', message);
+             }
+             message = "";
+             var updateScheduleStatusQuery = "UPDATE Schedule set Status=" + scanDataList[index].status + " \n" +
+                 "where ID=" + scanDataList[index].scheduleID;
+             connection.request().query(updateScheduleStatusQuery, (err, result) => {
+                 if (err) {
+                     message = statusMessageError + updateScheduleStatusQuery;
+                     io.emit('log message', message);
+                 } else {
+                     message = statusMessageSuccess + updateScheduleStatusQuery;
+                     io.emit('log message', message);
+                 }
+                 searchAndActionBySchedule(scanDataList, index + 1, callback)
+             })
+
+         })
+     }
+     socket.on('Update Mobile Schedule', (params) => {
+         var clientParams = JSON.parse(params);
+         var scanDataList = clientParams.scanDataList;
+
+
+         searchAndActionBySchedule(scanDataList, 0, () => {
+             socket.emit('Update Mobile Schedule', JSON.stringify({
+                 status: "COMPLETED"
+             }))
+         })
+
+     })
+
+     socket.on('Get Scan History', (params) => {
+         var clientParams = JSON.parse(params);
+         var getScanHistoryQuery = "select ScheduleID,OnTotal,TouristOff,Note,Status, StartTime,VisitingPlaceID,VisitingPlace.Name as VisitingPlaceName \n" +
+             "from ScanHistory \n" +
+             "inner join Schedule on Schedule.ID = ScanHistory.ScheduleID \n" +
+             "inner join TourInstance_Detail on TourInstance_Detail.ID=Schedule.TourInstanceDetailID \n" +
+             "inner join VisitingPlace on Schedule.VisitingPlaceID=VisitingPlace.ID \n" +
+             "where TourInstanceID=" + clientParams.tourInstanceID + "\n" +
+             "order by StartTime"
+         var message = "";
+         var scanHistoryList = [];
+         connection.request().query(getScanHistoryQuery, (err, result) => {
+             if (err) {
+                 message = statusMessageError + getScanHistoryQuery
+             } else {
+                 message = statusMessageSuccess + getScanHistoryQuery;
+                 if (typeof result !== "undefined" && result.recordset.length > 0) {
+                     scanHistoryList = result.recordset;
+                 }
+             }
+             io.emit('log message', message)
+             socket.emit('Get Scan History', JSON.stringify({
+                 scanHistoryList: scanHistoryList
+             }))
+         })
+     })
+ })
+
+
+
+
 
 
  http.listen(port, () => {

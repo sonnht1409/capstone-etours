@@ -132,6 +132,21 @@
 
                 socket.emit('Get Tour List', JSON.stringify({
                     isActive: 1
+                }))
+                var scanDataList = [];
+                scanDataList.push({
+                    scheduleID: 9,
+                    progress: 2,
+                    numberPerTotal: "1/2",
+                    listTouristOff: "",
+                    note: ""
+                })
+                socket.emit('Update Mobile Schedule', JSON.stringify({
+                    scanDataList: scanDataList
+                }))
+
+                socket.emit('Get Scan History', JSON.stringify({
+                    tourInstanceID: 3
                 }))*/
                 $('#m').val('');
                 return false;
@@ -186,6 +201,10 @@
                 console.log(JSON.parse(data));
             })
             socket.on('Get Tour List', (data) => {
+                console.log(JSON.parse(data));
+            })
+
+            socket.on('Get Scan History', (data) => {
                 console.log(JSON.parse(data));
             })*/
         });
