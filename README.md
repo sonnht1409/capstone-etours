@@ -533,6 +533,9 @@ Ex:
                LicensePlate,
                UserActive: boolean,
                RoleActive: boolean,
+               TourName: string,
+               StartTime: datetime,
+               EndTime: datetime,
                status: String,
                logStatus: String
              }
