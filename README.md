@@ -756,15 +756,7 @@ Ex:
        event name: 'Update Mobile Schedule'
        data:
             {
-                  scanHistoryList: array [{
-                                           ScheduleID: int
-                                           OnTotal: string ( = numberPerTotal)
-                                           TouristOff:string (= listTouristOff)
-                                           Note: string
-                                           Status: int ( = progress )
-                                           VisitingPlaceID: int
-                                           VisitingPlaceName: string
-                                          }]
+                  status
             }
       }
 
