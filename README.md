@@ -756,7 +756,7 @@ Ex:
        event name: 'Update Mobile Schedule'
        data:
             {
-                  status
+                  status: string
             }
       }
 
