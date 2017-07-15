@@ -189,9 +189,18 @@ Ex:
        event name: 'Mobile Send Request'
        params:
             {
-                  message: string,
-                  type: int (2= đổi địa điểm, 3= thông báo sự cố),
+                  
+                  type: int (2= đổi địa điểm, 3= thông báo sự cố)
                   userID: int
+
+                  type =2 {
+                    licensePlate: string
+                    startPlaceName: string
+                    destinationName: string    
+                  }
+                  type =3 {
+                    message: string
+                  }
             }
       }
       
@@ -246,6 +255,7 @@ Ex:
                                           listTouristOff: string
                                           note: string
                                     }]
+                  userID: int                  
             }
       }
 ## CRUD

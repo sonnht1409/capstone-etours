@@ -1063,14 +1063,20 @@
      socket.on('Mobile Send Request', (params) => {
          var clientParams = JSON.parse(params);
          var header = "";
+         var insertNotificationQuery = "";
          if (clientParams.type == 2) {
              header = "Yêu cầu thay đổi lộ trình! \n"
+             var notification = "Thay đổi lộ trình của xe " + clientParams.licensePlate + ", từ " + clientParams.startPlaceName +
+                 " đến " + clientParams.destinationName;
+             insertNotificationQuery = "INSERT INTO Notification (Message,Type,SenderID,ReceiverID) \n" +
+                 "VALUES (N'" + header + notification + "'," + clientParams.type + "," + clientParams.userID + ",0)";
+
          }
          if (clientParams.type == 3) {
              header = "Thông báo sự cố! \n"
+             insertNotificationQuery = "INSERT INTO Notification (Message,Type,SenderID,ReceiverID) \n" +
+                 "VALUES(N'" + header + clientParams.message + "'," + clientParams.type + "," + clientParams.userID + ",0)";
          }
-         var insertNotificationQuery = "INSERT INTO Notification (Message,Type,SenderID,ReceiverID) \n" +
-             "VALUES(N'" + header + clientParams.message + "'," + clientParams.type + "," + clientParams.userID + ",0)";
          var message = "";
          connection.request().query(insertNotificationQuery, (err, result) => {
              if (err) {
@@ -1457,7 +1463,7 @@
          })
      })
 
-     var searchAndActionBySchedule = (scanDataList, index, callback) => {
+     var searchAndActionBySchedule = (scanDataList, index, userID, callback) => {
 
          if (index == scanDataList.length) {
              callback();
@@ -1468,7 +1474,7 @@
              "OnTotal=N'" + scanDataList[index].numberPerTotal + "', \n" +
              "TouristOff=N'" + scanDataList[index].listTouristOff + "', \n" +
              "Note=N'" + scanDataList[index].note + "' \n" +
-             "Where ScheduleID=" + scanDataList[index].scheduleID;
+             "Where ScheduleID=" + scanDataList[index].scheduleID + " and UserID=" + userID;
          connection.request().query(actionQuery, (err, result) => {
              if (err) {
                  message = statusMessageError + actionQuery;
@@ -1496,9 +1502,8 @@
      socket.on('Update Mobile Schedule', (params) => {
          var clientParams = JSON.parse(params);
          var scanDataList = clientParams.scanDataList;
-
-
-         searchAndActionBySchedule(scanDataList, 0, () => {
+         var userID = clientParams.userID
+         searchAndActionBySchedule(scanDataList, userID, 0, () => {
              socket.emit('Update Mobile Schedule', JSON.stringify({
                  status: "COMPLETED"
              }))
@@ -1508,7 +1513,7 @@
 
      socket.on('Get Scan History', (params) => {
          var clientParams = JSON.parse(params);
-         var getScanHistoryQuery = "select ScheduleID,OnTotal,TouristOff,Note,Status, StartTime,VisitingPlaceID,VisitingPlace.Name as VisitingPlaceName \n" +
+         var getScanHistoryQuery = "select ScheduleID,OnTotal,TouristOff,Note,Schedule.UserID,Status, StartTime,VisitingPlaceID,VisitingPlace.Name as VisitingPlaceName \n" +
              "from ScanHistory \n" +
              "inner join Schedule on Schedule.ID = ScanHistory.ScheduleID \n" +
              "inner join TourInstance_Detail on TourInstance_Detail.ID=Schedule.TourInstanceDetailID \n" +
