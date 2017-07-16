@@ -1621,6 +1621,28 @@
              }))
          })
      })
+
+     socket.on('Update Tourist Status', (params) => {
+         var clientParams = JSON.parse(params);
+         var touristStatusList = clientParams.touristStatusList;
+         touristStatusList.forEach(function(element) {
+             var message = "";
+             var updateStatusQuery = "UPDATE [user] set TouristStatus =" + element.touristStatus + " \n" +
+                 "where ID=" + element.userID;
+             connection.request().query(updateStatusQuery, (err, result) => {
+                 if (err) {
+                     message = statusMessageError + updateStatusQuery;
+                 } else {
+                     message = statusMessageSuccess + updateStatusQuery;
+                 }
+                 io.emit('log message', message)
+             })
+         }, () => {
+             socket.emit('Update Tourist Status', JSON.stringify({
+                 status: "COMPLETED"
+             }))
+         });
+     })
  })
 
 

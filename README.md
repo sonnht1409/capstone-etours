@@ -259,6 +259,18 @@ Ex:
                   userID: int                  
             }
       }
+
+      {
+       event name: 'Update Tourist Status'
+       params:
+            {
+                 touristStatusList: array[{
+                                                userID:int,
+                                                touristStatus: int
+                                          }] 
+            }
+      }
+
 ## CRUD
 
      {
@@ -806,6 +818,14 @@ Ex:
             {
                   status: string
             }     
+      }
+
+       {
+       event name: 'Update Tourist Status'
+       params:
+            {
+                status: string 
+            }
       }
 
 ## CRUD
