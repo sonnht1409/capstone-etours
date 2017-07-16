@@ -1030,6 +1030,14 @@ Ex:
      }
 
      {
+      event name: 'Update Visit Place Order'
+      data:
+            {
+                  status: string
+            }     
+     }
+
+     {
       event name: 'Get Visit Place Order'
       data:
             {
@@ -1039,5 +1047,13 @@ Ex:
                                                 VisitingPlaceID: int,
                                                 Priority: int
                                                 }]
+            }     
+     }
+
+     {
+      event name: 'Remove Visit Order List'
+      data:
+            {
+                  status: string
             }     
      }

@@ -1569,7 +1569,11 @@
                      }
                      io.emit('log message', message);
                  })
-             }, this);
+             }, function() {
+                 socket.emit('Update Visit Place Order', JSON.stringify({
+                     status: "COMPLETED"
+                 }))
+             });
          })
 
      })
@@ -1593,6 +1597,27 @@
              io.emit('log message', message);
              socket.emit('Get Visit Place Order', JSON.stringify({
                  visitPlaceOrderList: visitPlaceOrderList
+             }))
+         })
+     })
+
+     socket.on('Remove Visit Order List', (params) => {
+         var clientParams = JSON.parse(params);
+         var removeOldOrderQuery = "DELETE FROM Tour_VisitingPlace where TourID=" + clientParams.tourID;
+         var message = "";
+         var status = "";
+
+         connection.request().query(removeOldOrderQuery, (err, result) => {
+             if (err) {
+                 message = statusMessageError + removeOldOrderQuery
+                 status = statusFailed
+             } else {
+                 message = statusMessageSuccess + removeOldOrderQuery;
+                 status = statusSuccess
+             }
+             io.emit('log message', message);
+             socket.emit('Remove Visit Order List', JSON.stringify({
+                 status: status
              }))
          })
      })
