@@ -241,7 +241,7 @@ Ex:
        params:
             {
                  tourInstanceID:int,
-                 
+                 userID: int
             }
       }
 
