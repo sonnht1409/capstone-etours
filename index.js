@@ -1006,7 +1006,11 @@
                  }
                  io.emit('log message', message)
              })
-         }, this);
+         }, function() {
+             socket.emit('Reschedule Time', JSON.stringify({
+                 status: "COMPLETED"
+             }))
+         });
 
      })
 

@@ -770,6 +770,14 @@ Ex:
             }
       }
 
+      {
+       event name: 'Reschedule Time'
+       data:
+            {
+                  status: string
+            }     
+      }
+
 ## CRUD
       {
         event name: 'Create Place'
