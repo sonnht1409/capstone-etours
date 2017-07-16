@@ -1421,15 +1421,15 @@
 
      socket.on('Reactive Tour', (params) => {
          var clientParams = JSON.parse(params);
-         var reacTiveTourQuery = "UPDATE Tour set IsActive=1 where ID=" + clientParams.tourID;
+         var reactiveTourQuery = "UPDATE Tour set IsActive=1 where ID=" + clientParams.tourID;
          var message = "";
          var status = "";
-         connection.request().query(reacTiveTourQuery, (err, result) => {
+         connection.request().query(reactiveTourQuery, (err, result) => {
              if (err) {
-                 message = statusMessageError + removeTourQuery
+                 message = statusMessageError + reactiveTourQuery
                  status = statusFailed
              } else {
-                 message = statusMessageSuccess + removeTourQuery
+                 message = statusMessageSuccess + reactiveTourQuery
                  status = statusSuccess
              }
              io.emit('log message', message);
