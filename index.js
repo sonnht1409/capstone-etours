@@ -1503,7 +1503,7 @@
          var clientParams = JSON.parse(params);
          var scanDataList = clientParams.scanDataList;
          var userID = clientParams.userID
-         searchAndActionBySchedule(scanDataList, userID, 0, () => {
+         searchAndActionBySchedule(scanDataList, 0, userID, () => {
              socket.emit('Update Mobile Schedule', JSON.stringify({
                  status: "COMPLETED"
              }))
