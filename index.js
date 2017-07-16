@@ -1560,7 +1560,7 @@
              visitPlaceOrderList.forEach(function(element, index) {
                  message = "";
                  var insertVisitPlaceOrderQuery = "INSERT INTO Tour_VisitingPlace (TourID,VisitingPlaceID,Priority) \n" +
-                     "VALUES (" + element.tourID + "," + element.visitPlaceID + "," + element.priority + ")";
+                     "VALUES (" + clientParams.tourID + "," + element.visitPlaceID + "," + element.priority + ")";
                  connection.request().query(insertVisitPlaceOrderQuery, (err, result) => {
                      if (err) {
                          message = statusMessageError + insertVisitPlaceOrderQuery
@@ -1572,6 +1572,29 @@
              }, this);
          })
 
+     })
+
+     socket.on('Get Visit Place Order', (params) => {
+         var clientParams = JSON.parse(params);
+         var getVisitPlaceOrder = "select * from Tour_VisitingPlace \n" +
+             "where tourID=" + clientParams.tourID + " \n" +
+             "order by priority";
+         var message = "";
+         var visitPlaceOrderList = [];
+         connection.request().query(getVisitPlaceOrder, (err, result) => {
+             if (err) {
+                 message = statusMessageError + getVisitPlaceOrder;
+             } else {
+                 message = statusMessageSuccess + getVisitPlaceOrder;
+                 if (typeof result !== "undefined" && result.recordset.length > 0) {
+                     visitPlaceOrderList = result.recordset;
+                 }
+             }
+             io.emit('log message', message);
+             socket.emit('Get Visit Place Order', JSON.stringify({
+                 visitPlaceOrderList: visitPlaceOrderList
+             }))
+         })
      })
  })
 

@@ -495,10 +495,18 @@ Ex:
             {
               tourID: int,
               visitPlaceOrderList: array[{
-                                          tourID: int,
+                                          
                                           visitPlaceID: int,
                                           priority: int
                                           }]    
+            }     
+     }
+
+     {
+      event name: 'Get Visit Place Order'
+      params:
+            {
+                  tourID: int
             }     
      }
 
@@ -1018,5 +1026,18 @@ Ex:
       data:
             {
               status: string
+            }     
+     }
+
+     {
+      event name: 'Get Visit Place Order'
+      data:
+            {
+                  visitPlaceOrderList: array[{
+                                                ID: int,
+                                                TourID: int,
+                                                VisitingPlaceID: int,
+                                                Priority: int
+                                                }]
             }     
      }
