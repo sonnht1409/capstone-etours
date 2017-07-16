@@ -1541,6 +1541,38 @@
              }))
          })
      })
+
+     socket.on('Order Visit Place', (params) => {
+         var clientParams = JSON.parse(params);
+         var visitPlaceOrderList = clientParams.visitPlaceOrderList;
+         var removeOldOrderQuery = "DELETE FROM Tour_VisitingPlace where TourID=" + clientParams.tourID;
+         var message = "";
+
+
+         connection.request().query(removeOldOrderQuery, (err, result) => {
+             if (err) {
+                 message = statusMessageError + removeOldOrderQuery
+             } else {
+                 message = statusMessageSuccess + removeOldOrderQuery;
+             }
+             io.emit('log message', message);
+
+             visitPlaceOrderList.forEach(function(element, index) {
+                 message = "";
+                 var insertVisitPlaceOrderQuery = "INSERT INTO Tour_VisitingPlace (TourID,VisitingPlaceID,Priority) \n" +
+                     "VALUES (" + element.tourID + "," + element.visitPlaceID + "," + element.priority + ")";
+                 connection.request().query(insertVisitPlaceOrderQuery, (err, result) => {
+                     if (err) {
+                         message = statusMessageError + insertVisitPlaceOrderQuery
+                     } else {
+                         message = statusMessageSuccess + insertVisitPlaceOrderQuery;
+                     }
+                     io.emit('log message', message);
+                 })
+             }, this);
+         })
+
+     })
  })
 
 

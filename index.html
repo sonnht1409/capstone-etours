@@ -147,6 +147,14 @@
 
                 socket.emit('Get Scan History', JSON.stringify({
                     tourInstanceID: 3
+                }))
+                var array = [{
+                    tourID: 1,
+                    visitPlaceID: 1,
+                    priority: 1
+                }]
+                socket.emit('Order Visit Place', JSON.stringify({
+                    visitPlaceOrderList: array
                 }))*/
                 $('#m').val('');
                 return false;
