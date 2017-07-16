@@ -489,6 +489,19 @@ Ex:
             }     
      }
 
+     {
+      event name: 'Update Visit Place Order'
+      params:
+            {
+              tourID: int,
+              visitPlaceOrderList: array[{
+                                          tourID: int,
+                                          visitPlaceID: int,
+                                          priority: int
+                                          }]    
+            }     
+     }
+
 # Server event (send to client)
       {
         event name: 'getTouristList',

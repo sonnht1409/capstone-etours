@@ -1542,7 +1542,7 @@
          })
      })
 
-     socket.on('Order Visit Place', (params) => {
+     socket.on('Update Visit Place Order', (params) => {
          var clientParams = JSON.parse(params);
          var visitPlaceOrderList = clientParams.visitPlaceOrderList;
          var removeOldOrderQuery = "DELETE FROM Tour_VisitingPlace where TourID=" + clientParams.tourID;
