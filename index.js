@@ -1517,12 +1517,12 @@
 
      socket.on('Get Scan History', (params) => {
          var clientParams = JSON.parse(params);
-         var getScanHistoryQuery = "select ScheduleID,OnTotal,TouristOff,Note,Schedule.UserID,Status, StartTime,VisitingPlaceID,VisitingPlace.Name as VisitingPlaceName \n" +
+         var getScanHistoryQuery = "select ScheduleID,OnTotal,TouristOff,Note,UserID,Status, StartTime,VisitingPlaceID,VisitingPlace.Name as VisitingPlaceName \n" +
              "from ScanHistory \n" +
              "inner join Schedule on Schedule.ID = ScanHistory.ScheduleID \n" +
              "inner join TourInstance_Detail on TourInstance_Detail.ID=Schedule.TourInstanceDetailID \n" +
              "inner join VisitingPlace on Schedule.VisitingPlaceID=VisitingPlace.ID \n" +
-             "where TourInstanceID=" + clientParams.tourInstanceID + "\n" +
+             "where TourInstanceID=" + clientParams.tourInstanceID + "and UserID=" + clientParams.userID + " \n" +
              "order by StartTime"
          var message = "";
          var scanHistoryList = [];

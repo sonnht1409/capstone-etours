@@ -240,7 +240,8 @@ Ex:
        event name: 'Get Scan History'     
        params:
             {
-                 tourInstanceID:int
+                 tourInstanceID:int,
+                 
             }
       }
 
@@ -779,7 +780,15 @@ Ex:
        event name: 'Get Scan History'     
        data:
             {
-                 tourInstanceID:int
+                 ScheduleID:int
+                 UserID:int
+                 OnTotal: string ( =numberPerTotal)
+                 TouristOff: string ( =listTouristOff)
+                 Note: string
+                 Status: int
+                 StartTime: string
+                 VisitingPlaceID: int
+                 VisitingPlaceName
             }
       }
 
