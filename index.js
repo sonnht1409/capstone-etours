@@ -1498,7 +1498,7 @@
                      message = statusMessageSuccess + updateScheduleStatusQuery;
                      io.emit('log message', message);
                  }
-                 searchAndActionBySchedule(scanDataList, index + 1, callback)
+                 searchAndActionBySchedule(scanDataList, index + 1, userID, callback)
              })
 
          })
