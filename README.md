@@ -741,6 +741,7 @@ Ex:
                                           header: string
                                           content: string
                                           isRead: bit
+                                          isAccept: bit
                                           }]
             }
       }
@@ -822,9 +823,18 @@ Ex:
 
        {
        event name: 'Update Tourist Status'
-       params:
+       data:
             {
                 status: string 
+            }
+      }
+      
+      {
+       event name: 'Web Response Notification'
+       params:
+            {
+               notificationID: int,
+               isAccept: boolean (1 or 0)
             }
       }
 
