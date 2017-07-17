@@ -1102,9 +1102,8 @@
          date.setHours(hour)
          var dateStartTime = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " 00:00:00.000";
          var dateEndTime = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " 23:59:59.999";
-         var getNotificationQuery = "select top 15 ID as notificationID,message, time, isRead from Notification \n" +
+         var getNotificationQuery = "select top 15 ID as notificationID,message, time, isRead, isAccept from Notification \n" +
              "where senderID=" + clientParams.userID + " \n" +
-             "and Time>='" + dateStartTime + "' and Time<='" + dateEndTime + "' \n" +
              "and Type=2 or Type=3 \n" +
              "order by Time DESC";
          var message = "";
@@ -1643,6 +1642,24 @@
              }))
          });
      })
+
+     socket.on('Web Response Notification', (params) => {
+         var clientParams = JSON.parse(params);
+         var responseNotificationQuery = "UPDATE Notification set IsAccept=" + clientParams.isAccept + " \n" +
+             "where ID=" + clientParams.notificationID;
+         var message = "";
+         connection.request().query(responseNotificationQuery, (err, result) => {
+             if (err) {
+                 message = "";
+             } else {
+                 message = "";
+             }
+             io.emit('log message', message);
+             //push notification later
+         })
+     })
+
+     //socket.on('Create Tourist Status')
  })
 
 
