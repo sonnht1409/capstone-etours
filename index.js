@@ -543,7 +543,7 @@
              "VisitingPlace.Name as VisitPlaceName,Schedule.Status,TourTime, Latitude,Longitude, TourInstanceDetailId \n" +
              "from Schedule inner join TourInstanceDetail as TID on Schedule.TourInstanceDetailId=TID.id \n" +
              "inner join TourInstance on TID.TourInstanceID = TourInstance.ID \n" +
-             "inner join TourInstance_Status as TIS on TourInstance.Status = TIS.ID \n" +
+             "inner join TourInstanceStatus as TIS on TourInstance.Status = TIS.ID \n" +
              "inner join Tour on TourInstance.TourID = Tour.ID \n" +
              "left join VisitingPlace on VisitingPlaceID = VisitingPlace.ID \n" +
              "where TourInstanceID =" + clientParams.tourInstanceID + " \n" +
