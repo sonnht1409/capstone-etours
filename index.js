@@ -541,7 +541,7 @@
          var clientParams = JSON.parse(params);
          var getScheduleQuery = "select Schedule.ID as scheduleID,Schedule.StartTime, Schedule.EndTime, Activity, VisitingPlaceID, \n" +
              "VisitingPlace.Name as VisitPlaceName,Schedule.Status,TourTime, Latitude,Longitude, TourInstanceDetailId \n" +
-             "from Schedule inner join TourInstance_Detail as TID on Schedule.TourInstanceDetailId=TID.id \n" +
+             "from Schedule inner join TourInstanceDetail as TID on Schedule.TourInstanceDetailId=TID.id \n" +
              "inner join TourInstance on TID.TourInstanceID = TourInstance.ID \n" +
              "inner join TourInstance_Status as TIS on TourInstance.Status = TIS.ID \n" +
              "inner join Tour on TourInstance.TourID = Tour.ID \n" +
@@ -1519,7 +1519,7 @@
          var getScanHistoryQuery = "select ScheduleID,OnTotal,TouristOff,Note,UserID,Status, StartTime,VisitingPlaceID,VisitingPlace.Name as VisitingPlaceName \n" +
              "from ScanHistory \n" +
              "inner join Schedule on Schedule.ID = ScanHistory.ScheduleID \n" +
-             "inner join TourInstance_Detail on TourInstance_Detail.ID=Schedule.TourInstanceDetailID \n" +
+             "inner join TourInstanceDetail on TourInstanceDetail.ID=Schedule.TourInstanceDetailID \n" +
              "inner join VisitingPlace on Schedule.VisitingPlaceID=VisitingPlace.ID \n" +
              "where TourInstanceID=" + clientParams.tourInstanceID + "and UserID=" + clientParams.userID + " \n" +
              "order by StartTime"
@@ -1659,7 +1659,220 @@
          })
      })
 
-     //socket.on('Create Tourist Status')
+     socket.on('Create Tourist Status', (params) => {
+         var clientParams = JSON.parse(params);
+         var createTouristStatusQuery = "INSERT into TouristStatus (Status,IsActive) VALUES \n" +
+             "(N'" + clientParams.status + "',1)";
+         var message = "";
+         var status = "";
+         connection.request().query(createTouristStatusQuery, (err, result) => {
+             if (err) {
+                 message = statusMessageError + createTouristStatusQuery;
+                 status = statusFailed;
+             } else {
+                 message = statusMessageSuccess + createTouristStatusQuery;
+                 status = statusSuccess;
+             }
+             io.emit('log message', message);
+             socket.emit('Create Tourist Status', JSON.stringify({
+                 status: status
+             }))
+         })
+     })
+
+     socket.on('Get Tourist Status List', (params) => {
+         var clientParams = JSON.parse(params)
+         var getTouristStatusQuery = "Select * from TouristStatus where IsActive=" + clientParams.isActive;
+         var message = "";
+         var touristStatusList = [];
+         connection.request().query(getTouristStatusQuery, (err, result) => {
+             if (err) {
+                 message = statusMessageError + getTouristStatusQuery;
+             } else {
+                 message = statusMessageSuccess + getTouristStatusQuery;
+                 if (typeof result !== "undefined" && result.recordset.length > 0) {
+                     touristStatusList = result.recordset;
+                 }
+             }
+             io.emit('log message', message);
+             socket.emit('Get Tourist Status List', JSON.stringify({
+                 touristStatusList: touristStatusList
+             }))
+         })
+     })
+
+     socket.on('Update Tourist Status', (params) => {
+         var clientParams = JSON.parse(params);
+         var updateTouristStatusQuery = "UPDATE TouristStatus set Status =N'" + clientParams.status + "' \n" +
+             "where ID=" + clientParams.touristStatusID;
+         var message = "";
+         var status = "";
+         connection.request().query(updateTouristStatusQuery, (err, result) => {
+             if (err) {
+                 message = statusMessageError + updateTouristStatusQuery;
+                 status = statusFailed
+             } else {
+                 message = statusMessageSuccess + updateTouristStatusQuery;
+                 status = statusSuccess
+             }
+             io.emit('log message', message);
+             socket.emit('Update Tourist Status', JSON.stringify({
+                 status: status
+             }))
+         })
+     })
+
+     socket.on('Remove Tourist Status', (params) => {
+         var clientParams = JSON.parse(params);
+         var removeTouristStatusQuery = "UPDATE TouristStatus set IsActive=0 \n" +
+             "where ID=" + clientParams.touristStatusID;
+         var message = "";
+         var status = "";
+         connection.request().query(removeTouristStatusQuery, (err, result) => {
+             if (err) {
+                 message = statusMessageError + removeTouristStatusQuery;
+                 status = statusFailed
+             } else {
+                 message = statusMessageSuccess + removeTouristStatusQuery;
+                 status = statusSuccess
+             }
+             io.emit('log message', message);
+             socket.emit('Remove Tourist Status', JSON.stringify({
+                 status: status
+             }))
+         })
+     })
+
+     socket.on('Reactive Tourist Status', (params) => {
+         var clientParams = JSON.parse(params);
+         var reactiveTouristStatusQuery = "UPDATE TouristStatus set IsActive=1 \n" +
+             "where ID=" + clientParams.touristStatusID;
+         var message = "";
+         var status = "";
+         connection.request().query(reactiveTouristStatusQuery, (err, result) => {
+             if (err) {
+                 message = statusMessageError + reactiveTouristStatusQuery;
+                 status = statusFailed
+             } else {
+                 message = statusMessageSuccess + reactiveTouristStatusQuery;
+                 status = statusSuccess
+             }
+             io.emit('log message', message);
+             socket.emit('Reactive Tourist Status', JSON.stringify({
+                 status: status
+             }))
+         })
+     })
+
+     socket.on('Create Tour Guide Status', (params) => {
+         var clientParams = JSON.parse(params);
+         var createTourGuideStatusQuery = "INSERT into TourGuideStatus (Status,IsActive) VALUES \n" +
+             "(N'" + clientParams.status + "',1)";
+         var message = "";
+         var status = "";
+         connection.request().query(createTourGuideStatusQuery, (err, result) => {
+             if (err) {
+                 message = statusMessageError + createTourGuideStatusQuery;
+                 status = statusFailed;
+             } else {
+                 message = statusMessageSuccess + createTourGuideStatusQuery;;
+                 status = statusSuccess;
+             }
+             io.emit('log message', message);
+             socket.emit('Create Tour Guide Status', JSON.stringify({
+                 status: status
+             }))
+         })
+     })
+
+     socket.on('Get Tour Guide Status List', (params) => {
+         var clientParams = JSON.parse(params)
+         var getTourGuideStatusQuery = "Select * from TourGuideStatus where IsActive=" + clientParams.isActive;
+         var message = "";
+         var tourGuideStatusList = [];
+         connection.request().query(getTourGuideStatusQuery, (err, result) => {
+             if (err) {
+                 message = statusMessageError + getTourGuideStatusQuery;
+             } else {
+                 message = statusMessageSuccess + getTourGuideStatusQuery;
+                 if (typeof result !== "undefined" && result.recordset.length > 0) {
+                     tourGuideStatusList = result.recordset;
+                 }
+             }
+             io.emit('log message', message);
+             socket.emit('Get Tour Guide Status List', JSON.stringify({
+                 tourGuideStatusList: tourGuideStatusList
+             }))
+         })
+     })
+
+     socket.on('Update Tour Guide Status', (params) => {
+         var clientParams = JSON.parse(params);
+         var updateTourGuideStatusQuery = "UPDATE TourGuideStatus set Status =N'" + clientParams.status + "' \n" +
+             "where ID=" + clientParams.tourGuideStatusID;
+         var message = "";
+         var status = "";
+         connection.request().query(updateTourGuideStatusQuery, (err, result) => {
+             if (err) {
+                 message = statusMessageError + updateTourGuideStatusQuery;
+                 status = statusFailed
+             } else {
+                 message = statusMessageSuccess + updateTourGuideStatusQuery;
+                 status = statusSuccess
+             }
+             io.emit('log message', message);
+             socket.emit('Update Tour Guide Status', JSON.stringify({
+                 status: status
+             }))
+         })
+     })
+
+     socket.on('Remove Tour Guide Status', (params) => {
+         var clientParams = JSON.parse(params);
+         var removeTourGuideStatusQuery = "UPDATE TourGuideStatus set IsActive=0 \n" +
+             "where ID=" + clientParams.tourGuideStatusID;
+         var message = "";
+         var status = "";
+         connection.request().query(removeTourGuideStatusQuery, (err, result) => {
+             if (err) {
+                 message = statusMessageError + removeTourGuideStatusQuery;
+                 status = statusFailed
+             } else {
+                 message = statusMessageSuccess + removeTourGuideStatusQuery;
+                 status = statusSuccess
+             }
+             io.emit('log message', message);
+             socket.emit('Remove Tour Guide Status', JSON.stringify({
+                 status: status
+             }))
+         })
+     })
+
+     socket.on('Reactive Tour Guide Status', (params) => {
+         var clientParams = JSON.parse(params);
+         var reactiveTourGuideStatusQuery = "UPDATE TourGuideStatus set IsActive=1 \n" +
+             "where ID=" + clientParams.tourGuideStatusID;
+         var message = "";
+         var status = "";
+         connection.request().query(reactiveTourGuideStatusQuery, (err, result) => {
+             if (err) {
+                 message = statusMessageError + reactiveTourGuideStatusQuery;
+                 status = statusFailed
+             } else {
+                 message = statusMessageSuccess + reactiveTouristStatusQuery;
+                 status = statusSuccess
+             }
+             io.emit('log message', message);
+             socket.emit('Reactive Tour Guide Status', JSON.stringify({
+                 status: status
+             }))
+         })
+     })
+
+     socket.on('Get Tour Instance Status List', (params) => {
+         var clientParams = JSON.parse(params);
+         var getTourInstanceStatusQuery = "Select * from Tour"
+     })
  })
 
 
