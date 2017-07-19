@@ -1871,7 +1871,23 @@
 
      socket.on('Get Tour Instance Status List', (params) => {
          var clientParams = JSON.parse(params);
-         var getTourInstanceStatusQuery = "Select * from Tour"
+         var getTourInstanceStatusQuery = "Select * from TourInstanceStatus where IsActive=" + clientParams.isActive;
+         var tourInstanceStatusList = [];
+         var message = "";
+         connection.request().query(getTourInstanceStatusQuery, (err, result) => {
+             if (err) {
+                 message = statusMessageError + getTourInstanceStatusQuery
+             } else {
+                 message = statusMessageSuccess + getTourInstanceStatusQuery
+                 if (typeof result !== "undefined" && result.recordset.length > 0) {
+                     tourInstanceStatusList = result.recordset;
+                 }
+             }
+             io.emit('log message', message);
+             socket.emit('Get Tour Instance Status List', JSON.stringify({
+                 tourInstanceStatusList: tourInstanceStatusList
+             }))
+         })
      })
  })
 

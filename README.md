@@ -523,6 +523,90 @@ Ex:
             }     
      }
 
+     {
+      event name: 'Get Tourist Status List'
+      params: 
+            {
+                  isActive: boolean (0 or 1)
+            }
+     }
+
+     {
+      event name: 'Create Tourist Status'
+      params:
+            {
+                  status: string
+            }
+
+     }
+
+     {
+      event name: 'Update Tourist Status'     
+      params:
+            {
+                  status: string
+                  touristStatusID: int
+            }
+     }
+
+     {
+      event name: 'Remove Tourist Status'
+      params:
+            {
+                  touristStatusID: int
+            }
+     }
+
+     {
+      event name: 'Reactive Tourist Status'
+      params:
+            {
+                  touristStatusID: int
+            }     
+     }
+
+     {
+      event name: 'Get Tour Guide Status List'
+      params: 
+            {
+                  isActive: boolean (0 or 1)
+            }
+     }
+
+     {
+      event name: 'Create Tour Guide Status'
+      params:
+            {
+                  status: string
+            }
+
+     }
+
+     {
+      event name: 'Update Tour Guide Status'     
+      params:
+            {
+                  status: string
+                  tourGuideStatusID: int
+            }
+     }
+
+     {
+      event name: 'Remove Tour GUide Status'
+      params:
+            {
+                  tourGuideStatusID: int
+            }
+     }
+
+     {
+      event name: 'Reactive Tour Guide Status'
+      params:
+            {
+                  tourGuideStatusID: int
+            }     
+     }
+
 # Server event (send to client)
       {
         event name: 'getTouristList',
@@ -1091,6 +1175,96 @@ Ex:
 
      {
       event name: 'Remove Visit Order List'
+      data:
+            {
+                  status: string
+            }     
+     }
+
+     {
+      event name: 'Get Tourist Status List'
+      data: 
+            {
+                  touristStatusList: array[{
+                                                ID: int,
+                                                Status: string,
+                                                IsActive: boolean (0 , 1)
+                                          }]
+            }
+     }
+
+     {
+      event name: 'Create Tourist Status'
+      data:
+            {
+                  status: string
+            }
+
+     }
+
+     {
+      event name: 'Update Tourist Status'     
+      data:
+            {
+                  status: string
+            }
+     }
+
+     {
+      event name: 'Remove Tourist Status'
+      data:
+            {
+                  status: string
+            }
+     }
+
+     {
+      event name: 'Reactive Tourist Status'
+      data:
+            {
+                  status: string
+            }     
+     }
+
+     {
+      event name: 'Get Tour Guide Status List'
+      data: 
+            {
+                  tourGuideStatusList: array[{
+                                                ID: int,
+                                                Status: string,
+                                                IsActive: boolean (0 , 1)
+                                          }]
+            }
+     }
+
+     {
+      event name: 'Create Tour Guide Status'
+      data:
+            {
+                  status: string
+            }
+
+     }
+
+     {
+      event name: 'Update Tour Guide Status'     
+      data:
+            {
+                  status: string
+            }
+     }
+
+     {
+      event name: 'Remove Tour Guide Status'
+      data:
+            {
+                  status: string
+            }
+     }
+
+     {
+      event name: 'Reactive Tour Guide Status'
       data:
             {
                   status: string
