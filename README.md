@@ -606,6 +606,47 @@ Ex:
                   tourGuideStatusID: int
             }     
      }
+     
+     {
+      event name: 'Get Tour Instance Status List'
+      params:
+            {
+                  isActive: boolean (0 or 1)
+            }
+     }
+
+     {
+      event name: 'Create Tour Instance Status'
+      params:
+            {
+                  status: string
+            }     
+     }
+
+     {
+      event name: 'Update Tour Instance Status'
+      params:
+            {
+                  status: string
+                  tourInstanceStatusID: int
+            }     
+     }
+
+     {
+      event name: 'Remove Tour Instance Status'
+      params:
+            {                  
+                  tourInstanceStatusID: int
+            }
+     }
+
+     {
+      event name: 'Reactive Tour Instance Status'
+      params:
+            {                  
+                  tourInstanceStatusID: int
+            }
+     }
 
 # Server event (send to client)
       {
@@ -1269,4 +1310,48 @@ Ex:
             {
                   status: string
             }     
+     }
+
+     {
+      event name: 'Get Tour Instance Status List'
+      data:
+            {
+                  tourInstanceStatusList: array[{
+                                                      ID: int,
+                                                      Status:string
+                                                      IsACtive: boolean (0 , 1)
+                                                }]
+            }
+     }
+
+     {
+      event name: 'Create Tour Instance Status'
+      data:
+            {
+                  status: string
+            }     
+     }
+
+     {
+      event name: 'Update Tour Instance Status'
+      data:
+            {
+                  status: string
+            }     
+     }
+
+     {
+      event name: 'Remove Tour Instance Status'
+      data:
+            {
+                  status: string
+            }
+     }
+
+     {
+      event name: 'Reactive Tour Instance Status'
+      data:
+            {
+                  status: string
+            }
      }

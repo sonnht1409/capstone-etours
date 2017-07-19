@@ -1889,6 +1889,90 @@
              }))
          })
      })
+
+     socket.on('Create Tour Instance Status', (params) => {
+         var clientParams = JSON.parse(params);
+         var createTourInstanceStatus = "INSERT INTO TourInstanceStatus (Status,IsActive) VALUES \n" +
+             "(N'" + clientParams.status + "',1)";
+         var message = "";
+         var status = "";
+         connection.request().query(createTourInstanceStatus, (err, result) => {
+             if (err) {
+                 message = statusMessageError + createTourInstanceStatus;
+                 status = statusFailed
+             } else {
+                 message = statusMessageSuccess + createTourInstanceStatus;
+                 status = statusSuccess;
+             }
+             io.emit('log message', message);
+             socket.emit('Create Tour Instance Status', JSON.stringify({
+                 status: status
+             }))
+         })
+     })
+
+     socket.on('Update Tour Instance Status', (params) => {
+         var clientParams = JSON.parse(params);
+         var updateTourInstanceStatus = "UPDATE TourInstanceStatus set Status=N'" + clientParams.status + " \n" +
+             "where ID=" + clientParams.tourInstanceStatusID;
+         var message = "";
+         var status = "";
+         connection.request().query(updateTourInstanceStatus, (err, result) => {
+             if (err) {
+                 message = statusMessageError + updateTourInstanceStatus
+                 status = statusFailed
+             } else {
+                 message = statusMessageSuccess + updateTourInstanceStatus
+                 status = statusSuccess
+             }
+             io.emit('log message', message);
+             socket.emit('Update Tour Instance Status', JSON.stringify({
+                 status: status
+             }))
+         })
+     })
+
+     socket.on('Remove Tour Instance Status', (params) => {
+         var clientParams = JSON.parse(params);
+         var removeTourInstanceStatusQuery = "UPDATE TourInstanceStatus set IsActive=0 \n" +
+             "where ID=" + clientParams.tourInstanceStatusID;
+         var message = "";
+         var status = "";
+         connection.request().query(removeTourInstanceStatusQuery, (err, result) => {
+             if (err) {
+                 message = statusMessageError + removeTourInstanceStatusQuery;
+                 status = statusFailed
+             } else {
+                 message = statusMessageSuccess + removeTourInstanceStatusQuery;
+                 status = statusSuccess;
+             }
+             io.emit('log message', message);
+             socket.emit('Remove Tour Instance Status', JSON.stringify({
+                 status: status
+             }))
+         })
+     })
+
+     socket.on('Reactive Tour Instance Status', (params) => {
+         var clientParams = JSON.parse(params);
+         var reactiveTourInstanceStatusQuery = "UPDATE TourInstanceStatus set IsActive=1 \n" +
+             "where ID=" + clientParams.tourInstanceStatusID;
+         var message = "";
+         var status = "";
+         connection.request().query(reactiveTourInstanceStatusQuery, (err, result) => {
+             if (err) {
+                 message = statusMessageError + reactiveTourInstanceStatusQuery;
+                 status = statusFailed
+             } else {
+                 message = statusMessageSuccess + reactiveTourInstanceStatusQuery;
+                 status = statusSuccess;
+             }
+             io.emit('log message', message);
+             socket.emit('Reactive Tour Instance Status', JSON.stringify({
+                 status: status
+             }))
+         })
+     })
  })
 
 
