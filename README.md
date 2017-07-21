@@ -261,7 +261,7 @@ Ex:
       }
 
       {
-       event name: 'Update Tourist Status'
+       event name: 'Mobile Update Tourist Status'
        params:
             {
                  touristStatusList: array[{
@@ -947,7 +947,7 @@ Ex:
       }
 
        {
-       event name: 'Update Tourist Status'
+       event name: 'Mobile Update Tourist Status'
        data:
             {
                 status: string 

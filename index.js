@@ -1621,7 +1621,7 @@
          })
      })
 
-     socket.on('Update Tourist Status', (params) => {
+     socket.on('Mobile Update Tourist Status', (params) => {
          var clientParams = JSON.parse(params);
          var touristStatusList = clientParams.touristStatusList;
          touristStatusList.forEach(function(element) {
@@ -1637,7 +1637,7 @@
                  io.emit('log message', message)
              })
          }, () => {
-             socket.emit('Update Tourist Status', JSON.stringify({
+             socket.emit('Mobile Update Tourist Status', JSON.stringify({
                  status: "COMPLETED"
              }))
          });
