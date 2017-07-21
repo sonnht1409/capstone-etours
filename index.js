@@ -1913,7 +1913,7 @@
 
      socket.on('Update Tour Instance Status', (params) => {
          var clientParams = JSON.parse(params);
-         var updateTourInstanceStatus = "UPDATE TourInstanceStatus set Status=N'" + clientParams.status + " \n" +
+         var updateTourInstanceStatus = "UPDATE TourInstanceStatus set Status=N'" + clientParams.status + "' \n" +
              "where ID=" + clientParams.tourInstanceStatusID;
          var message = "";
          var status = "";
