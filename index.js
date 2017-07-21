@@ -1859,7 +1859,7 @@
                  message = statusMessageError + reactiveTourGuideStatusQuery;
                  status = statusFailed
              } else {
-                 message = statusMessageSuccess + reactiveTouristStatusQuery;
+                 message = statusMessageSuccess + reactiveTourGuideStatusQuery;
                  status = statusSuccess
              }
              io.emit('log message', message);
