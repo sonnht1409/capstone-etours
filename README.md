@@ -1247,7 +1247,8 @@ Ex:
       event name: 'Create Tour'
       data:
             {
-              status: string
+              status: string,
+              tourID: int
             }     
      }
 

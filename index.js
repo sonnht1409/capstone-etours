@@ -1365,9 +1365,23 @@
                  status = statusSuccess
              }
              io.emit('log message', message)
-             socket.emit('Create Tour', JSON.stringify({
-                 status: status
-             }))
+             var message = "";
+             var tourID
+             var selectInsertedTour = "select top 1 ID from Tour order by ID DESC";
+             connection.request().query(selectInsertedTour, (err, result) => {
+                 if (err) {
+                     message = statusMessageError + selectInsertedTour;
+                 } else {
+                     message = statusMessageSuccess + selectInsertedTour;
+                     tourID = result.recordset[0].ID;
+                 }
+                 socket.emit('Create Tour', JSON.stringify({
+                     status: status,
+                     tourID: tourID
+                 }))
+             })
+
+
          })
      })
 
