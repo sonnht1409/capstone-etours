@@ -1580,12 +1580,13 @@
                          message = statusMessageSuccess + insertVisitPlaceOrderQuery;
                      }
                      io.emit('log message', message);
+                     if (index == visitPlaceOrderList.length - 1) {
+                         socket.emit('Update Visit Place Order', JSON.stringify({
+                             status: "COMPLETED"
+                         }))
+                     }
                  })
-             }, function() {
-                 socket.emit('Update Visit Place Order', JSON.stringify({
-                     status: "COMPLETED"
-                 }))
-             });
+             }, this);
          })
 
      })
