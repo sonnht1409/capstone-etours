@@ -6,7 +6,6 @@
  var port = 8080;
  var path = require('path');
  var appDir = path.dirname(require.main.filename);
- console.log(appDir)
  const sql = require('mssql');
  const connection = new sql.ConnectionPool({
      user: 'etours',
@@ -223,7 +222,7 @@
          var username = clientParams.username;
          var password = clientParams.password;
          var authenicateQuery =
-             "select fullname, CoachID, Coach.LicensePlate, [user].TourInstanceID, [user].id as UserID, role.ID as RoleID, role" +
+             "select fullname,PhoneNumber,Email,Address, CoachID, Coach.LicensePlate, [user].TourInstanceID, [user].id as UserID, role.ID as RoleID, role" +
              ", [user].IsActive as UserActive, role.IsActive as RoleActive, \n " +
              "Tour.Name as TourName, TourInstance.StartTime,TourInstance.EndTime \n" +
              "from [user] \n " +
@@ -793,7 +792,7 @@
          var clientParams = JSON.parse(params);
          console.log(clientParams)
          var authenicateQuery =
-             "select fullname, CoachID, [user].TourInstanceID, [user].id as UserID, role.ID as RoleID, role" +
+             "select fullname,PhoneNumber,Email,Address, CoachID, [user].TourInstanceID, [user].id as UserID, role.ID as RoleID, role" +
              ", [user].IsActive as UserActive, role.IsActive as RoleActive \n " +
              "from Card inner join [user] on Card.UserID = [user].id \n " +
              "inner join UserInfo on [user].ID = UserInfo.UserID \n " +
@@ -1521,7 +1520,7 @@
              "inner join Schedule on Schedule.ID = ScanHistory.ScheduleID \n" +
              "inner join TourInstanceDetail on TourInstanceDetail.ID=Schedule.TourInstanceDetailID \n" +
              "inner join VisitingPlace on Schedule.VisitingPlaceID=VisitingPlace.ID \n" +
-             "where TourInstanceID=" + clientParams.tourInstanceID + "and UserID=" + clientParams.userID + " \n" +
+             "where TourInstanceID=" + clientParams.tourInstanceID + " and UserID=" + clientParams.userID + " \n" +
              "order by StartTime"
          var message = "";
          var scanHistoryList = [];
@@ -1972,6 +1971,220 @@
                  status: status
              }))
          })
+     })
+
+     socket.on('Get Tour Instance List', (params) => {
+         var clientParams = JSON.parse(params);
+         var getTourInstanceQuery = "select Tour.ID as TourID, Tour.Name as TourName, TourInstance.ID as TourInstanceID, \n" +
+             "StartTime, EndTime, Duration \n" +
+             "from TourInstance \n" +
+             "inner join Tour on TourID = TourID \n" +
+             "inner join TourInstanceStatus on TourInstance.Status=TourInstanceStatus.ID \n" +
+             "where Tour.ID=" + clientParams.tourID + " and TourInstance.Status=" + clientParams.tourInstanceStatus +
+             " and TourInstance.IsActive=" + clientParams.isActive + "\n" +
+             "order by StartTime, EndTime"
+         var message = ""
+         var tourInstanceList = [];
+         connection.request().query(getTourInstanceQuery, (err, result) => {
+             if (err) {
+                 message = statusMessageError + getTourInstanceQuery
+             } else {
+                 message = statusMessageSuccess + getTourInstanceQuery
+                 if (typeof result !== "undefined" && result.recordset.length > 0) {
+                     tourInstanceList = result.recordset;
+                 }
+             }
+             io.emit('log message', message);
+             socket.emit('Get Tour Instance List', JSON.stringify({
+                 tourInstanceList: tourInstanceList
+             }))
+         })
+     })
+
+     socket.on('Create Tour Instance', (params) => {
+         var clientParams = JSON.parse(params);
+         var startDate = new Date(clientParams.startDate);
+         var endDate = new Date(clientParams.endDate);
+         var startTime = startDate.getUTCFullYear() + "-" + (startDate.getUTCMonth() + 1) + "-" + startDate.getUTCDate() + " " +
+             startDate.getUTCHours() + ":" + startDate.getUTCMinutes() + ":00.000";
+
+         var endTime = endDate.getUTCFullYear() + "-" + (endDate.getUTCMonth() + 1) + "-" + endDate.getUTCDate() + " " +
+             endDate.getUTCHours() + ":" + endDate.getUTCMinutes() + ":00.000";
+
+         var createTourInstanceQuery = "INSERT INTO TourInstance (StartTime,EndTime,IsActive,TourID,Status) \n" +
+             "VALUES ('" + startTime + "','" + endTime + "',1," + clientParams.tourID + ",1)";
+         var message = "";
+         var status = "";
+         connection.request().query(createTourInstanceQuery, (err, result) => {
+             if (err) {
+                 message = statusMessageError + createTourInstanceQuery;
+                 status = statusFailed
+             } else {
+                 message = statusMessageSuccess + createTourInstanceQuery;
+                 status = statusSuccess
+             }
+             io.emit('log message', message);
+             socket.emit('Create Tour Instance', JSON.stringify({
+                 status: status
+             }))
+         })
+
+     })
+
+     socket.on('Update Tour Instance', (params) => {
+         var clientParams = JSON.parse(params);
+         var startDate = new Date(clientParams.startDate);
+         var endDate = new Date(clientParams.endDate);
+         var startTime = startDate.getUTCFullYear() + "-" + (startDate.getUTCMonth() + 1) + "-" + startDate.getUTCDate() + " " +
+             startDate.getUTCHours() + ":" + startDate.getUTCMinutes() + ":00.000";
+
+         var endTime = endDate.getUTCFullYear() + "-" + (endDate.getUTCMonth() + 1) + "-" + endDate.getUTCDate() + " " +
+             endDate.getUTCHours() + ":" + endDate.getUTCMinutes() + ":00.000";
+
+         var updateTourInstanceQuery = "UPDATE TourInstance set \n" +
+             "StartTime='" + startTime + "', \n" +
+             "EndTime='" + endTime + "', \n" +
+             "TourID=" + clientParams.tourID + ", \n" +
+             "Status=" + clientParams.tourInstanceStatus + " \n" +
+             "where ID=" + clientParams.tourInstanceID;
+         var message = "";
+         var status = "";
+         connection.request().query(updateTourInstanceQuery, (err, result) => {
+             if (err) {
+                 message = statusMessageError + updateTourInstanceQuery;
+                 status = statusFailed
+             } else {
+                 message = statusMessageSuccess + updateTourInstanceQuery;
+                 status = statusSuccess
+             }
+             io.emit('log message', message);
+             socket.emit('Update Tour Instance', JSON.stringify({
+                 status: status
+             }))
+         })
+
+     })
+
+     socket.on('Remove Tour Instance', (params) => {
+         var clientParams = JSON.parse(params);
+         var removeTourInstanceQuery = "UPDATE TourInstance set IsActive=0 where ID=" + clientParams.tourInstanceID;
+         var message = "";
+         var status = "";
+         connection.request().query(removeTourInstanceQuery, (err, result) => {
+             if (err) {
+                 message = statusMessageError + removeTourInstanceQuery
+                 status = statusFailed
+             } else {
+                 message = statusMessageSuccess + removeTourInstanceQuery
+                 status = statusSuccess
+             }
+             io.emit('log message', message);
+             socket.emit('Remove Tour Instance', JSON.stringify({
+                 status: status
+             }))
+         })
+     })
+
+     socket.on('Reactive Tour Instance', (params) => {
+         var clientParams = JSON.parse(params);
+         var reactiveTourInstanceQuery = "UPDATE TourInstance set IsActive=1 where ID=" + clientParams.tourInstanceID;
+         var message = "";
+         var status = "";
+         connection.request().query(reactiveTourInstanceQuery, (err, result) => {
+             if (err) {
+                 message = statusMessageError + reactiveTourInstanceQuery
+                 status = statusFailed
+             } else {
+                 message = statusMessageSuccess + reactiveTourInstanceQuery
+                 status = statusSuccess
+             }
+             io.emit('log message', message);
+             socket.emit('Reactive Tour Instance', JSON.stringify({
+                 status: status
+             }))
+         })
+     })
+
+
+     socket.on('Tour Guide Get My Tour List', (params) => {
+         var clientParams = JSON.parse(params);
+         var getMyTourListQuery = "select distinct Tour.Name as TourName,TourInstance.ID as TourInstanceID, \n" +
+             "TourInstance.StartTime, TourInstance.EndTime, LicensePlate, \n" +
+             "TourInstanceStatus.Status \n" +
+             "from [User] \n" +
+             "inner join ScanHistory on [User].ID= ScanHistory.UserID \n" +
+             "inner join Schedule on ScanHistory.ScheduleID= Schedule.ID \n" +
+             "inner join TourInstanceDetail on Schedule.TourInstanceDetailId= TourInstanceDetail.ID \n" +
+             "inner join TourInstance on TourInstanceDetail.TourInstanceID = TourInstance.ID \n" +
+             "inner join Tour on Tour.ID = TourInstance.TourID \n" +
+             "inner join Coach on Coach.ID = ScanHistory.CoachID \n" +
+             "inner join TourInstanceStatus on TourInstance.Status = TourInstanceStatus.ID \n" +
+             "where [User].ID=" + clientParams.userID + " \n" +
+             "order by TourInstance.StartTime,TourInstance.EndTime";
+
+         var myTourList = [];
+         connection.request().query(getMyTourListQuery, (err, result) => {
+             if (err) {
+                 socket.emit('log message', statusMessageError + getMyTourListQuery)
+             } else {
+                 socket.emit('log message', statusMessageSuccess + getMyTourListQuery);
+                 if (typeof result !== "undefined" && result.recordset.length > 0) {
+                     var tourList = result.recordset;
+                     tourList.forEach(function(element, index) {
+                         var getTotalTouristQuery = "select count([User].ID) as TotalTourist \n" +
+                             "from TourInstance  \n" +
+                             "inner join [User] on TourInstance.ID = [User].TourInstanceID \n" +
+                             "Where [User].RoleID =3 and TourInstanceID=" + element.TourInstanceID;
+                         var TotalTourist = 0;
+                         var getTotalVisitPlaceQuery = "select count(VisitingPlaceID) as TotalVisitPlace \n" +
+                             "from TourInstance \n" +
+                             "inner join Tour on TourInstance.TourID = Tour.ID \n" +
+                             "inner join Tour_VisitingPlace on Tour.ID= Tour_VisitingPlace.TourID \n" +
+                             "where TourInstance.ID=" + element.TourInstanceID;
+                         var TotalVisitPlace = 0;
+                         connection.request().query(getTotalTouristQuery, (err, result) => {
+                             if (err) {
+                                 socket.emit('log message', statusMessageError + getTotalTouristQuery)
+                             } else {
+                                 socket.emit('log message', statusMessageSuccess + getTotalTouristQuery)
+                                 if (typeof result !== "undefined" && result.recordset.length > 0) {
+                                     TotalTourist = result.recordset[0].TotalTourist
+                                     element.TotalTourist = TotalTourist;
+                                 }
+                             }
+                             connection.request().query(getTotalVisitPlaceQuery, (err, result) => {
+                                 if (err) {
+                                     socket.emit('log message', statusMessageError + getTotalVisitPlaceQuery)
+                                 } else {
+                                     socket.emit('log message', statusMessageSuccess + getTotalVisitPlaceQuery)
+                                     if (typeof result !== "undefined" && result.recordset.length > 0) {
+                                         TotalVisitPlace = result.recordset[0].TotalVisitPlace
+                                         element.TotalVisitPlace = TotalVisitPlace;
+                                     }
+                                     myTourList.push(element)
+                                     if (index == tourList.length - 1) {
+                                         socket.emit('Tour Guide Get My Tour List', JSON.stringify({
+                                             myTourList: myTourList
+                                         }))
+                                     }
+                                 }
+                             })
+                         })
+
+
+
+
+                     }, this);
+                 }
+             }
+         })
+     })
+
+
+
+     socket.on('Get Coach List', (params) => {
+         var clientParams = JSON.parse(params);
+         var getCoachQuery = "";
      })
  })
 

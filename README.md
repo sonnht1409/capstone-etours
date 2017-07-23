@@ -271,6 +271,24 @@ Ex:
             }
       }
 
+      {
+       event name: 'Web Response Notification'
+       params:
+            {
+               notificationID: int,
+               isAccept: boolean (1 or 0)
+            }
+      }
+
+      {
+       event name: 'Tour Guide Get My Tour List'
+       params: 
+            {
+               userID: int   
+            }     
+      }
+      
+
 ## CRUD
 
      {
@@ -648,6 +666,54 @@ Ex:
             }
      }
 
+     {
+      event name: 'Get Tour Instance List'
+      params:
+            {
+                  tourID: int,
+                  tourInstanceStatus: int,
+                  isActive: bit (1 or 0)
+            }     
+     }
+
+     {
+      event name: 'Create Tour Instance'
+      params:
+            {
+                  startDate: datetime (both date and time include),
+                  endDate: datetime (both date and time include),
+                  tourID: int
+            }     
+     }
+
+     {
+      event name: 'Update Tour Instance'     
+      params:
+            {
+                  startDate: datetime (both date and time include),
+                  endDate: datetime (both date and time include),
+                  tourID: int
+                  tourInstanceStatus: int
+                  tourInstanceID: int
+            }
+     }
+
+     {
+      event name: 'Remove Tour Instance'
+      params: 
+            {
+                  tourInstanceID: int
+            }     
+     }
+
+     {
+      event name: 'Reactive Tour Instance'
+      params: 
+            {
+                  tourInstanceID: int
+            }     
+     }
+
 # Server event (send to client)
       {
         event name: 'getTouristList',
@@ -706,7 +772,10 @@ Ex:
                StartTime: datetime,
                EndTime: datetime,
                status: String,
-               logStatus: String
+               logStatus: String,
+               Email: string,
+               Address: string
+
              }
             
       }
@@ -831,7 +900,9 @@ Ex:
                UserActive: boolean,
                RoleActive: boolean,
                status: String,
-               logStatus: String
+               logStatus: String,
+               Email: string,
+               Address: string
              }
             
       }
@@ -954,13 +1025,23 @@ Ex:
             }
       }
       
+      
+
       {
-       event name: 'Web Response Notification'
-       params:
+       event name: 'Tour Guide Get My Tour List'
+       data: 
             {
-               notificationID: int,
-               isAccept: boolean (1 or 0)
-            }
+               myTourList: array[{
+                                    TourName: String,
+                                    TourInstanceID: int,
+                                    StartTime: datetime,
+                                    EndTime: datetime,
+                                    LicensePlate: String,
+                                    Status: String,
+                                    TotalTourist: int,
+                                    TotalVisitPlace:int
+                                    }]
+            }     
       }
 
 ## CRUD
@@ -1354,4 +1435,51 @@ Ex:
             {
                   status: string
             }
+     }
+
+      {
+      event name: 'Get Tour Instance List'
+      data:
+            {
+                 tourInstanceList: array[{
+                                          Duration:String
+                                          EndTime: datetime
+                                          StartTime: datetime
+                                          TourID:int
+                                          TourInstanceID:int
+                                          TourName: String
+                                        }] 
+            }     
+     }
+
+     {
+      event name: 'Create Tour Instance'
+      data:
+            {
+                  status: string
+            }     
+     }
+
+     {
+      event name: 'Update Tour Instance'     
+      data:
+            {
+                  status: string
+            }
+     }
+
+     {
+      event name: 'Remove Tour Instance'
+      data: 
+            {
+                  status: string
+            }     
+     }
+
+     {
+      event name: 'Reactive Tour Instance'
+      data: 
+            {
+                  status: string
+            }     
      }

@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Socket.IO chat</title>
+    <title>Etours Live Log</title>
 
 </head>
 
@@ -19,142 +19,168 @@
             $('form').submit(function() {
                 socket.emit('log message', $('#m').val());
                 /*socket.emit('getTouristList', {
-                    tourInstanceID: 3,
-                    coachId: 1
-                }) 
-                socket.emit('Scan', {
-                    cardCode: 'ET000001',
-                    tourInstanceID: 3
-                })
-                socket.emit('Mobile Login', JSON.stringify({
-                    username: 'tourguide1',
-                    password: '40bd001563085fc35165329ea1ff5c5ecbdbbeef'
-                }))
-                socket.emit('Mobile Sent GPS', JSON.stringify({
-                    userID: 1,
-                    tourInstanceID: 3,
-                    coachID: 1,
-                    lat: 16.0294362,
-                    long: 108.2216732
+                            tourInstanceID: 3,
+                            coachId: 1
+                        }) 
+                        socket.emit('Scan', {
+                            cardCode: 'ET000001',
+                            tourInstanceID: 3
+                        })
+                
+                        socket.emit('Mobile Sent GPS', JSON.stringify({
+                            userID: 1,
+                            tourInstanceID: 3,
+                            coachID: 1,
+                            lat: 16.0294362,
+                            long: 108.2216732
 
-                }))
-                socket.emit('Web Get GPS', JSON.stringify({
-                    tourInstanceID: 3,
-                    roleID: 1
-                }))
-                socket.emit('Get Visit Place Location', JSON.stringify({
-                    tourInstanceID: 3
-                }))
-                socket.emit('Create Place', JSON.stringify({
-                    Name: 'TP Hồ Chí Minh'
-                }))
-                socket.emit('Mobile Send Pick Up Location', JSON.stringify({
-                    tourInstanceID: 3,
-                    coachID: 1,
-                    userID: 3,
-                    hour: 10,
-                    min: 30,
-                    lat: 16.0028779,
-                    long: 108.2644913
-                }))
-                socket.emit('Mobile Get Schedule', JSON.stringify({
-                    tourInstanceID: 3
-                }))
+                        }))
+                        socket.emit('Web Get GPS', JSON.stringify({
+                            tourInstanceID: 3,
+                            roleID: 1
+                        }))
+                        socket.emit('Get Visit Place Location', JSON.stringify({
+                            tourInstanceID: 3
+                        }))
+                        socket.emit('Create Place', JSON.stringify({
+                            Name: 'TP Hồ Chí Minh'
+                        }))
+                        socket.emit('Mobile Send Pick Up Location', JSON.stringify({
+                            tourInstanceID: 3,
+                            coachID: 1,
+                            userID: 3,
+                            hour: 10,
+                            min: 30,
+                            lat: 16.0028779,
+                            long: 108.2644913
+                        }))
+                        socket.emit('Mobile Get Schedule', JSON.stringify({
+                            tourInstanceID: 3
+                        }))
 
-                socket.emit('Mobile Get Others Location', JSON.stringify({
-                    tourInstanceID: 3,
-                    coachID: 1,
-                    roleID: 0
-                }))
-                socket.emit('Mobile Gather Tourist', JSON.stringify({
-                    tourInstanceID: 3,
-                    coachID: 1,
-                    userList: []
-                }))
-                socket.emit('Mobile Login By Card', JSON.stringify({
-                    cardCode: 'ET000001'
-                }))
-                var scheduleList = [{
-                    scheduleID: 9,
-                    startYear: 2017,
-                    startMonth: 6,
-                    startDate: 1,
-                    startHour: 6,
-                    startMin: 15,
-                    endYear: 2017,
-                    endMonth: 6,
-                    endDate: 1,
-                    endHour: 6,
-                    endMin: 30
-                }, {
-                    scheduleID: 1,
-                    startYear: 2017,
-                    startMonth: 6,
-                    startDate: 1,
-                    startHour: 7,
-                    startMin: 15,
-                    endYear: 2017,
-                    endMonth: 6,
-                    endDate: 1,
-                    endHour: 9,
-                    endMin: 30
-                }]
-                socket.emit('Reschedule Time', JSON.stringify({
-                    scheduleList: scheduleList
-                }))
-                socket.emit('Mobile Send Request', JSON.stringify({
-                    message: 'Tắc đường',
-                    type: 3,
-                    userID: 3
-                }))
-                socket.emit('Mobile Get Notifications', JSON.stringify({
-                    userID: 3
-                }))
-                socket.emit('Web Login', JSON.stringify({
-                    username: "admin1",
-                    password: "40bd001563085fc35165329ea1ff5c5ecbdbbeef"
-                }))
-                socket.emit('Create Tour', JSON.stringify({
-                    name: "Đà Nẵng - Huế",
-                    startPlaceID: 1,
-                    destinationID: 19,
-                    duration: "2 ngày 1 đêm",
-                    description: ""
-                }))
-                socket.emit('Update Tour', JSON.stringify({
-                    name: "Đà Nẵng - Huế",
-                    startPlaceID: 1,
-                    destinationID: 19,
-                    duration: "3 ngày 2 đêm",
-                    description: "",
-                    tourID: 2
-                }))
+                        socket.emit('Mobile Get Others Location', JSON.stringify({
+                            tourInstanceID: 3,
+                            coachID: 1,
+                            roleID: 0
+                        }))
+                        socket.emit('Mobile Gather Tourist', JSON.stringify({
+                            tourInstanceID: 3,
+                            coachID: 1,
+                            userList: []
+                        }))
+                        socket.emit('Mobile Login By Card', JSON.stringify({
+                            cardCode: 'ET000001'
+                        }))
+                        var scheduleList = [{
+                            scheduleID: 9,
+                            startYear: 2017,
+                            startMonth: 6,
+                            startDate: 1,
+                            startHour: 6,
+                            startMin: 15,
+                            endYear: 2017,
+                            endMonth: 6,
+                            endDate: 1,
+                            endHour: 6,
+                            endMin: 30
+                        }, {
+                            scheduleID: 1,
+                            startYear: 2017,
+                            startMonth: 6,
+                            startDate: 1,
+                            startHour: 7,
+                            startMin: 15,
+                            endYear: 2017,
+                            endMonth: 6,
+                            endDate: 1,
+                            endHour: 9,
+                            endMin: 30
+                        }]
+                        socket.emit('Reschedule Time', JSON.stringify({
+                            scheduleList: scheduleList
+                        }))
+                        socket.emit('Mobile Send Request', JSON.stringify({
+                            message: 'Tắc đường',
+                            type: 3,
+                            userID: 3
+                        }))
+                        socket.emit('Mobile Get Notifications', JSON.stringify({
+                            userID: 3
+                        }))
+                        socket.emit('Web Login', JSON.stringify({
+                            username: "admin1",
+                            password: "40bd001563085fc35165329ea1ff5c5ecbdbbeef"
+                        }))
+                        socket.emit('Create Tour', JSON.stringify({
+                            name: "Đà Nẵng - Huế",
+                            startPlaceID: 1,
+                            destinationID: 19,
+                            duration: "2 ngày 1 đêm",
+                            description: ""
+                        }))
+                        socket.emit('Update Tour', JSON.stringify({
+                            name: "Đà Nẵng - Huế",
+                            startPlaceID: 1,
+                            destinationID: 19,
+                            duration: "3 ngày 2 đêm",
+                            description: "",
+                            tourID: 2
+                        }))
 
-                socket.emit('Get Tour List', JSON.stringify({
-                    isActive: 1
-                }))
-                var scanDataList = [];
-                scanDataList.push({
-                    scheduleID: 9,
-                    progress: 2,
-                    numberPerTotal: "1/2",
-                    listTouristOff: "",
-                    note: ""
-                })
-                socket.emit('Update Mobile Schedule', JSON.stringify({
-                    scanDataList: scanDataList
-                }))
+                        socket.emit('Get Tour List', JSON.stringify({
+                            isActive: 1
+                        }))
+                        var scanDataList = [];
+                        scanDataList.push({
+                            scheduleID: 9,
+                            progress: 2,
+                            numberPerTotal: "1/2",
+                            listTouristOff: "",
+                            note: ""
+                        })
+                        socket.emit('Update Mobile Schedule', JSON.stringify({
+                            scanDataList: scanDataList
+                        }))
 
-                socket.emit('Get Scan History', JSON.stringify({
-                    tourInstanceID: 3
-                }))
-                var array = [{
+                
+                        var array = [{
+                            tourID: 1,
+                            visitPlaceID: 1,
+                            priority: 1
+                        }]
+                        socket.emit('Order Visit Place', JSON.stringify({
+                            visitPlaceOrderList: array
+                        }))
+
+                        socket.emit('Create Tour Instance', JSON.stringify({
+                            startDate: new Date("2017-07-23T01:15:00.000Z"),
+                            endDate: new Date("2017-07-23T02:15:00.000Z"),
+                            tourID: 21
+                        }))
+
+                        socket.emit('Update Tour Instance', JSON.stringify({
+                            startDate: new Date("2017-07-23T02:15:00.000Z"),
+                            endDate: new Date("2017-07-23T03:15:00.000Z"),
+                            tourID: 1,
+                            tourInstanceStatus: 1,
+                            tourInstanceID: 8
+                        }))
+
+                        socket.emit('Tour Guide Get My Tour List', JSON.stringify({
+                            userID: 3
+                        }))
+                        socket.emit('Get Scan History', JSON.stringify({
+                            tourInstanceID: 3,
+                            userID: 3
+                        }))
+                        socket.emit('Mobile Login', JSON.stringify({
+                            username: 'tourguide1',
+                            password: '40bd001563085fc35165329ea1ff5c5ecbdbbeef'
+                        }))
+                socket.emit('Get Tour Instance List', JSON.stringify({
                     tourID: 1,
-                    visitPlaceID: 1,
-                    priority: 1
-                }]
-                socket.emit('Order Visit Place', JSON.stringify({
-                    visitPlaceOrderList: array
+                    tourInstanceStatus: 1,
+                    isActive: 1
                 }))*/
                 $('#m').val('');
                 return false;
@@ -214,6 +240,16 @@
 
             socket.on('Get Scan History', (data) => {
                 console.log(JSON.parse(data));
+            })
+            socket.on('Update Tour Instance', (data) => {
+                console.log(JSON.parse(data));
+            })
+
+            socket.on('Mobile Login', (data) => {
+                console.log(JSON.parse(data));
+            })
+            socket.on('Get Tour Instance List', (data) => {
+                console.log(JSON.parse(data))
             })*/
         });
     </script>
