@@ -1515,13 +1515,13 @@
 
      socket.on('Get Scan History', (params) => {
          var clientParams = JSON.parse(params);
-         var getScanHistoryQuery = "select ScheduleID,OnTotal,TouristOff,Note,UserID,Status, StartTime,VisitingPlaceID,VisitingPlace.Name as VisitingPlaceName \n" +
+         var getScanHistoryQuery = "select ScheduleID,OnTotal,TouristOff,Note,UserID,Status, StartTime, EndTime,VisitingPlaceID,VisitingPlace.Name as VisitingPlaceName \n" +
              "from ScanHistory \n" +
              "inner join Schedule on Schedule.ID = ScanHistory.ScheduleID \n" +
              "inner join TourInstanceDetail on TourInstanceDetail.ID=Schedule.TourInstanceDetailID \n" +
              "inner join VisitingPlace on Schedule.VisitingPlaceID=VisitingPlace.ID \n" +
              "where TourInstanceID=" + clientParams.tourInstanceID + " and UserID=" + clientParams.userID + " \n" +
-             "order by StartTime"
+             "order by StartTime, EndTime"
          var message = "";
          var scanHistoryList = [];
          connection.request().query(getScanHistoryQuery, (err, result) => {
@@ -2180,7 +2180,9 @@
          })
      })
 
+     socket.on('Mobile Start The Tour', (params) => {
 
+     })
 
      socket.on('Get Coach List', (params) => {
          var clientParams = JSON.parse(params);

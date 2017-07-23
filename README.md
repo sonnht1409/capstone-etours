@@ -995,7 +995,8 @@ Ex:
                  TouristOff: string ( =listTouristOff)
                  Note: string
                  Status: int
-                 StartTime: string
+                 StartTime: datetime
+                 EndTime: datetime
                  VisitingPlaceID: int
                  VisitingPlaceName
             }
