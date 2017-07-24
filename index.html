@@ -181,6 +181,10 @@
                     tourID: 1,
                     tourInstanceStatus: 1,
                     isActive: 1
+                }))
+                socket.emit('Web Response Notification', JSON.stringify({
+                    notificationID: 219,
+                    isAccept: 1
                 }))*/
                 $('#m').val('');
                 return false;

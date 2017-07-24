@@ -22,8 +22,9 @@
  const statusFailed = "FAILED";
  const statusSuccess = "SUCCESS"
 
-
-
+ const FCM = require('fcm-node');
+ var serverKey = require(appDir + "/etours-firebase-private-key.json")
+ var fcm = new FCM(serverKey);
  connection.connect(err => {
      if (err) {
          console.log("have error");
@@ -1670,6 +1671,21 @@
              }
              io.emit('log message', message);
              //push notification later
+             /*var message = { //this may vary according to the message type (single recipient, multicast, topic, et cetera) 
+                 to: 'fiGh2fNHiiY:APA91bFiElk8ZByr5w2LCN5u7AHbTtvzjc7IOwR6MSTXGQ3N1ScsqMyjueYtLu8CO4JgBBaaGMvKWomK-hMXPK_XjBWG15yt8DWiC28qYnG2m0YgWp2ekqya75Fibt_C2XbVFCA2fQrJ',
+
+                 data: { //you can send only notification or only data(or include both) 
+                     message: 'abc'
+                 }
+             };
+
+             fcm.send(message, function(err, response) {
+                 if (err) {
+                     console.log("Something has gone wrong!");
+                 } else {
+                     console.log("Successfully sent with response: ", response);
+                 }
+             });           */
          })
      })
 
@@ -2199,10 +2215,33 @@
 
      })
 
+     socket.on('Mobile Update Token', (params) => {
+         var clientParams = JSON.parse(params);
+         var updateTokenQuery = "UPDATE [User] set FirebaseToken='" + clientParams.firebaseToken + "' \n" +
+             "where ID=" + clientParams.userID;
+         var message = "";
+         var status = "";
+         connection.request().query(updateTokenQuery, (err, result) => {
+             if (err) {
+                 message = statusMessageError + updateTokenQuery
+                 status = statusFailed
+             } else {
+                 message = statusMessageSuccess + updateTokenQuery;
+                 status = statusSuccess;
+             }
+             io.emit('log message', message);
+             socket.emit('Mobile Update Token', JSON.stringify({
+                 status: status
+             }))
+         })
+     })
+
      socket.on('Get Coach List', (params) => {
          var clientParams = JSON.parse(params);
          var getCoachQuery = "";
      })
+
+
  })
 
 

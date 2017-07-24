@@ -288,6 +288,14 @@ Ex:
             }     
       }
       
+      {
+       event name: 'Mobile Upate Token'
+       params:
+            {
+               userID: int,
+               firebaseToken: string   
+            }     
+      }
 
 ## CRUD
 
@@ -1042,6 +1050,14 @@ Ex:
                                     TotalTourist: int,
                                     TotalVisitPlace:int
                                     }]
+            }     
+      }
+
+      {
+       event name: 'Mobile Upate Token'
+       data:
+            {
+               status: string  
             }     
       }
 
