@@ -1054,7 +1054,7 @@ Ex:
       }
 
       {
-       event name: 'Mobile Upate Token'
+       event name: 'Mobile Update Token'
        data:
             {
                status: string  
