@@ -63,11 +63,7 @@
                             coachID: 1,
                             roleID: 0
                         }))
-                        socket.emit('Mobile Gather Tourist', JSON.stringify({
-                            tourInstanceID: 3,
-                            coachID: 1,
-                            userList: []
-                        }))
+                        
                         socket.emit('Mobile Login By Card', JSON.stringify({
                             cardCode: 'ET000001'
                         }))
@@ -181,6 +177,14 @@
                     tourID: 1,
                     tourInstanceStatus: 1,
                     isActive: 1
+                }))
+                
+                socket.emit('Mobile Gather Tourist', JSON.stringify({
+                    tourInstanceID: 3,
+                    coachID: 1,
+                    userList: [4, 9],
+                    senderID: 3,
+                    message: 'tập trung khẩn cấp'
                 }))
                 socket.emit('Web Response Notification', JSON.stringify({
                     notificationID: 219,

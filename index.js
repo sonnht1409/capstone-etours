@@ -752,39 +752,97 @@
      socket.on('Mobile Gather Tourist', (params) => {
          var clientParams = JSON.parse(params);
 
-         var message = "Xin quý hành khách vui lòng đến điểm tập trung!";
-         var queryMEssage = "";
+         var message = clientParams.message;
+         var queryMessage = "";
          if (typeof clientParams.userList === "undefined" || clientParams.userList.length == 0) {
-             var getTouristListQuery = "select [user].ID as UserID \n" +
+             var getTouristListQuery = "select [user].ID as UserID, FirebaseToken \n" +
                  "from [user] inner join User_Coach_SeatNumber as UCSN on [user].ID = UCSN.UserID \n" +
                  "where [user].TourInstanceID=" + clientParams.tourInstanceID + " and RoleID = 3 and CoachID = " + clientParams.coachID;
 
              connection.request().query(getTouristListQuery, (err, result) => {
                  var userList = [];
                  if (err) {
-                     queryMEssage = statusMessageError + getTouristListQuery;
+                     queryMessage = statusMessageError + getTouristListQuery;
                  } else {
-                     queryMEssage = statusMessageSuccess + getTouristListQuery;
+                     queryMessage = statusMessageSuccess + getTouristListQuery;
 
                      if (typeof result !== "undefined" && result.recordset.length > 0) {
                          userList = result.recordset;
                      }
                  }
-                 io.emit('log message', queryMEssage);
-                 socket.broadcast.emit('Mobile Gather Tourist', JSON.stringify({
-                     tourInstanceID: clientParams.tourInstanceID,
-                     coachID: clientParams.coachID,
-                     userList: userList,
-                     message: message
-                 }))
+                 io.emit('log message', queryMessage)
+                 userList.forEach(function(element, index) {
+                     var insertNotificationQuery = "INSERT INTO Notification (Message,Type,SenderID,ReceiverID) \n" +
+                         "VALUES (N'" + message + "',4," + clientParams.senderID + "," + element.UserID + ")";
+                     queryMessage = "";
+                     connection.request().query(insertNotificationQuery, (err, result) => {
+                         if (err) {
+                             queryMessage = statusMessageError + insertNotificationQuery
+                         } else {
+                             queryMessage = statusMessageSuccess + insertNotificationQuery
+                         }
+                         io.emit('log message', queryMessage);
+                     })
+                     var fcmMessage = {
+                         to: element.FirebaseToken,
+                         data: {
+                             message: message
+                         }
+                     }
+                     fcm.send(fcmMessage, function(err, response) {
+                         if (err) {
+                             io.emit('log message', statusMessageError + "cannot push notification to user with id=" + element.UserID)
+                         } else {
+                             io.emit('log message', statusMessageSuccess + "successfully pushed notification to user with id=" + element.UserID)
+                         }
+                     });
+
+                 }, this);
              })
          } else {
-             socket.broadcast.emit('Mobile Gather Tourist', JSON.stringify({
-                 tourInstanceID: clientParams.tourInstanceID,
-                 coachID: clientParams.coachID,
-                 userList: clientParams.userList,
-                 message: message
-             }))
+             var userList = clientParams.userList
+             userList.forEach(function(element, index) {
+                 var getFirebaseTokenQuery = "select FirebaseToken \n" +
+                     "from [user] inner join User_Coach_SeatNumber as UCSN on [user].ID = UCSN.UserID \n" +
+                     "where [user].ID=" + element
+                 queryMessage = "";
+                 var firebaseToken = "";
+                 connection.request().query(getFirebaseTokenQuery, (err, result) => {
+                     if (err) {
+                         queryMessage = statusMessageError + getFirebaseTokenQuery
+                     } else {
+                         queryMessage = statusMessageSuccess + getFirebaseTokenQuery
+                         if (typeof result !== "undefined" && result.recordset.length > 0) {
+                             firebaseToken = result.recordset[0].FirebaseToken
+                         }
+                     }
+                     var insertNotificationQuery = "INSERT INTO Notification (Message,Type,SenderID,ReceiverID) \n" +
+                         "VALUES (N'" + message + "',4," + clientParams.senderID + "," + element + ")";
+                     queryMessage = "";
+                     connection.request().query(insertNotificationQuery, (err, result) => {
+                         if (err) {
+                             queryMessage = statusMessageError + insertNotificationQuery
+                         } else {
+                             queryMessage = statusMessageSuccess + insertNotificationQuery
+                         }
+                         io.emit('log message', queryMessage);
+                     })
+                     var fcmMessage = {
+                         to: firebaseToken,
+                         data: {
+                             message: message
+                         }
+                     }
+                     fcm.send(fcmMessage, function(err, response) {
+                         if (err) {
+                             io.emit('log message', statusMessageError + "cannot push notification to user with id=" + element)
+                         } else {
+                             io.emit('log message', statusMessageSuccess + "successfully pushed notification to user with id=" + element)
+                         }
+                     });
+
+                 })
+             }, this);
          }
      })
 
@@ -1090,7 +1148,7 @@
 
              }
              io.emit('log message', message);
-             // push notification
+
              socket.broadcast.emit('Web Trigger Notification', JSON.stringify({}))
          })
      })
@@ -1665,27 +1723,64 @@
          var message = "";
          connection.request().query(responseNotificationQuery, (err, result) => {
              if (err) {
-                 message = "";
+                 message = statusMessageError + responseNotificationQuery;
              } else {
-                 message = "";
+                 message = statusMessageSuccess + responseNotificationQuery;
              }
              io.emit('log message', message);
-             //push notification later
-             /*var message = { //this may vary according to the message type (single recipient, multicast, topic, et cetera) 
-                 to: 'fiGh2fNHiiY:APA91bFiElk8ZByr5w2LCN5u7AHbTtvzjc7IOwR6MSTXGQ3N1ScsqMyjueYtLu8CO4JgBBaaGMvKWomK-hMXPK_XjBWG15yt8DWiC28qYnG2m0YgWp2ekqya75Fibt_C2XbVFCA2fQrJ',
-
-                 data: { //you can send only notification or only data(or include both) 
-                     message: 'abc'
-                 }
-             };
-
-             fcm.send(message, function(err, response) {
+             var getSenderQuery = "select SenderID from Notification where ID=" + clientParams.notificationID;
+             message = "";
+             var senderID;
+             connection.request().query(getSenderQuery, (err, result) => {
                  if (err) {
-                     console.log("Something has gone wrong!");
+                     message = statusMessageError + getSenderQuery;
                  } else {
-                     console.log("Successfully sent with response: ", response);
+                     message = statusMessageSuccess + getSenderQuery
+                     if (typeof result !== "undefined" && result.recordset.length > 0) {
+                         senderID = result.recordset[0].SenderID;
+                     }
                  }
-             });           */
+                 io.emit('log message', message)
+                 var getSenderFirebaseToken = "select FirebaseToken from [user] where id=" + senderID;
+                 var message = "";
+                 var firebaseToken = "";
+                 connection.request().query(getSenderFirebaseToken, (err, result) => {
+                     if (err) {
+                         message = statusMessageError + getSenderFirebaseToken
+                     } else {
+                         message = statusMessageSuccess + getSenderFirebaseToken
+                         if (typeof result !== "undefined" && result.recordset.length > 0) {
+                             firebaseToken = result.recordset[0].FirebaseToken
+                         }
+                     }
+                     io.emit('log message', message);
+                     var messageToSend = "được chấp thuận";
+                     if (clientParams.isAccept == 1) {
+                         messageToSend = "được chấp thuận";
+                     } else {
+                         messageToSend = "không được chấp thuận";
+                     }
+
+                     var fcmMessage = {
+                         to: firebaseToken,
+
+                         data: {
+                             message: 'Yêu cầu của bạn đã ' + messageToSend
+                         }
+                     };
+
+                     fcm.send(fcmMessage, function(err, response) {
+                         if (err) {
+                             io.emit('log message', statusMessageError + "cannot push notification to user with id=" + senderID)
+                         } else {
+                             io.emit('log message', statusMessageSuccess + "successfully pushed notification to user with id=" + senderID)
+                         }
+                     });
+                 })
+
+             })
+
+
          })
      })
 

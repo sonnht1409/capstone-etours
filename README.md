@@ -131,7 +131,9 @@ Ex:
             {
               tourInstanceID: int,
               coachID: int,
-              userList: array of UserID (if null or empty mean send to all tourist)
+              userList: array of UserID (if null or empty mean send to all tourist),
+              message: string
+              senderID: int
             }
      }
      
