@@ -778,6 +778,7 @@ Ex:
                LicensePlate,
                UserActive: boolean,
                RoleActive: boolean,
+               TourID: int
                TourName: string,
                StartTime: datetime,
                EndTime: datetime,
@@ -907,8 +908,13 @@ Ex:
                RoleID: int,
                TourInstanceID: int,
                CoachID: int,
+               LicensePlate,
                UserActive: boolean,
                RoleActive: boolean,
+               TourID: int
+               TourName: string,
+               StartTime: datetime,
+               EndTime: datetime,
                status: String,
                logStatus: String,
                Email: string,

@@ -64,9 +64,7 @@
                             roleID: 0
                         }))
                         
-                        socket.emit('Mobile Login By Card', JSON.stringify({
-                            cardCode: 'ET000001'
-                        }))
+                        
                         var scheduleList = [{
                             scheduleID: 9,
                             startYear: 2017,
@@ -189,6 +187,9 @@
                 socket.emit('Web Response Notification', JSON.stringify({
                     notificationID: 219,
                     isAccept: 1
+                }))
+                socket.emit('Mobile Login By Card', JSON.stringify({
+                    cardCode: 'ET000001'
                 }))*/
                 $('#m').val('');
                 return false;
@@ -226,9 +227,7 @@
             socket.on('Mobile Gather Tourist', function(data) {
                 console.log(JSON.parse(data))
             }) 
-            socket.on('Mobile Login By Card', function(data) {
-                console.log(JSON.parse(data));
-            })
+           
             socket.on('Mobile Get Notifications', (data) => {
                 console.log(JSON.parse(data));
             })
@@ -258,6 +257,9 @@
             })
             socket.on('Get Tour Instance List', (data) => {
                 console.log(JSON.parse(data))
+            })
+            socket.on('Mobile Login By Card', function(data) {
+                console.log(JSON.parse(data));
             })*/
         });
     </script>

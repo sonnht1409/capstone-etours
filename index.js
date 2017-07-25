@@ -225,7 +225,7 @@
          var authenicateQuery =
              "select fullname,PhoneNumber,Email,Address, CoachID, Coach.LicensePlate, [user].TourInstanceID, [user].id as UserID, role.ID as RoleID, role" +
              ", [user].IsActive as UserActive, role.IsActive as RoleActive, \n " +
-             "Tour.Name as TourName, TourInstance.StartTime,TourInstance.EndTime \n" +
+             "TourID, Tour.Name as TourName, TourInstance.StartTime,TourInstance.EndTime \n" +
              "from [user] \n " +
              "inner join UserInfo on [user].ID = UserInfo.UserID \n " +
              "inner join Role on [user].RoleID = Role.ID \n " +
@@ -849,14 +849,31 @@
      socket.on('Mobile Login By Card', (params) => {
          console.log(params)
          var clientParams = JSON.parse(params);
-         console.log(clientParams)
+         /*
          var authenicateQuery =
-             "select fullname,PhoneNumber,Email,Address, CoachID, [user].TourInstanceID, [user].id as UserID, role.ID as RoleID, role" +
-             ", [user].IsActive as UserActive, role.IsActive as RoleActive \n " +
+             "select fullname,PhoneNumber,Email,Address, CoachID, Coach.LicensePlate, [user].TourInstanceID, [user].id as UserID, role.ID as RoleID, role" +
+             ", [user].IsActive as UserActive, role.IsActive as RoleActive, \n " +
+             "TourID, Tour.Name as TourName, TourInstance.StartTime,TourInstance.EndTime \n" +
+             "from [user] \n " +
+             "inner join UserInfo on [user].ID = UserInfo.UserID \n " +
+             "inner join Role on [user].RoleID = Role.ID \n " +
+             "inner join User_Coach_SeatNumber as UCSN on [user].id = UCSN.UserID \n" +
+             "inner join Coach on UCSN.CoachID=Coach.ID \n" +
+             "inner join TourInstance on [user].TourInstanceID=TourInstance.ID \n" +
+             "inner join Tour on TourInstance.TourID=Tour.ID \n" +
+             "where username ='" + username + "' and password='" + password + "'";
+         */
+         var authenicateQuery =
+             "select fullname,PhoneNumber,Email,Address, CoachID, Coach.LicensePlate, [user].TourInstanceID, [user].id as UserID, role.ID as RoleID, role" +
+             ", [user].IsActive as UserActive, role.IsActive as RoleActive, \n " +
+             "TourID, Tour.Name as TourName, TourInstance.StartTime,TourInstance.EndTime \n" +
              "from Card inner join [user] on Card.UserID = [user].id \n " +
              "inner join UserInfo on [user].ID = UserInfo.UserID \n " +
              "inner join Role on [user].RoleID = Role.ID \n " +
              "inner join User_Coach_SeatNumber as UCSN on [user].id = UCSN.UserID \n" +
+             "inner join Coach on UCSN.CoachID=Coach.ID \n" +
+             "inner join TourInstance on [user].TourInstanceID=TourInstance.ID \n" +
+             "inner join Tour on TourInstance.TourID=Tour.ID \n" +
              "where Card.Code='" + clientParams.cardCode + "'";
          console.log(authenicateQuery)
          var message = "";
