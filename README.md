@@ -1070,6 +1070,14 @@ Ex:
             }     
       }
 
+      {
+       event name: 'Web Response Notification'
+       data:
+            {
+               status: string
+            }
+      }
+
 ## CRUD
       {
         event name: 'Create Place'

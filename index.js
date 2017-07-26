@@ -1262,8 +1262,6 @@
      socket.on('Mobile Get Received Notifications', (params) => {
          var clientParams = JSON.parse(params);
          var date = new Date();
-         var hour = date.getHours() + 7;
-         date.setHours(hour)
          var dateStartTime = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " 00:00:00.000";
          var dateEndTime = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " 23:59:59.999";
          var getNotificationQuery = "select Notification.ID as notificationID,message,NotificationType.name as messageType, time, senderID, \n" +
@@ -1749,9 +1747,10 @@
                  status = statusSuccess
              }
              io.emit('log message', message);
-             var getSenderQuery = "select SenderID from Notification where ID=" + clientParams.notificationID;
+             var getSenderQuery = "select SenderID, Message from Notification where ID=" + clientParams.notificationID;
              message = "";
              var senderID;
+             var requestMessage = "";
              connection.request().query(getSenderQuery, (err, result) => {
                  if (err) {
                      message = statusMessageError + getSenderQuery;
@@ -1759,6 +1758,7 @@
                      message = statusMessageSuccess + getSenderQuery
                      if (typeof result !== "undefined" && result.recordset.length > 0) {
                          senderID = result.recordset[0].SenderID;
+                         requestMessage = result.recordset[0].message
                      }
                  }
                  io.emit('log message', message)
@@ -1798,7 +1798,15 @@
                          }
                      });
                  })
-
+                 var insertNotificationQuery = "INSERT INTO Notification (Message,Type,SenderID,ReceiverID,IsAccept) \n" +
+                     "VALUES (N'" + requestMessage + "',0,0," + senderID + "," + clientParams.isAccept + ")"
+                 connection.request().query(insertNotificationQuery, (err, result) => {
+                     if (err) {
+                         io.emit('log message', statusMessageError + insertNotificationQuery)
+                     } else {
+                         io.emit('log message', statusMessageSuccess + insertNotificationQuery)
+                     }
+                 })
              })
              socket.emit('Web Response Notification', JSON.stringify({
                  status: status
