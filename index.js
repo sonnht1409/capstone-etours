@@ -1800,7 +1800,7 @@
                      });
                  })
                  var insertNotificationQuery = "INSERT INTO Notification (Message,Type,ReceiverID,IsAccept) \n" +
-                     "VALUES (N'" + requestMessage + "',5,0," + senderID + "," + clientParams.isAccept + ")"
+                     "VALUES (N'" + requestMessage + "',5," + senderID + "," + clientParams.isAccept + ")"
                  connection.request().query(insertNotificationQuery, (err, result) => {
                      if (err) {
                          io.emit('log message', statusMessageError + insertNotificationQuery)
