@@ -1265,7 +1265,7 @@
          var dateStartTime = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " 00:00:00.000";
          var dateEndTime = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " 23:59:59.999";
          var getNotificationQuery = "select Notification.ID as notificationID,message,NotificationType.name as messageType, time, senderID, \n" +
-             "UserInfo.Fullname as senderName, receiverID, UI.Fullname as receiverName,isRead \n" +
+             "UserInfo.Fullname as senderName, receiverID, UI.Fullname as receiverName,isRead,isAccept \n" +
              "from Notification \n" +
              "inner join UserInfo on SenderID = UserInfo.UserID \n" +
              "inner join UserInfo as UI on ReceiverID = UI.UserID \n" +

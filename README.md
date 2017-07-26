@@ -997,7 +997,8 @@ Ex:
                                           senderName: string
                                           receiverID:int
                                           receiverName: string                                         
-                                          isRead: bit
+                                          isRead: bit,
+                                          isAccept: bit
                                           }]
             }
       }
