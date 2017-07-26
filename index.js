@@ -1233,7 +1233,7 @@
              "inner join Coach on UCSN.CoachID = Coach.ID \n" +
              "inner join TourInstance on [user].TourInstanceID=TourInstance.ID \n" +
              "inner join Tour on TourInstance.TourID = Tour.ID \n" +
-             "where ReceiverID=null  \n" +
+             "where ReceiverID is null  \n" +
              // "and Time>='" + dateStartTime + "' and Time<='" + dateEndTime + "' \n" +
              "and Type=2 or Type=3 \n";
          if (clientParams.getAll == false) {
