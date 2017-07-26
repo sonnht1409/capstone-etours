@@ -1181,6 +1181,7 @@
          var dateEndTime = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " 23:59:59.999";
          var getNotificationQuery = "select top 20 ID as notificationID,message, time, isRead, isAccept from Notification \n" +
              "where senderID=" + clientParams.userID + " \n" +
+             "and Type=2 or Type=3 \n" +
              "order by Time DESC";
          var message = "";
          var notificationList = [];
