@@ -1270,7 +1270,7 @@
              "inner join UserInfo on SenderID = UserInfo.UserID \n" +
              "inner join UserInfo as UI on ReceiverID = UI.UserID \n" +
              "inner join NotificationType on Type=NotificationType.ID \n" +
-             "where ReceiverID=" + clientParams.userID //+ " \n"
+             "where ReceiverID=" + clientParams.userID + " \n"
              //"and Time>='" + dateStartTime + "' and Time<='" + dateEndTime + "' \n"
          getNotificationQuery += "order by Time DESC";
 
