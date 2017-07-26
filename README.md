@@ -971,6 +971,7 @@ Ex:
                                           licensePlate: string
                                           tourName: string
                                           isRead: bit
+                                          isAccept: bit
                                           }]
             }
       }

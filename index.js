@@ -1224,7 +1224,7 @@
          date.setHours(hour)
          var dateStartTime = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " 00:00:00.000";
          var dateEndTime = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " 23:59:59.999";
-         var getNotificationQuery = "select Notification.ID as notificationID,message, time, senderID,fullname as sender, licensePlate, isRead,Tour.Name as tourName  \n" +
+         var getNotificationQuery = "select Notification.ID as notificationID,message, time, senderID,fullname as sender, licensePlate,isAccept, isRead,Tour.Name as tourName  \n" +
              "from Notification \n" +
              "inner join [user] on SenderID = [user].ID \n" +
              "inner join UserInfo on SenderID=UserInfo.UserID \n" +
