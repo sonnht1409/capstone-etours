@@ -1268,7 +1268,7 @@
          var getNotificationQuery = "select Notification.ID as notificationID,message,NotificationType.name as messageType, time, senderID, \n" +
              "UserInfo.Fullname as senderName, receiverID, UI.Fullname as receiverName,isRead,isAccept \n" +
              "from Notification \n" +
-             "inner join UserInfo on SenderID = UserInfo.UserID \n" +
+             "left join UserInfo on SenderID = UserInfo.UserID \n" +
              "inner join UserInfo as UI on ReceiverID = UI.UserID \n" +
              "inner join NotificationType on Type=NotificationType.ID \n" +
              "where ReceiverID=" + clientParams.userID + " \n"
