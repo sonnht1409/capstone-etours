@@ -993,8 +993,8 @@ Ex:
                                           message: string
                                           messageType: string
                                           time: string (chưa +7 UTC)
-                                          senderID: int (NULL mean sent from center)
-                                          senderName: string (NULL mean name = admin)
+                                          senderID: int (0 mean sent from center)
+                                          senderName: string (0 mean name = admin)
                                           receiverID:int
                                           receiverName: string                                         
                                           isRead: bit,

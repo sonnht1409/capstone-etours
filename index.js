@@ -1284,6 +1284,15 @@
                  message = statusMessageSuccess + getNotificationQuery
                  if (typeof result != "undefined" && result.recordset.length > 0) {
                      notificationList = result.recordset;
+                     notificationList.forEach(function(element) {
+                         if (typeof element.senderID === "undefined" || element.senderID == null) {
+                             element.senderID = 0
+                         }
+                         if (typeof element.senderName === "undefined" || element.senderName == null) {
+                             element.senderName = "Admin"
+                         }
+
+                     }, this);
                  }
              }
 
