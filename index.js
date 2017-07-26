@@ -1233,7 +1233,7 @@
              "inner join TourInstance on [user].TourInstanceID=TourInstance.ID \n" +
              "inner join Tour on TourInstance.TourID = Tour.ID \n" +
              "where ReceiverID=0  \n" +
-             "and Time>='" + dateStartTime + "' and Time<='" + dateEndTime + "' \n" +
+             // "and Time>='" + dateStartTime + "' and Time<='" + dateEndTime + "' \n" +
              "and Type=2 or Type=3 \n";
          if (clientParams.getAll == false) {
              getNotificationQuery += "and IsRead=0 \n"
@@ -1758,7 +1758,7 @@
                      message = statusMessageSuccess + getSenderQuery
                      if (typeof result !== "undefined" && result.recordset.length > 0) {
                          senderID = result.recordset[0].SenderID;
-                         requestMessage = result.recordset[0].message
+                         requestMessage = result.recordset[0].Message
                      }
                  }
                  io.emit('log message', message)
