@@ -1739,11 +1739,14 @@
          var responseNotificationQuery = "UPDATE Notification set IsAccept=" + clientParams.isAccept + " \n" +
              "where ID=" + clientParams.notificationID;
          var message = "";
+         var status = "";
          connection.request().query(responseNotificationQuery, (err, result) => {
              if (err) {
                  message = statusMessageError + responseNotificationQuery;
+                 status = statusFailed
              } else {
                  message = statusMessageSuccess + responseNotificationQuery;
+                 status = statusSuccess
              }
              io.emit('log message', message);
              var getSenderQuery = "select SenderID from Notification where ID=" + clientParams.notificationID;
@@ -1797,7 +1800,9 @@
                  })
 
              })
-
+             socket.emit('Web Response Notification', JSON.stringify({
+                 status: status
+             }))
 
          })
      })
