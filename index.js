@@ -469,7 +469,7 @@
          if (pickUpAddress === "") {
              pickUpAddress = "UNKNOW"
          }
-         var getDriverAndTourguideInfoQuery = "select Fullname, PhoneNumber, [user].id, Coach.LicensePlate \n" +
+         var getDriverAndTourguideInfoQuery = "select Fullname, PhoneNumber, [user].id, FirebaseToken, Coach.LicensePlate \n" +
              "from [user] inner join UserInfo on [user].ID=UserInfo.UserID \n" +
              "inner join User_Coach_SeatNumber as UCSN on [user].id = UCSN.UserID \n" +
              "inner join Coach on UCSN.CoachID = Coach.ID \n" +
@@ -487,19 +487,19 @@
                      userList = result.recordset;
                      notification +=
                          "Thông báo đổi địa điểm đón! \n" +
-                         "Xin chào " + userList[0].Fullname + ", xe mang biển số: " + userList[0].LicensePlate + ". \n" +
+                         //"Xin chào " + userList[0].Fullname + ", xe mang biển số: " + userList[0].LicensePlate + ". \n" +
                          "Hướng dẫn viên " + userList[1].Fullname + " đã thay đổi địa điểm đón tiếp theo trong lịch trình." +
                          "Địa điểm mới là: " + pickUpAddress + ". \n" +
                          "Vào lúc" + date.getHours() + " giờ " + date.getMinutes() + " phút, \n" +
-                         "ngày " + date.getDate() + " tháng " + (date.getMonth() + 1) + " năm " + date.getFullYear() + ". \n" +
-                         "Vui lòng ấn nút Điểm Đón Tiếp Theo để nhìn trên bản đồ."
+                         "ngày " + date.getDate() + " tháng " + (date.getMonth() + 1) + " năm " + date.getFullYear() + ". \n"
 
 
 
                      notificationContent = {
                          senderID: userList[1].id,
                          receiverID: userList[0].id,
-                         type: 1
+                         type: 1,
+                         receiverToken: userList[0].FirebaseToken
                      }
                  }
 
@@ -519,19 +519,21 @@
                          message = statusMessageSuccess + insertNotificationQuery;
                      }
                      io.emit('log message', message);
-                     socket.broadcast.emit('Mobile Receiver Pick Up Notification', JSON.stringify({
-                         tourInstanceID: clientParams.tourInstanceID,
-                         coachID: clientParams.coachID,
-                         receiverID: notificationContent.receiverID,
-                         lat: clientParams.lat,
-                         long: clientParams.long,
-                         hour: date.getHours(),
-                         min: date.getMinutes(),
-                         date: date.getDate(),
-                         month: date.getMonth() + 1,
-                         year: date.getFullYear(),
-                         notification: notification
-                     }))
+                     console.log(notificationContent.receiverToken)
+                     var fcmMessage = {
+                         to: notificationContent.receiverToken,
+                         data: {
+                             message: 'Thông báo đổi địa điểm đón!'
+                         }
+                     }
+
+                     fcm.send(fcmMessage, function(err, response) {
+                         if (err) {
+                             io.emit('log message', statusMessageError + "cannot push notification to user with id=" + notificationContent.receiverID)
+                         } else {
+                             io.emit('log message', statusMessageSuccess + "successfully pushed notification to user with id=" + notificationContent.receiverID)
+                         }
+                     });
                  })
              }
          })
@@ -1177,9 +1179,8 @@
          date.setHours(hour)
          var dateStartTime = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " 00:00:00.000";
          var dateEndTime = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " 23:59:59.999";
-         var getNotificationQuery = "select top 15 ID as notificationID,message, time, isRead, isAccept from Notification \n" +
+         var getNotificationQuery = "select top 20 ID as notificationID,message, time, isRead, isAccept from Notification \n" +
              "where senderID=" + clientParams.userID + " \n" +
-             "and Type=2 or Type=3 \n" +
              "order by Time DESC";
          var message = "";
          var notificationList = [];

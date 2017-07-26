@@ -45,15 +45,7 @@
                         socket.emit('Create Place', JSON.stringify({
                             Name: 'TP Hồ Chí Minh'
                         }))
-                        socket.emit('Mobile Send Pick Up Location', JSON.stringify({
-                            tourInstanceID: 3,
-                            coachID: 1,
-                            userID: 3,
-                            hour: 10,
-                            min: 30,
-                            lat: 16.0028779,
-                            long: 108.2644913
-                        }))
+                        
                         socket.emit('Mobile Get Schedule', JSON.stringify({
                             tourInstanceID: 3
                         }))
@@ -190,6 +182,15 @@
                 }))
                 socket.emit('Mobile Login By Card', JSON.stringify({
                     cardCode: 'ET000001'
+                }))
+                socket.emit('Mobile Send Pick Up Location', JSON.stringify({
+                    tourInstanceID: 3,
+                    coachID: 1,
+                    userID: 3,
+                    hour: 10,
+                    min: 30,
+                    lat: 16.0028779,
+                    long: 108.2644913
                 }))*/
                 $('#m').val('');
                 return false;
