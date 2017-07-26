@@ -1181,7 +1181,7 @@
          var dateEndTime = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " 23:59:59.999";
          var getNotificationQuery = "select top 20 ID as notificationID,message, time, isRead, isAccept from Notification \n" +
              "where senderID=" + clientParams.userID + " \n" +
-             "and Type=2 or Type=3 \n" +
+             "and Type=2 or Type=3 or Type=1 \n" +
              "order by Time DESC";
          var message = "";
          var notificationList = [];
@@ -1233,7 +1233,7 @@
              "inner join Coach on UCSN.CoachID = Coach.ID \n" +
              "inner join TourInstance on [user].TourInstanceID=TourInstance.ID \n" +
              "inner join Tour on TourInstance.TourID = Tour.ID \n" +
-             "where ReceiverID=0  \n" +
+             "where ReceiverID=null  \n" +
              // "and Time>='" + dateStartTime + "' and Time<='" + dateEndTime + "' \n" +
              "and Type=2 or Type=3 \n";
          if (clientParams.getAll == false) {
@@ -1799,8 +1799,8 @@
                          }
                      });
                  })
-                 var insertNotificationQuery = "INSERT INTO Notification (Message,Type,SenderID,ReceiverID,IsAccept) \n" +
-                     "VALUES (N'" + requestMessage + "',0,0," + senderID + "," + clientParams.isAccept + ")"
+                 var insertNotificationQuery = "INSERT INTO Notification (Message,Type,ReceiverID,IsAccept) \n" +
+                     "VALUES (N'" + requestMessage + "',5,0," + senderID + "," + clientParams.isAccept + ")"
                  connection.request().query(insertNotificationQuery, (err, result) => {
                      if (err) {
                          io.emit('log message', statusMessageError + insertNotificationQuery)
