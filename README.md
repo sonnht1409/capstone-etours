@@ -158,6 +158,9 @@ Ex:
        event name: 'Reschedule Time'
        params:
             {
+              userID: int,
+              coachID: int,
+              tourInstanceID: int,    
               scheduleList: array object, ex: [{
                     scheduleID: 9,
                     startYear: 2017,
@@ -296,6 +299,23 @@ Ex:
             {
                userID: int,
                firebaseToken: string   
+            }     
+      }
+
+      {
+       event name: 'Mobile Start The Tour'
+       params:
+            {
+               tourInstanceID: int   
+            }     
+      }
+
+      {
+       event name: 'Complete Trip'
+       params:
+            {
+               coachID: int,
+               tourInstanceID: int   
             }     
       }
 
@@ -1077,6 +1097,22 @@ Ex:
             {
                status: string
             }
+      }
+
+      {
+       event name: 'Mobile Start The Tour'
+       params:
+            {
+               status: string
+            }     
+      }
+
+      {
+       event name: 'Complete Trip'
+       params:
+            {
+               status: string
+            }     
       }
 
 ## CRUD

@@ -1087,6 +1087,39 @@
              socket.emit('Reschedule Time', JSON.stringify({
                  status: "COMPLETED"
              }))
+             var getFirebaseTokenQuery = "select [user].id,firebaseToken from Coach \n" +
+                 "inner join [User] on Coach.TourInstanceID = [User].TourInstanceID \n" +
+                 "where Coach.TourInstanceID =" + clientParams.tourInstanceID + "and Coach.ID = " + clientParams.coachID +
+                 "and [User].ID <>" + clientParams.userID;
+             var message = "";
+             var firebaseTokenList = [];
+             connection.request().query(getFirebaseTokenQuery, (err, result) => {
+                 if (err) {
+                     message = statusMessageError + getFirebaseTokenQuery;
+                     io.emit('log message', message)
+                 } else {
+                     message = statusMessageSuccess + getFirebaseTokenQuery;
+                     io.emit('log message', message)
+                     if (typeof result !== "undefined" && result.recordset.length > 0) {
+                         firebaseTokenList = result.recordset;
+                     }
+                     firebaseTokenList.forEach(function(element) {
+                         var fcmMessage = {
+                             to: element.firebaseToken,
+                             data: {
+                                 message: 'Thông báo! Lịch trình có thay đổi!'
+                             }
+                         }
+                         fcm.send(fcmMessage, (err, response) => {
+                             if (err) {
+                                 io.emit('log message', statusMessageError + "cannot push notification to user with id=" + element.userID)
+                             } else {
+                                 io.emit('log message', statusMessageSuccess + "successfully push notification to user with id=" + element.userID)
+                             }
+                         })
+                     }, this);
+                 }
+             })
          });
 
      })
@@ -2348,7 +2381,81 @@
      })
 
      socket.on('Mobile Start The Tour', (params) => {
+         var clientParams = JSON.parse(params);
+         var startTourQuery = "UPDATE TourInstance set Status=1 where ID=" + clientParams.tourInstanceID;
+         var message = "";
+         var status = "";
+         connection.request().query(startTourQuery, (err, result) => {
+             if (err) {
+                 message = statusMessageError + startTourQuery
+                 status = statusFailed
+             } else {
+                 message = statusMessageSuccess + startTourQuery
+                 status = statusSuccess
+             }
+             io.emit('log message', message)
+             socket.emit('Mobile Start The Tour', JSON.stringify({
+                 status: status
+             }))
+         })
+     })
 
+     socket.on('Complete Trip', (params) => {
+         var clientParams = JSON.parse(params);
+         var completedCoachTrip = "UPDATE Coach set IsCompleted=1 where id=" + clientParams.coachID;
+         var message = "";
+         var status = "";
+         connection.request().query(completedCoachTrip, (err, result) => {
+             if (err) {
+                 message = statusMessageError + completedCoachTrip;
+                 status = statusFailed
+             } else {
+                 message = statusMessageSuccess + completedCoachTrip;
+                 status = statusSuccess
+             }
+             io.emit('log message', message);
+             socket.emit('Complete Trip', JSON.stringify({
+                 status: status
+             }))
+             var getAllCoachStatusQuery = "select isCompleted from Coach where TourInstanceID=" + clientParams.tourInstanceID;
+             var coachStatusList = [];
+             message = "";
+             connection.request().query(getAllCoachStatusQuery, (err, result) => {
+                 if (err) {
+                     message = statusMessageError + getAllCoachStatusQuery;
+                     io.emit('log message', message)
+                 } else {
+                     message = statusMessageSuccess + getAllCoachStatusQuery;
+                     io.emit('log message', message)
+                     var isAllCompleted = true;
+                     if (typeof result !== "undefined" && result.recordset.length > 0) {
+                         coachStatusList = result.recordset;
+                         coachStatusList.forEach(function(element, index) {
+                             if (element.isComplted !== 1) {
+                                 isAllCompleted = false;
+                             }
+                             if (index == coachStatusList.length - 1) {
+                                 if (isAllCompleted) {
+                                     var completedTourInstanceQuery = "UPDATE TourInstance set Status=3 where ID=" + clientParams.tourInstanceID;
+                                     message = "";
+                                     status = "";
+                                     connection.request().query(completedTourInstanceQuery, (err, result) => {
+                                         if (err) {
+                                             message = statusMessageError + completedTourInstanceQuery
+                                             status = statusFailed
+                                         } else {
+                                             message = statusMessageSuccess + completedTourInstanceQuery
+                                             status = statusSuccess
+                                         }
+                                         io.emit('log message', message);
+                                     })
+                                 }
+                             }
+                         }, this);
+                     }
+                 }
+             })
+         })
      })
 
      socket.on('Mobile Update Token', (params) => {
@@ -2371,6 +2478,8 @@
              }))
          })
      })
+
+
 
      socket.on('Get Coach List', (params) => {
          var clientParams = JSON.parse(params);
