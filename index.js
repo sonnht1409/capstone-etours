@@ -10,7 +10,7 @@
  const connection = new sql.ConnectionPool({
      user: 'etours',
      password: "$Son01627335534",
-     server: "etours1.database.windows.net",
+     server: "etours2.database.windows.net",
      driver: 'tedious',
      database: 'etours',
      options: {
@@ -2178,7 +2178,7 @@
          var getTourInstanceQuery = "select Tour.ID as TourID, Tour.Name as TourName, TourInstance.ID as TourInstanceID, \n" +
              "StartTime, EndTime, Duration \n" +
              "from TourInstance \n" +
-             "inner join Tour on TourID = TourID \n" +
+             "inner join Tour on TourID = Tour.ID \n" +
              "inner join TourInstanceStatus on TourInstance.Status=TourInstanceStatus.ID \n" +
              "where Tour.ID=" + clientParams.tourID + " and TourInstance.Status=" + clientParams.tourInstanceStatus +
              " and TourInstance.IsActive=" + clientParams.isActive + "\n" +
@@ -2479,7 +2479,32 @@
          })
      })
 
-
+     socket.on('Get All Tour Instance', (params) => {
+         var clientParams = JSON.parse(params);
+         var getTourInstanceQuery = "select Tour.ID as TourID, Tour.Name as TourName, TourInstance.ID as TourInstanceID, \n" +
+             "StartTime, EndTime, Duration,TourInstanceStatus.ID as TourInstanceStatusID, TourInstanceStatus.Status \n" +
+             "from TourInstance \n" +
+             "inner join Tour on TourID = Tour.ID \n" +
+             "inner join TourInstanceStatus on TourInstance.Status=TourInstanceStatus.ID \n" +
+             "where TourInstance.IsActive=" + clientParams.isActive + "\n" +
+             "order by TourInstance.Status, StartTime, EndTime"
+         var tourInstanceList = [];
+         var message = "";
+         connection.request().query(getTourInstanceQuery, (err, result) => {
+             if (err) {
+                 message = statusMessageError + getTourInstanceQuery
+             } else {
+                 message = statusMessageSuccess + getTourInstanceQuery
+                 if (typeof result !== "undefined" && result.recordset.length > 0) {
+                     tourInstanceList = result.recordset
+                 }
+             }
+             io.emit('log message', message);
+             socket.emit('Get All Tour Instance', JSON.stringify({
+                 tourInstanceList: tourInstanceList
+             }))
+         })
+     })
 
      socket.on('Get Coach List', (params) => {
          var clientParams = JSON.parse(params);

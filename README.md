@@ -1555,3 +1555,20 @@ Ex:
                   status: string
             }     
      }
+
+     {
+      event name: 'Get All Tour Instance'
+      data:
+            {
+                 tourInstanceList: array[{
+                                          Duration:String
+                                          EndTime: datetime
+                                          StartTime: datetime
+                                          TourID:int
+                                          TourInstanceID:int
+                                          TourName: String
+                                          TourInstanceStatusID: int
+                                          Status: string
+                                        }] 
+            }     
+     }
