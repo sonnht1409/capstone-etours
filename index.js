@@ -2431,7 +2431,8 @@
                      if (typeof result !== "undefined" && result.recordset.length > 0) {
                          coachStatusList = result.recordset;
                          coachStatusList.forEach(function(element, index) {
-                             if (element.isComplted !== 1) {
+
+                             if (element.isCompleted !== 1 && element.isCompleted !== true) {
                                  isAllCompleted = false;
                              }
                              if (index == coachStatusList.length - 1) {
