@@ -1578,6 +1578,7 @@ Ex:
                                           TourName: String
                                           TourInstanceStatusID: int
                                           Status: string
+                                          IsActive: bit
                                         }] 
             }     
      }

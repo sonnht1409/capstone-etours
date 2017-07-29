@@ -2506,7 +2506,7 @@
      socket.on('Get All Tour Instance', (params) => {
          var clientParams = JSON.parse(params);
          var getTourInstanceQuery = "select Tour.ID as TourID, Tour.Name as TourName, TourInstance.ID as TourInstanceID, \n" +
-             "StartTime, EndTime, Duration,TourInstanceStatus.ID as TourInstanceStatusID, TourInstanceStatus.Status \n" +
+             "StartTime, EndTime, Duration,TourInstanceStatus.ID as TourInstanceStatusID, TourInstanceStatus.Status, TourInstance.IsActive \n" +
              "from TourInstance \n" +
              "inner join Tour on TourID = Tour.ID \n" +
              "inner join TourInstanceStatus on TourInstance.Status=TourInstanceStatus.ID \n" +
