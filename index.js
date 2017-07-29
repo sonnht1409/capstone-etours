@@ -473,7 +473,7 @@
              "from [user] inner join UserInfo on [user].ID=UserInfo.UserID \n" +
              "inner join User_Coach_SeatNumber as UCSN on [user].id = UCSN.UserID \n" +
              "inner join Coach on UCSN.CoachID = Coach.ID \n" +
-             "where [user].RoleID = 1 or [user].RoleID=2 and [user].TourInstanceID =" + clientParams.tourInstanceID + "and UCSN.CoachID=" + clientParams.coachID + " \n" +
+             "where ([user].RoleID = 1 or [user].RoleID=2) and [user].TourInstanceID =" + clientParams.tourInstanceID + "and UCSN.CoachID=" + clientParams.coachID + " \n" +
              "order by RoleID"
          message = "";
          var userList = [];
@@ -543,7 +543,7 @@
          var clientParams = JSON.parse(params);
          var getScheduleQuery = "select Schedule.ID as scheduleID,Schedule.StartTime, Schedule.EndTime, Activity, VisitingPlaceID, \n" +
              "VisitingPlace.Name as VisitPlaceName,Schedule.Status,TourTime, Latitude,Longitude, TourInstanceDetailId \n" +
-             "from Schedule inner join TourInstanceDetail as TID on Schedule.TourInstanceDetailId=TID.id \n" +
+             "from Schedule inner join TourInstanceDetail as TID on Schedule.TourInstanceDetailId=TID.id, ImageLink \n" +
              "inner join TourInstance on TID.TourInstanceID = TourInstance.ID \n" +
              "inner join TourInstanceStatus as TIS on TourInstance.Status = TIS.ID \n" +
              "inner join Tour on TourInstance.TourID = Tour.ID \n" +
@@ -1214,7 +1214,7 @@
          var dateEndTime = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " 23:59:59.999";
          var getNotificationQuery = "select top 20 ID as notificationID,message, time, isRead, isAccept from Notification \n" +
              "where senderID=" + clientParams.userID + " \n" +
-             "and Type=2 or Type=3 or Type=1 \n" +
+             "and (Type=2 or Type=3 or Type=1) \n" +
              "order by Time DESC";
          var message = "";
          var notificationList = [];
@@ -1268,7 +1268,7 @@
              "inner join Tour on TourInstance.TourID = Tour.ID \n" +
              "where ReceiverID is null  \n" +
              // "and Time>='" + dateStartTime + "' and Time<='" + dateEndTime + "' \n" +
-             "and Type=2 or Type=3 \n";
+             "and (Type=2 or Type=3) \n";
          if (clientParams.getAll == false) {
              getNotificationQuery += "and IsRead=0 \n"
          }
