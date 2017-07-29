@@ -2091,7 +2091,7 @@
      socket.on('Create Tour Instance Status', (params) => {
          var clientParams = JSON.parse(params);
          var createTourInstanceStatus = "INSERT INTO TourInstanceStatus (Status,IsActive) VALUES \n" +
-             "(N'" + clientParams.status + "',1)";
+             "(N'" + clientParams.status + "',2)";
          var message = "";
          var status = "";
          connection.request().query(createTourInstanceStatus, (err, result) => {
@@ -2401,7 +2401,7 @@
 
      socket.on('Complete Trip', (params) => {
          var clientParams = JSON.parse(params);
-         var completedCoachTrip = "UPDATE Coach set IsCompleted=1 where id=" + clientParams.coachID;
+         var completedCoachTrip = "UPDATE Coach set IsCompleted=1,TourInstanceID=null where id=" + clientParams.coachID;
          var message = "";
          var status = "";
          connection.request().query(completedCoachTrip, (err, result) => {
@@ -2454,8 +2454,32 @@
                          }, this);
                      }
                  }
+
+                 var tourGuideFinishTourQuery = "UPDATE [user] set TourInstanceID = null where id=" + clientParams.userID;
+                 connection.request().query(tourGuideFinishTourQuery, (err, result) => {
+                     if (err) {
+                         io.emit('log message', statusMessageError + tourGuideFinishTourQuery)
+                     } else {
+                         io.emit('log message', statusMessageSuccess + tourGuideFinishTourQuery)
+                     }
+                 })
+                 var getDriverID = " (select [user].id \n" +
+                     "from [user] \n" +
+                     "inner join User_Coach_SeatNumber as UCSN on UCSN.UserID = [user].ID \n" +
+                     "where UCSN.CoachID =2 and RoleID =1)";
+                 var driverFinishTourQuery = "UPDATE [user] set TourInstanceID = null where id in \n" + getDriverID;
+                 connection.request().query(driverFinishTourQuery, (err, result) => {
+                     if (err) {
+                         io.emit('log message', statusMessageError + driverFinishTourQuery)
+                     } else {
+                         io.emit('log message', statusMessageSuccess + driverFinishTourQuery);
+                     }
+
+                 })
+
              })
          })
+
      })
 
      socket.on('Mobile Update Token', (params) => {
