@@ -1181,7 +1181,7 @@
              header = "Yêu cầu thay đổi lộ trình! \n"
              var notification = "Thay đổi lộ trình của xe " + clientParams.licensePlate + ", từ " + clientParams.startPlaceName +
                  " đến " + clientParams.destinationName;
-             insertNotificationQuery = "INSERT INTO Notification (Message,Type,SenderID,) \n" +
+             insertNotificationQuery = "INSERT INTO Notification (Message,Type,SenderID) \n" +
                  "VALUES (N'" + header + notification + "'," + clientParams.type + "," + clientParams.userID + ")";
 
          }
