@@ -1083,44 +1083,43 @@
                  }
                  io.emit('log message', message)
              })
-         }, function() {
-             socket.emit('Reschedule Time', JSON.stringify({
-                 status: "COMPLETED"
-             }))
-             var getFirebaseTokenQuery = "select [user].id,firebaseToken from Coach \n" +
-                 "inner join [User] on Coach.TourInstanceID = [User].TourInstanceID \n" +
-                 "where Coach.TourInstanceID =" + clientParams.tourInstanceID + "and Coach.ID = " + clientParams.coachID +
-                 "and [User].ID <>" + clientParams.userID;
-             var message = "";
-             var firebaseTokenList = [];
-             connection.request().query(getFirebaseTokenQuery, (err, result) => {
-                 if (err) {
-                     message = statusMessageError + getFirebaseTokenQuery;
-                     io.emit('log message', message)
-                 } else {
-                     message = statusMessageSuccess + getFirebaseTokenQuery;
-                     io.emit('log message', message)
-                     if (typeof result !== "undefined" && result.recordset.length > 0) {
-                         firebaseTokenList = result.recordset;
-                     }
-                     firebaseTokenList.forEach(function(element) {
-                         var fcmMessage = {
-                             to: element.firebaseToken,
-                             data: {
-                                 message: 'Thông báo! Lịch trình có thay đổi!'
-                             }
-                         }
-                         fcm.send(fcmMessage, (err, response) => {
-                             if (err) {
-                                 io.emit('log message', statusMessageError + "cannot push notification to user with id=" + element.userID)
-                             } else {
-                                 io.emit('log message', statusMessageSuccess + "successfully push notification to user with id=" + element.userID)
-                             }
-                         })
-                     }, this);
+         }, this);
+         socket.emit('Reschedule Time', JSON.stringify({
+             status: "COMPLETED"
+         }))
+         var getFirebaseTokenQuery = "select [user].id,firebaseToken from Coach \n" +
+             "inner join [User] on Coach.TourInstanceID = [User].TourInstanceID \n" +
+             "where Coach.TourInstanceID =" + clientParams.tourInstanceID + "and Coach.ID = " + clientParams.coachID +
+             "and [User].ID <>" + clientParams.userID;
+         var message = "";
+         var firebaseTokenList = [];
+         connection.request().query(getFirebaseTokenQuery, (err, result) => {
+             if (err) {
+                 message = statusMessageError + getFirebaseTokenQuery;
+                 io.emit('log message', message)
+             } else {
+                 message = statusMessageSuccess + getFirebaseTokenQuery;
+                 io.emit('log message', message)
+                 if (typeof result !== "undefined" && result.recordset.length > 0) {
+                     firebaseTokenList = result.recordset;
                  }
-             })
-         });
+                 firebaseTokenList.forEach(function(element) {
+                     var fcmMessage = {
+                         to: element.firebaseToken,
+                         data: {
+                             message: 'Thông báo! Lịch trình có thay đổi!'
+                         }
+                     }
+                     fcm.send(fcmMessage, (err, response) => {
+                         if (err) {
+                             io.emit('log message', statusMessageError + "cannot push notification to user with id=" + element.userID)
+                         } else {
+                             io.emit('log message', statusMessageSuccess + "successfully push notification to user with id=" + element.userID)
+                         }
+                     })
+                 }, this);
+             }
+         })
 
      })
 
