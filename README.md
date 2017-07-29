@@ -314,6 +314,7 @@ Ex:
        event name: 'Complete Trip'
        params:
             {
+               userID: int,
                coachID: int,
                tourInstanceID: int   
             }     
