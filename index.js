@@ -2401,7 +2401,7 @@
 
      socket.on('Complete Trip', (params) => {
          var clientParams = JSON.parse(params);
-         var completedCoachTrip = "UPDATE Coach set IsCompleted=1,TourInstanceID=null where id=" + clientParams.coachID;
+         var completedCoachTrip = "UPDATE Coach set IsCompleted=1 where id=" + clientParams.coachID;
          var message = "";
          var status = "";
          connection.request().query(completedCoachTrip, (err, result) => {
@@ -2450,6 +2450,16 @@
                                          io.emit('log message', message);
                                      })
                                  }
+                                 var clearTourInstanceFromCoachQuery = "UPDATE Coach set TourInstanceID = null where id=" + clientParams.coachID;
+                                 message = "";
+                                 connection.request().query(clearTourInstanceFromCoachQuery, (err, result) => {
+                                     if (err) {
+                                         message = statusMessageError + clearTourInstanceFromCoachQuery
+                                     } else {
+                                         message = statusMessageSuccess + clearTourInstanceFromCoachQuery
+                                     }
+                                     io.emit('log message', message);
+                                 })
                              }
                          }, this);
                      }

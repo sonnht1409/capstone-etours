@@ -1,5 +1,5 @@
 # API URL
-http://52.187.117.134:8080/
+
 http://52.187.10.94:8080/
 
 # Tool Test Socket event 
@@ -7,6 +7,7 @@ http://amritb.github.io/socketio-client-tool/
 
 # Database server
 etours2.database.windows.net
+username: etours
 password: $Son01627335534
 azure: etoursserver@gmail.com
 password: Anhphuong11
@@ -915,20 +916,9 @@ Ex:
                                           }]
             }
       }
-      
-      {
-      event name: 'Mobile Gather Tourist'
-      data: 
-            {
-              tourInstanceID: int,
-              coachID: int,
-              userList: array of UserID,
-              message: string
-              
-            }
-     }
+           
      
-     {
+      {
         event name: 'Mobile Login By Card'
         loggedUser: 
              {
