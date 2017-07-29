@@ -542,8 +542,8 @@
      socket.on('Mobile Get Schedule', (params) => {
          var clientParams = JSON.parse(params);
          var getScheduleQuery = "select Schedule.ID as scheduleID,Schedule.StartTime, Schedule.EndTime, Activity, VisitingPlaceID, \n" +
-             "VisitingPlace.Name as VisitPlaceName,Schedule.Status,TourTime, Latitude,Longitude, TourInstanceDetailId \n" +
-             "from Schedule inner join TourInstanceDetail as TID on Schedule.TourInstanceDetailId=TID.id, ImageLink \n" +
+             "VisitingPlace.Name as VisitPlaceName,Schedule.Status,TourTime, Latitude,Longitude, TourInstanceDetailId, ImageLink \n" +
+             "from Schedule inner join TourInstanceDetail as TID on Schedule.TourInstanceDetailId=TID.id \n" +
              "inner join TourInstance on TID.TourInstanceID = TourInstance.ID \n" +
              "inner join TourInstanceStatus as TIS on TourInstance.Status = TIS.ID \n" +
              "inner join Tour on TourInstance.TourID = Tour.ID \n" +

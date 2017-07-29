@@ -886,6 +886,7 @@ Ex:
                               Activity: string
                               Latitude: float
                               Longitude: float
+                              ImageLink: string
                          }]
                   }]
             }
