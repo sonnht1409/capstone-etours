@@ -509,9 +509,9 @@
              io.emit('log message', message);
              message = "";
              if (typeof notificationContent !== "undefined") {
-                 var insertNotificationQuery = "INSERT into Notification (Message,Type,SenderID,ReceiverID) \n VALUES " +
+                 var insertNotificationQuery = "INSERT into Notification (Message,Type,SenderID,ReceiverID,CoachID,TourInstanceID) \n VALUES " +
                      "(N'" + notification + "'," + notificationContent.type + "," +
-                     notificationContent.senderID + "," + notificationContent.receiverID + ")"
+                     notificationContent.senderID + "," + notificationContent.receiverID + "," + clientParams.coachID + "," + clientParams.tourInstanceID + ")"
                  connection.request().query(insertNotificationQuery, (err, result) => {
                      if (err) {
                          message = statusMessageError + insertNotificationQuery;
@@ -774,8 +774,8 @@
                  }
                  io.emit('log message', queryMessage)
                  userList.forEach(function(element, index) {
-                     var insertNotificationQuery = "INSERT INTO Notification (Message,Type,SenderID,ReceiverID) \n" +
-                         "VALUES (N'" + message + "',4," + clientParams.senderID + "," + element.UserID + ")";
+                     var insertNotificationQuery = "INSERT INTO Notification (Message,Type,SenderID,ReceiverID,CoachID,TourInstanceID) \n" +
+                         "VALUES (N'" + message + "',4," + clientParams.senderID + "," + element.UserID + "," + clientParams.coachID + "," + clientParams.tourInstanceID + ")";
                      queryMessage = "";
                      connection.request().query(insertNotificationQuery, (err, result) => {
                          if (err) {
@@ -818,8 +818,8 @@
                              firebaseToken = result.recordset[0].FirebaseToken
                          }
                      }
-                     var insertNotificationQuery = "INSERT INTO Notification (Message,Type,SenderID,ReceiverID) \n" +
-                         "VALUES (N'" + message + "',4," + clientParams.senderID + "," + element + ")";
+                     var insertNotificationQuery = "INSERT INTO Notification (Message,Type,SenderID,ReceiverID,CoachID,TourInstanceID) \n" +
+                         "VALUES (N'" + message + "',4," + clientParams.senderID + "," + element + "," + clientParams.coachID + "," + clientParams.tourInstanceID + ")";
                      queryMessage = "";
                      connection.request().query(insertNotificationQuery, (err, result) => {
                          if (err) {
@@ -1181,14 +1181,14 @@
              header = "Yêu cầu thay đổi lộ trình! \n"
              var notification = "Thay đổi lộ trình của xe " + clientParams.licensePlate + ", từ " + clientParams.startPlaceName +
                  " đến " + clientParams.destinationName;
-             insertNotificationQuery = "INSERT INTO Notification (Message,Type,SenderID) \n" +
-                 "VALUES (N'" + header + notification + "'," + clientParams.type + "," + clientParams.userID + ")";
+             insertNotificationQuery = "INSERT INTO Notification (Message,Type,SenderID,CoachID,TourInstanceID) \n" +
+                 "VALUES (N'" + header + notification + "'," + clientParams.type + "," + clientParams.userID + "," + clientParams.coachID + "," + clientParams.tourInstanceID + ")";
 
          }
          if (clientParams.type == 3) {
              header = "Thông báo sự cố! \n"
-             insertNotificationQuery = "INSERT INTO Notification (Message,Type,SenderID) \n" +
-                 "VALUES(N'" + header + clientParams.message + "'," + clientParams.type + "," + clientParams.userID + ")";
+             insertNotificationQuery = "INSERT INTO Notification (Message,Type,SenderID,CoachID,TourInstanceID) \n" +
+                 "VALUES(N'" + header + clientParams.message + "'," + clientParams.type + "," + clientParams.userID + "," + clientParams.coachID + "," + clientParams.tourInstanceID + ")";
          }
          var message = "";
          connection.request().query(insertNotificationQuery, (err, result) => {
@@ -1257,13 +1257,14 @@
          date.setHours(hour)
          var dateStartTime = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " 00:00:00.000";
          var dateEndTime = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " 23:59:59.999";
-         var getNotificationQuery = "select Notification.ID as notificationID,message, time, senderID,fullname as sender, licensePlate,isAccept, isRead,Tour.Name as tourName  \n" +
+         var getNotificationQuery = "select Notification.ID as notificationID,message, time, senderID \n" +
+             ",fullname as sender, licensePlate,isAccept, isRead,Tour.Name as tourName,  \n" +
+             "Notification.CoachID, Notification.TourInstanceID \n" +
              "from Notification \n" +
              "inner join [user] on SenderID = [user].ID \n" +
              "inner join UserInfo on SenderID=UserInfo.UserID \n" +
-             "inner join User_Coach_SeatNumber as UCSN on UCSN.UserID =SenderID \n" +
-             "inner join Coach on UCSN.CoachID = Coach.ID \n" +
-             "inner join TourInstance on [user].TourInstanceID=TourInstance.ID \n" +
+             "inner join Coach on UCSN.CoachID = Notification.CoachID \n" +
+             "inner join TourInstance on Notification.TourInstanceID=TourInstance.ID \n" +
              "inner join Tour on TourInstance.TourID = Tour.ID \n" +
              "where ReceiverID is null  \n" +
              // "and Time>='" + dateStartTime + "' and Time<='" + dateEndTime + "' \n" +
@@ -1789,10 +1790,11 @@
                  status = statusSuccess
              }
              io.emit('log message', message);
-             var getSenderQuery = "select SenderID, Message from Notification where ID=" + clientParams.notificationID;
+             var getSenderQuery = "select SenderID, Message, CoachID,TourInstanceID from Notification where ID=" + clientParams.notificationID;
              message = "";
              var senderID;
              var requestMessage = "";
+             var notificationInfo = {}
              connection.request().query(getSenderQuery, (err, result) => {
                  if (err) {
                      message = statusMessageError + getSenderQuery;
@@ -1801,6 +1803,10 @@
                      if (typeof result !== "undefined" && result.recordset.length > 0) {
                          senderID = result.recordset[0].SenderID;
                          requestMessage = result.recordset[0].Message
+                         notificationInfo = {
+                             coachID: result.recordset[0].CoachID,
+                             tourInstanceID: result.recordset[0].TourInstanceID
+                         }
                      }
                  }
                  io.emit('log message', message)
@@ -1840,8 +1846,8 @@
                          }
                      });
                  })
-                 var insertNotificationQuery = "INSERT INTO Notification (Message,Type,ReceiverID,IsAccept) \n" +
-                     "VALUES (N'" + requestMessage + "',5," + senderID + "," + clientParams.isAccept + ")"
+                 var insertNotificationQuery = "INSERT INTO Notification (Message,Type,ReceiverID,IsAccept,CoachID,TourInstanceID) \n" +
+                     "VALUES (N'" + requestMessage + "',5," + senderID + "," + clientParams.isAccept + "," + notificationInfo.coachID + "," + notificationInfo.tourInstanceID + ")";
                  connection.request().query(insertNotificationQuery, (err, result) => {
                      if (err) {
                          io.emit('log message', statusMessageError + insertNotificationQuery)
