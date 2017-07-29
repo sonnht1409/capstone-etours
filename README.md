@@ -745,6 +745,13 @@ Ex:
             }     
      }
 
+     {
+      event name: 'Get All Tour Instance'
+      params:
+            {
+                  isActive: bit
+            }     
+     }
 # Server event (send to client)
       {
         event name: 'getTouristList',
