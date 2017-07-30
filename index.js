@@ -1263,7 +1263,7 @@
              "from Notification \n" +
              "inner join [user] on SenderID = [user].ID \n" +
              "inner join UserInfo on SenderID=UserInfo.UserID \n" +
-             "inner join Coach on UCSN.CoachID = Notification.CoachID \n" +
+             "inner join Coach on Coach.ID = Notification.CoachID \n" +
              "inner join TourInstance on Notification.TourInstanceID=TourInstance.ID \n" +
              "inner join Tour on TourInstance.TourID = Tour.ID \n" +
              "where ReceiverID is null  \n" +
@@ -1793,7 +1793,7 @@
              var getSenderQuery = "select SenderID, Message, CoachID,TourInstanceID from Notification where ID=" + clientParams.notificationID;
              message = "";
              var senderID;
-             var requestMessage = "";
+             var requestMessage = "Yêu cầu thay đổi lộ trình của bạn đã ";
              var notificationInfo = {}
              connection.request().query(getSenderQuery, (err, result) => {
                  if (err) {
@@ -1802,7 +1802,7 @@
                      message = statusMessageSuccess + getSenderQuery
                      if (typeof result !== "undefined" && result.recordset.length > 0) {
                          senderID = result.recordset[0].SenderID;
-                         requestMessage = result.recordset[0].Message
+                         // requestMessage = result.recordset[0].Message
                          notificationInfo = {
                              coachID: result.recordset[0].CoachID,
                              tourInstanceID: result.recordset[0].TourInstanceID
