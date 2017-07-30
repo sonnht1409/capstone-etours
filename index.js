@@ -2314,7 +2314,7 @@
      socket.on('Tour Guide Get My Tour List', (params) => {
          var clientParams = JSON.parse(params);
          var getMyTourListQuery = "select distinct Tour.Name as TourName,TourInstance.ID as TourInstanceID, \n" +
-             "TourInstance.StartTime, TourInstance.EndTime, LicensePlate, ScanHistory.CoachID \n" +
+             "TourInstance.StartTime, TourInstance.EndTime, LicensePlate, ScanHistory.CoachID, \n" +
              "TourInstanceStatus.Status \n" +
              "from [User] \n" +
              "inner join ScanHistory on [User].ID= ScanHistory.UserID \n" +
