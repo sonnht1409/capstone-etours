@@ -992,6 +992,7 @@ Ex:
                                           tourName: string
                                           isRead: bit
                                           isAccept: bit
+                                          type: int
                                           }]
             }
       }

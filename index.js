@@ -1257,7 +1257,7 @@
          date.setHours(hour)
          var dateStartTime = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " 00:00:00.000";
          var dateEndTime = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " 23:59:59.999";
-         var getNotificationQuery = "select Notification.ID as notificationID,message, time, senderID \n" +
+         var getNotificationQuery = "select Notification.ID as notificationID,message, time, senderID, Notification.Type \n" +
              ",fullname as sender, licensePlate,isAccept, isRead,Tour.Name as tourName,  \n" +
              "Notification.CoachID, Notification.TourInstanceID \n" +
              "from Notification \n" +
@@ -1793,7 +1793,7 @@
              var getSenderQuery = "select SenderID, Message, CoachID,TourInstanceID from Notification where ID=" + clientParams.notificationID;
              message = "";
              var senderID;
-             var requestMessage = "Yêu cầu thay đổi lộ trình của bạn đã ";
+             var requestMessage = "Yêu cầu của bạn đã ";
              var notificationInfo = {}
              connection.request().query(getSenderQuery, (err, result) => {
                  if (err) {
