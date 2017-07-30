@@ -2314,7 +2314,7 @@
      socket.on('Tour Guide Get My Tour List', (params) => {
          var clientParams = JSON.parse(params);
          var getMyTourListQuery = "select distinct Tour.Name as TourName,TourInstance.ID as TourInstanceID, \n" +
-             "TourInstance.StartTime, TourInstance.EndTime, LicensePlate, \n" +
+             "TourInstance.StartTime, TourInstance.EndTime, LicensePlate, ScanHistory.CoachID \n" +
              "TourInstanceStatus.Status \n" +
              "from [User] \n" +
              "inner join ScanHistory on [User].ID= ScanHistory.UserID \n" +
@@ -2402,6 +2402,24 @@
              socket.emit('Mobile Start The Tour', JSON.stringify({
                  status: status
              }))
+         })
+         var assignTourGuideToTourInstance = "UPDATE [user] set TourInstanceID=" + clientParams.tourInstanceID +
+             " where id=" + clientParams.userID
+         connection.request().query(assignTourGuideToTourInstance, (err, result) => {
+             if (err) {
+                 io.emit('log message', statusMessageError + assignTourGuideToTourInstance)
+             } else {
+                 io.emit('log message', statusMessageSuccess + assignTourGuideToTourInstance)
+             }
+         })
+         var assignCoachToTourInstance = "UPDATE Coach set TourInstanceID=" + clientParams.tourInstanceID +
+             " where id=" + clientParams.coachID;
+         connection.request().query(assignCoachToTourInstance, (err, result) => {
+             if (err) {
+                 io.emit('log message', statusMessageError + assignCoachToTourInstance)
+             } else {
+                 io.emit('log message', statusMessageSuccess + assignCoachToTourInstance)
+             }
          })
      })
 

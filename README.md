@@ -308,7 +308,9 @@ Ex:
        event name: 'Mobile Start The Tour'
        params:
             {
-               tourInstanceID: int   
+               tourInstanceID: int,
+               userID: int,
+               coachID: int   
             }     
       }
 
@@ -1074,6 +1076,7 @@ Ex:
                myTourList: array[{
                                     TourName: String,
                                     TourInstanceID: int,
+                                    CoachID: int
                                     StartTime: datetime,
                                     EndTime: datetime,
                                     LicensePlate: String,
