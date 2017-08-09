@@ -1647,7 +1647,7 @@
 
      socket.on('Get Scan History', (params) => {
          var clientParams = JSON.parse(params);
-         var getScanHistoryQuery = "select ScheduleID,OnTotal,TouristOff,Note,UserID,Status, StartTime, EndTime,VisitingPlaceID,VisitingPlace.Name as VisitingPlaceName \n" +
+         var getScanHistoryQuery = "select ScheduleID,OnTotal,TouristOff,Note,UserID,Status, StartTime, EndTime,ImageLink,VisitingPlaceID,VisitingPlace.Name as VisitingPlaceName \n" +
              "from ScanHistory \n" +
              "inner join Schedule on Schedule.ID = ScanHistory.ScheduleID \n" +
              "inner join TourInstanceDetail on TourInstanceDetail.ID=Schedule.TourInstanceDetailID \n" +
@@ -1846,8 +1846,14 @@
                          }
                      });
                  })
+                 var messageToStore = "";
+                 if (clientParams.isAccept == 1) {
+                     messageToStore = "được chấp thuận"
+                 } else {
+                     messageToStore = "không được chấp thuận"
+                 }
                  var insertNotificationQuery = "INSERT INTO Notification (Message,Type,ReceiverID,IsAccept,CoachID,TourInstanceID) \n" +
-                     "VALUES (N'" + requestMessage + "',5," + senderID + "," + clientParams.isAccept + "," + notificationInfo.coachID + "," + notificationInfo.tourInstanceID + ")";
+                     "VALUES (N'" + requestMessage + messageToStore + "',5," + senderID + "," + clientParams.isAccept + "," + notificationInfo.coachID + "," + notificationInfo.tourInstanceID + ")";
                  connection.request().query(insertNotificationQuery, (err, result) => {
                      if (err) {
                          io.emit('log message', statusMessageError + insertNotificationQuery)
