@@ -93,10 +93,7 @@
                         socket.emit('Mobile Get Notifications', JSON.stringify({
                             userID: 3
                         }))
-                        socket.emit('Web Login', JSON.stringify({
-                            username: "admin1",
-                            password: "40bd001563085fc35165329ea1ff5c5ecbdbbeef"
-                        }))
+                        
                         socket.emit('Create Tour', JSON.stringify({
                             name: "Đà Nẵng - Huế",
                             startPlaceID: 1,
@@ -196,6 +193,10 @@
                     tourInstanceID: 4,
                     coachID: 2
                 }))*/
+                socket.emit('Web Login', JSON.stringify({
+                    username: "admin1",
+                    password: "40bd001563085fc35165329ea1ff5c5ecbdbbeef"
+                }))
                 $('#m').val('');
                 return false;
             });
@@ -237,8 +238,7 @@
                 console.log(JSON.parse(data));
             })
 
-            socket.on('Web Login', (data) => {
-                console.log(JSON.parse(data));
+            console.log(JSON.parse(data));
             })
             socket.on('Create Tour', (data) => {
                 console.log(JSON.parse(data));
@@ -266,6 +266,10 @@
             socket.on('Mobile Login By Card', function(data) {
                 console.log(JSON.parse(data));
             })*/
+
+            socket.on('Web Login', (data) => {
+                console.log(JSON.parse(data));
+            })
         });
     </script>
 </body>
