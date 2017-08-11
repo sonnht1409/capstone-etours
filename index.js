@@ -8,15 +8,11 @@
  var appDir = path.dirname(require.main.filename);
  const sql = require('mssql');
  const connection = new sql.ConnectionPool({
-     user: 'admin',
-     password: 'evil001',
-     server: 'localhost',
+     user: 'etours',
+     password: "$Son01627335534",
+     server: "etours2.database.windows.net",
      driver: 'tedious',
      database: 'etours',
-     port: '61762',
-     dialectOptions: {
-         "instanceName": "SQLEXPRESS"
-     },
      options: {
          encrypt: true
      }
