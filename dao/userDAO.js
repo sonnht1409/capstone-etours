@@ -1,14 +1,19 @@
  "use strict"
  const sql = require('mssql');
  const connection = new sql.ConnectionPool({
-     user: 'etours',
-     password: "$Son01627335534",
-     server: "etours2.database.windows.net",
+     user: 'admin',
+     password: 'evil001',
+     server: 'localhost',
      driver: 'tedious',
      database: 'etours',
+     port: '61762',
+     dialectOptions: {
+         "instanceName": "SQLEXPRESS"
+     },
      options: {
          encrypt: true
      }
+
  })
  const statusMessageError = "ERROR! ";
  const statusMessageSuccess = "SUCCESS! ";
