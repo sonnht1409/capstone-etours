@@ -524,7 +524,6 @@
                          message = statusMessageSuccess + insertNotificationQuery;
                      }
                      io.emit('log message', message);
-                     console.log(notificationContent.receiverToken)
                      var fcmMessage = {
                          to: notificationContent.receiverToken,
                          data: {
@@ -554,6 +553,7 @@
              "inner join Tour on TourInstance.TourID = Tour.ID \n" +
              "left join VisitingPlace on VisitingPlaceID = VisitingPlace.ID \n" +
              "where TourInstanceID =" + clientParams.tourInstanceID + " \n" +
+             "and CoachID=" + clientParams.coachID + " and TID.IsActive=1 \n" +
              "order by TourInstanceDetailId,Schedule.StartTime, Schedule.EndTime"
 
          var message = "";
@@ -2396,49 +2396,52 @@
          })
      })
 
-     socket.on('Mobile Start The Tour', (params) => {
+     socket.on('Start The Tour', (params) => {
          var clientParams = JSON.parse(params);
          var startTourQuery = "UPDATE TourInstance set Status=1 where ID=" + clientParams.tourInstanceID;
          var message = "";
          var status = "";
          connection.request().query(startTourQuery, (err, result) => {
-             if (err) {
-                 message = statusMessageError + startTourQuery
-                 status = statusFailed
-             } else {
-                 message = statusMessageSuccess + startTourQuery
-                 status = statusSuccess
-             }
-             io.emit('log message', message)
-             socket.emit('Mobile Start The Tour', JSON.stringify({
-                 status: status
-             }))
-         })
-         var assignTourGuideToTourInstance = "UPDATE [user] set TourInstanceID=" + clientParams.tourInstanceID +
-             " where id=" + clientParams.userID
-         connection.request().query(assignTourGuideToTourInstance, (err, result) => {
-             if (err) {
-                 io.emit('log message', statusMessageError + assignTourGuideToTourInstance)
-             } else {
-                 io.emit('log message', statusMessageSuccess + assignTourGuideToTourInstance)
-             }
-         })
-         var assignCoachToTourInstance = "UPDATE Coach set TourInstanceID=" + clientParams.tourInstanceID +
-             " where id=" + clientParams.coachID;
-         connection.request().query(assignCoachToTourInstance, (err, result) => {
-             if (err) {
-                 io.emit('log message', statusMessageError + assignCoachToTourInstance)
-             } else {
-                 io.emit('log message', statusMessageSuccess + assignCoachToTourInstance)
-             }
-         })
+                 if (err) {
+                     message = statusMessageError + startTourQuery
+                     status = statusFailed
+                 } else {
+                     message = statusMessageSuccess + startTourQuery
+                     status = statusSuccess
+                 }
+                 io.emit('log message', message)
+                 socket.emit('Start The Tour', JSON.stringify({
+                     status: status
+                 }))
+             })
+             /*
+             var assignTourGuideToTourInstance = "UPDATE [user] set TourInstanceID=" + clientParams.tourInstanceID +
+                 " where id=" + clientParams.userID
+             connection.request().query(assignTourGuideToTourInstance, (err, result) => {
+                 if (err) {
+                     io.emit('log message', statusMessageError + assignTourGuideToTourInstance)
+                 } else {
+                     io.emit('log message', statusMessageSuccess + assignTourGuideToTourInstance)
+                 }
+             })
+             var assignCoachToTourInstance = "UPDATE Coach set TourInstanceID=" + clientParams.tourInstanceID +
+                 " where id=" + clientParams.coachID;
+             connection.request().query(assignCoachToTourInstance, (err, result) => {
+                 if (err) {
+                     io.emit('log message', statusMessageError + assignCoachToTourInstance)
+                 } else {
+                     io.emit('log message', statusMessageSuccess + assignCoachToTourInstance)
+                 }
+             }) */
      })
 
      socket.on('Complete Trip', (params) => {
          var clientParams = JSON.parse(params);
-         var completedCoachTrip = "UPDATE Coach set IsCompleted=1 where id=" + clientParams.coachID;
          var message = "";
          var status = "";
+         /*
+         var completedCoachTrip = "UPDATE Coach set IsCompleted=1 where id=" + clientParams.coachID;
+         
          connection.request().query(completedCoachTrip, (err, result) => {
              if (err) {
                  message = statusMessageError + completedCoachTrip;
@@ -2524,6 +2527,71 @@
 
              })
          })
+         */
+         var completeTourInstance = "UPDATE TourInstance set Status=3 where ID=" + clientParams.tourInstanceID;
+         connection.request().query(completeTourInstance, (err, result) => {
+             if (err) {
+                 message = statusMessageError + completeTourInstance
+                 status = statusFailed
+             } else {
+                 message = statusMessageSuccess + completeTourInstance
+                 status = statusSuccess
+             }
+             io.emit('log message', message);
+             socket.emit('Complete Trip', JSON.stringify({
+                 status: status
+             }))
+         })
+
+         var getTouristFirebaseToken = "Select firebaseToken, [user].id from [user] where TourInstanceID=" + clientParams.tourInstanceID + " and RoleID=3";
+         var firebaseTokenList = [];
+         message = "";
+         connection.request().query(getTouristFirebaseToken, (err, result) => {
+             if (err) {
+                 message = statusMessageError + getTouristFirebaseToken
+             } else {
+                 message = statusMessageSuccess + getTouristFirebaseToken
+                 if (typeof result !== "undefined" && result.recordset.length > 0) {
+                     firebaseTokenList = result.recordset;
+                     firebaseTokenList.forEach(function(element, index) {
+                         var fcmMessage = {
+                             to: element.firebaseToken,
+                             data: {
+                                 message: 'Tour đã kết thúc!'
+                             }
+                         }
+
+                         fcm.send(fcmMessage, function(err, response) {
+                             if (err) {
+                                 io.emit('log message', statusMessageError + "cannot push notification to user with id=" + element.id)
+                             } else {
+                                 io.emit('log message', statusMessageSuccess + "successfully pushed notification to user with id=" + element.id)
+                             }
+                         });
+
+                         var updateUserStatusQuery = "Update [User] set tourInstanceID= NULL, isActive=0 where id =" + element.id;
+                         connection.request().query(updateUserStatusQuery, (err, result) => {
+                             if (err) {
+                                 io.emit('log message', statusMessageError + updateUserStatusQuery)
+                             } else {
+                                 io.emit('log message', statusMessageSuccess + updateUserStatusQuery)
+                             }
+                         })
+
+
+
+                         var updateCoachQuery = "Update Coach set tourInstanceID= NULL, isComplete =1 where tourInstanceID=" + clientParams.tourInstanceID;
+                         connection.request().query(updateCoachQuery, (err, result) => {
+                             if (err) {
+                                 io.emit('log message', statusMessageError + updateCoachQuery)
+                             } else {
+                                 io.emit('log message', statusMessageSuccess + updateCoachQuery)
+                             }
+                         })
+                     }, this);
+                 }
+             }
+         })
 
      })
 
@@ -2575,11 +2643,57 @@
          })
      })
 
-     socket.on('Get Coach List', (params) => {
+     socket.on('Create Tour Schedule', (params) => {
          var clientParams = JSON.parse(params);
-         var getCoachQuery = "";
      })
 
+     socket.on('Get Coach List In Tour', (params) => {
+         var clientParams = JSON.parse(params);
+         var getCoachQuery = "Select id, licensePlate from coach where tourInstanceID=" + clientParams.tourInstanceID;
+         var message = "";
+         var coachList = [];
+         connection.request().query(getCoachQuery, (err, result) => {
+             if (err) {
+                 message = statusMessageError + getCoachQuery
+             } else {
+                 message = statusMessageSuccess + getCoachQuery
+                 if (typeof result !== "undefined" && result.recordset.length > 0) {
+                     coachList = result.recordset;
+                 }
+             }
+             io.emit('log message', message);
+             socket.emit('Get Coach List In Tour', JSON.stringify({
+                 coachList: coachList
+             }))
+         })
+     })
+
+     socket.on('Get Schedule By Coach', (params) => {
+         var clientParams = JSON.parse(params);
+         var getCoachSchedule = "select TourInstanceDetailID, TourTime, StartTime,EndTime, \n " +
+             "Activity, Status, CoachID, VisitingPlaceID, VisitingPlace.Name \n " +
+             "from TourInstanceDetail \n" +
+             "inner join Schedule on TourInstanceDetail.ID = Schedule.TourInstanceDetailID \n" +
+             "inner join VisitingPlace on Schedule.VisitingPlaceID = VisitingPlace.ID \n" +
+             "where TourInstanceID =" + clientParams.tourInstanceID + " and CoachID =" + clientParams.coachID + " and TourInstanceDetail.IsActive=1 \n" +
+             "order by Schedule.StartTime"
+         var message = "";
+         var scheduleList = [];
+         connection.request().query(getCoachSchedule, (err, result) => {
+             if (err) {
+                 message = statusMessageError + getCoachSchedule
+             } else {
+                 message = statusMessageSuccess + getCoachSchedule
+                 if (typeof result !== "undefined" && result.recordset.length > 0) {
+                     scheduleList = result.recordset;
+                 }
+             }
+             io.emit('log message', message);
+             socket.emit('Get Schedule By Coach', JSON.stringify({
+                 scheduleList: scheduleList
+             }))
+         })
+     })
 
  })
 

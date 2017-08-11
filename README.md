@@ -111,7 +111,8 @@ Ex:
       event name: Mobile Get Schedule
       params: 
             {
-             tourInstanceID: int     
+             tourInstanceID: int,
+             coachID: int     
             }
      }
      
@@ -305,12 +306,10 @@ Ex:
       }
 
       {
-       event name: 'Mobile Start The Tour'
+       event name: 'Start The Tour'
        params:
             {
-               tourInstanceID: int,
-               userID: int,
-               coachID: int   
+               tourInstanceID: int
             }     
       }
 
@@ -318,9 +317,25 @@ Ex:
        event name: 'Complete Trip'
        params:
             {
-               userID: int,
-               coachID: int,
+              
                tourInstanceID: int   
+            }     
+      }
+
+      {
+       event name: 'Get Coach List In Tour'     
+       params:
+            {
+              tourInstanceID: int    
+            }
+      }
+
+      {
+       event name: 'Get Schedule By Coach'
+       params:
+            {
+              tourInstanceID: int,
+              coachID: int    
             }     
       }
 
@@ -1104,8 +1119,8 @@ Ex:
       }
 
       {
-       event name: 'Mobile Start The Tour'
-       params:
+       event name: 'Start The Tour'
+       data:
             {
                status: string
             }     
@@ -1113,9 +1128,38 @@ Ex:
 
       {
        event name: 'Complete Trip'
-       params:
+       data:
             {
                status: string
+            }     
+      }
+
+      {
+       event name: 'Get Coach List In Tour'     
+       data:
+            {
+              coachList: array[{
+                                    id: int
+                                    licensePlate: string
+                              }]
+            }
+      }
+
+      {
+       event name: 'Get Schedule By Coach'
+       data:
+            {
+              scheduleList: array [{
+                                    TourInstanceDetailID: int
+                                    TourTime: string
+                                    StartTime: datetime
+                                    EndTime: datetime
+                                    Activity: string
+                                    Status: int (1 completed, 2 on going, 3 future)
+                                    CoachID: int
+                                    VisitingPlaceID: int
+                                    Name: string
+                                    }]
             }     
       }
 
