@@ -2670,7 +2670,7 @@
 
      socket.on('Get Schedule By Coach', (params) => {
          var clientParams = JSON.parse(params);
-         var getCoachSchedule = "select TourInstanceDetailID, TourTime, StartTime,EndTime, \n " +
+         var getCoachSchedule = "select Schedule.ID as ScheduleID,TourInstanceDetailID, TourTime, StartTime,EndTime, \n " +
              "Activity, Status, CoachID, VisitingPlaceID, VisitingPlace.Name \n " +
              "from TourInstanceDetail \n" +
              "inner join Schedule on TourInstanceDetail.ID = Schedule.TourInstanceDetailID \n" +
@@ -2692,6 +2692,73 @@
              socket.emit('Get Schedule By Coach', JSON.stringify({
                  scheduleList: scheduleList
              }))
+         })
+     })
+
+     socket.on('Change Visit Place', (params) => {
+         var clientParams = JSON.parse(params);
+         var updateNewVisitPlaceQuery = "UPDATE Schedule set VisitingPlaceID=" + clientParams.newVisitPlaceID + " where ID=" + clientParams.scheduleID;
+         connection.request().query(updateNewVisitPlaceQuery, (err, result) => {
+             var message = "";
+             var status = "";
+             if (err) {
+                 message = statusMessageError + updateNewVisitPlaceQuery
+                 status = statusFailed
+             } else {
+                 message = statusMessageSuccess + updateNewVisitPlaceQuery;
+                 statusSuccess
+             }
+             io.emit('log message', message);
+             socket.emit('Change Visit Place', JSON.stringify({
+                 status: status
+             }))
+         })
+
+         var getTouristListQuery = "select [user].ID as UserID, FirebaseToken \n" +
+             "from [user] inner join User_Coach_SeatNumber as UCSN on [user].ID = UCSN.UserID \n" +
+             "where [user].TourInstanceID=" + clientParams.tourInstanceID + " and CoachID = " + clientParams.coachID;
+         var message = "";
+         var userList = [];
+         connection.request().query(getTouristListQuery, (err, result) => {
+             var userList = [];
+             if (err) {
+                 message = statusMessageError + getTouristListQuery;
+             } else {
+                 message = statusMessageSuccess + getTouristListQuery;
+
+                 if (typeof result !== "undefined" && result.recordset.length > 0) {
+                     userList = result.recordset;
+                 }
+             }
+             io.emit('log message', message)
+             var notificationMess = "Lịch trình thay đổi từ " + clientParams.oldVisitPlaceName + " sang " + clientParams.newVisitPlaceName;
+             userList.forEach(function(element, index) {
+                 var insertNotificationQuery = "INSERT INTO Notification (Message,Type,ReceiverID,CoachID,TourInstanceID) \n" +
+                     "VALUES (N'" + notificationMess + "',5," + element.UserID + "," + clientParams.coachID + "," + clientParams.tourInstanceID + ")";
+                 message = "";
+                 connection.request().query(insertNotificationQuery, (err, result) => {
+                     if (err) {
+                         message = statusMessageError + insertNotificationQuery
+                     } else {
+                         message = statusMessageSuccess + insertNotificationQuery
+                     }
+                     io.emit('log message', message);
+                 })
+                 var fcmMessage = {
+                     to: element.FirebaseToken,
+                     data: {
+                         message: "Thông báo! Lịch trình có thay đổi"
+                     }
+                 }
+                 fcm.send(fcmMessage, function(err, response) {
+                     if (err) {
+                         io.emit('log message', statusMessageError + "cannot push notification to user with id=" + element.UserID)
+                     } else {
+                         io.emit('log message', statusMessageSuccess + "successfully pushed notification to user with id=" + element.UserID)
+                     }
+                 });
+
+             }, this);
          })
      })
 
