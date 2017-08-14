@@ -1,17 +1,24 @@
 {
-  "name": "socket-chat-example",
-  "version": "0.0.1",
-  "description": "my first socket.io app",
-  "dependencies": {
-    "body-parser": "^1.17.2",
-    "express": "^4.15.3",
-    "fcm-node": "^1.2.0",
-    "mssql": "^4.0.4",
-    "socket.io": "^1.7.4",
-    "sync-request": "^4.1.0"
-  },
-  "scripts": {
-    "start": "node index.js"
-  },
-  "main": "./index.js"
+    "name": "socket-chat-example",
+    "version": "0.0.1",
+    "description": "my first socket.io app",
+    "dependencies": {
+        "body-parser": "^1.17.2",
+        "express": "^4.15.3",
+        "fcm-node": "^1.2.0",
+        "mssql": "^4.0.4",
+        "socket.io": "^1.7.4",
+        "sync-request": "^4.1.0"
+    },
+    "scripts": {
+        "start": "forever start index.js",
+        "stop": "forever stop index.js",
+        "test": "mocha ./test/server-test.js"
+    },
+    "main": "./index.js",
+    "devDependencies": {
+        "chai": "^4.1.1",
+        "mocha": "^3.5.0"
+
+    }
 }

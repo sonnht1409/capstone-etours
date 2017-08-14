@@ -51,7 +51,7 @@
          return this._isActive
      }
 
-     set tourInstanceId(setTourInstanceId) {
+     set tourInstanceId(tourInstanceId) {
          this._tourInstanceId = tourInstanceId
      }
 
@@ -75,7 +75,7 @@
          return this._touristStatus
      }
 
-     set tourguideStatus(tourGuideStatus) {
+     set tourGuideStatus(tourGuideStatus) {
          this._tourGuideStatus = tourGuideStatus
      }
 

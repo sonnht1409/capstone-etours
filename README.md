@@ -339,6 +339,20 @@ Ex:
             }     
       }
 
+      {
+       event name: 'Change Visit Place'
+       params:
+            {
+              scheduleID: int,
+              tourInstanceID: int,
+              coachID: int,
+              oldVisitPlaceID: int,
+              oldVisitPlaceName: string,
+              newVisitiPlaceID: int,
+              newVisitPlaceName: string    
+            }     
+      }
+
 ## CRUD
 
      {
@@ -1160,6 +1174,14 @@ Ex:
                                     VisitingPlaceID: int
                                     Name: string
                                     }]
+            }     
+      }
+
+      {
+       event name: 'Change Visit Place'
+       data:
+            {
+                  status: string
             }     
       }
 
