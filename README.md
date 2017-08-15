@@ -406,6 +406,7 @@ Ex:
              latitude: float
              longitude: float
              typeID: int
+             imageLink: string
              
             }
      }
@@ -419,6 +420,7 @@ Ex:
              longitude: float
              typeID: int
              visitPlaceID: int
+             imageLink: string
             }
      }
      {
@@ -785,6 +787,52 @@ Ex:
                   isActive: bit
             }     
      }
+
+     {
+      event name: 'Get Coach List'
+      params:
+            {
+                  isActive: bit
+            }     
+     }
+
+     {
+      event name: 'Create Coach'     
+      params:
+            {
+                  licensePlate: string,
+                  numberOfSeat: int,
+                  coachCompanyID: int
+            }
+     }
+
+     {
+      event name: 'Update Coach'
+      params:
+            {
+                  licensePlate: string,
+                  numberOfSeat: int,
+                  coachCompanyID: int,
+                  coachID: int
+            }
+     }
+
+     {
+      event name: 'Remove Coach'
+      params:
+            {
+                  coachID: int
+            }     
+     }
+
+     {
+      event name: 'Reactive Coach'
+      params:
+            {
+                  coachID: int
+            }     
+     }
+
 # Server event (send to client)
       {
         event name: 'getTouristList',
@@ -1641,5 +1689,51 @@ Ex:
                                           Status: string
                                           IsActive: bit
                                         }] 
+            }     
+     }
+
+     {
+      event name: 'Get Coach List'
+      data:
+            {
+                  coachID: int,
+                  licensePlate: string,
+                  numberOfSeat: int,
+                  isActive: bit,
+                  coachCompanyID: int,
+                  coachCompanyName: string,
+                  tourInstanceID: int
+            }     
+     }
+
+     {
+      event name: 'Create Coach'     
+      data:
+            {
+                  status: string
+            }
+     }
+
+     {
+      event name: 'Update Coach'     
+      data:
+            {
+                  status: string
+            }
+     }
+
+     {
+      event name: 'Remove Coach'
+      data:
+            {
+                  status: string
+            }     
+     }
+
+     {
+      event name: 'Reactive Coach'
+      data:
+            {
+                  status: string
             }     
      }

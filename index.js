@@ -323,110 +323,85 @@
 
      socket.on('Create Place', (params) => {
          var clientParams = JSON.parse(params);
-         var insertPlaceQuery = "Insert into Place (Name,IsActive) VALUES (N'" + clientParams.Name + "',1)";
-         var message = "";
-         var status = "";
-         connection.request().query(insertPlaceQuery, (err, result) => {
-             if (err) {
-                 message = statusMessageError + insertPlaceQuery
-                 status = statusFailed
-             } else {
-                 message = statusMessageSuccess + insertPlaceQuery;
-                 status = statusSuccess
-             }
+         var Place = require("./entities/place")
+         var place = new Place();
+         place.name = clientParams.Name.toString();
+         var PlaceDAO = require("./dao/placeDAO")
+         var placeDAO = new PlaceDAO();
+         placeDAO.createPlace(place.name, (result) => {
              socket.emit('Create Place', JSON.stringify({
-                 status: status
+                 status: result.status
 
              }))
-             io.emit('log message', message)
+             io.emit('log message', result.message)
          })
+
 
      })
 
      socket.on('Get Place List', (params) => {
          var clientParams = JSON.parse(params);
-         var getPlaceListQuery = "select * from Place where IsActive=" + clientParams.isActive;
-         var message = "";
-         var data = {
-             placeList: []
-         };
-         connection.request().query(getPlaceListQuery, (err, result) => {
-             if (err) {
-                 message = statusMessageError + getPlaceListQuery
-             } else {
-                 message = statusMessageSuccess + getPlaceListQuery;
-                 if (typeof result !== "undefined" && result.recordset.length > 0) {
-                     data.placeList = result.recordset;
-                 }
-             }
-
-             socket.emit('Get Place List', JSON.stringify(data));
-             io.emit('log message', message);
+         var Place = require("./entities/place")
+         var place = new Place();
+         place.isActive = clientParams.isActive
+         var PlaceDAO = require("./dao/placeDAO")
+         var placeDAO = new PlaceDAO();
+         placeDAO.getAllPlace(place.isActive, (result) => {
+             socket.emit('Get Place List', JSON.stringify({
+                 placeList: result.placeList
+             }));
+             io.emit('log message', result.message);
          })
-
      })
 
      socket.on('Update Place', (params) => {
          var clientParams = JSON.parse(params);
-         var updatePlaceQuery = "update Place set name=N'" + clientParams.name + "' \n" +
-             "where id=" + clientParams.placeID;
-         var message = "";
-         var status = ""
-         connection.request().query(updatePlaceQuery, (err, result) => {
-             if (err) {
-                 message = statusMessageError + updatePlaceQuery;
-                 status = statusFailed
-             } else {
-                 message = statusMessageSuccess + updatePlaceQuery;
-                 status = statusSuccess
-             }
+         var Place = require("./entities/place")
+         var place = new Place();
+         place.name = clientParams.name
+         place.id = clientParams.placeID
+         var PlaceDAO = require("./dao/placeDAO")
+         var placeDAO = new PlaceDAO();
+         placeDAO.updatePlace(place.id, place.name, (result) => {
              socket.emit('Update Place', JSON.stringify({
-                 status: status
+                 status: result.status
              }))
-             io.emit('log message', message)
+             io.emit('log message', result.message)
          })
+
      })
 
      socket.on('Remove Place', (params) => {
          var clientParams = JSON.parse(params);
-         var deactivePlaceQuery = "update Place set isActive=0 where id=" + clientParams.placeID;
-         var message = "";
-         var status = ""
-         connection.request().query(deactivePlaceQuery, (err, result) => {
-             if (err) {
-                 message = statusMessageError + deactivePlaceQuery;
-                 status = statusFailed
-             } else {
-                 message = statusMessageSuccess + deactivePlaceQuery;
-                 status = statusSuccess
-             }
-
+         var Place = require("./entities/place")
+         var place = new Place();
+         place.id = clientParams.placeID;
+         var PlaceDAO = require("./dao/placeDAO")
+         var placeDAO = new PlaceDAO();
+         placeDAO.removePlace(place.id, (result) => {
              socket.emit('Remove Place', JSON.stringify({
-                 status: status
+                 status: result.status
              }))
-             io.emit('log message', message)
+             io.emit('log message', result.message)
          })
+
      })
 
      socket.on('Reactive Place', (params) => {
          var clientParams = JSON.parse(params);
-         var reactivePlaceQuery = "update Place set isActive=1 where id=" + clientParams.placeID;
-         var message = "";
-         var status = "";
-         connection.request().query(reactivePlaceQuery, (err, result) => {
-             if (err) {
-                 message = statusMessageError + reactivePlaceQuery;
-                 status = statusFailed
-             } else {
-                 message = statusMessageSuccess + reactivePlaceQuery;
-                 status = statusSuccess
 
-             }
+         var Place = require("./entities/place")
+         var place = new Place();
+         place.id = clientParams.placeID;
+         var PlaceDAO = require("./dao/placeDAO")
+         var placeDAO = new PlaceDAO();
+         placeDAO.reactivePlace(place.id, (result) => {
              socket.emit('Reactive Place', JSON.stringify({
-                 status: status
+                 status: result.status
              }))
-             io.emit('log message', message)
+             io.emit('log message', result.message)
          })
+
      })
 
      socket.on('Mobile Send Pick Up Location', (params) => {
@@ -603,118 +578,99 @@
 
      socket.on('Create Visit Place', (params) => {
          var clientParams = JSON.parse(params);
-         var insertVisitPlaceQuery = "Insert into VisitingPlace (Name,IsActive,Latitude,Longitude,Type) \n" +
-             "VALUES (N'" + clientParams.name + "',1," + clientParams.latitude + "," + clientParams.longitude + "," +
-             clientParams.typeID + ")";
-         var message = "";
-         var status = "";
-         connection.request().query(insertVisitPlaceQuery, (err, result) => {
-             if (err) {
-                 message = statusMessageError + insertVisitPlaceQuery
-                 status = statusFailed
-             } else {
-                 message = statusMessageSuccess + insertVisitPlaceQuery;
-                 status = statusSuccess
-             }
+         var VisitingPlace = require("./entities/visitingPlace")
+         var visitingPlace = new VisitingPlace();
+         visitingPlace.name = clientParams.name;
+         visitingPlace.latitude = clientParams.latitude;
+         visitingPlace.longitude = clientParams.longitude;
+         visitingPlace.type = clientParams.typeID;
+         if (typeof clientParams.imageLink === "undefined" || clientParams.imageLink.trim().length == 0) {
+             clientParams.imageLink = "";
+         }
+         visitingPlace.imageLink = clientParams.imageLink;
+         var VisitingPlaceDAO = require("./dao/visitingPlaceDAO")
+         var visitingPlaceDAO = new VisitingPlaceDAO();
+         visitingPlaceDAO.createVisitPlace(visitingPlace.name, visitingPlace.latitude, visitingPlace.longitude, visitingPlace.type, visitingPlace.imageLink, (result) => {
              socket.emit('Create Visit Place', JSON.stringify({
-                 status: status
+                 status: result.status
 
              }))
-             io.emit('log message', message)
+             io.emit('log message', result.message)
          })
 
      })
 
      socket.on('Update Visit Place', (params) => {
          var clientParams = JSON.parse(params);
-         var updateVisitPlaceQuery = "update VisitingPlace set name=N'" + clientParams.name + "', \n" +
-             "Latitude=" + clientParams.latitude + ", \n" +
-             "Longitude=" + clientParams.longitude + ", \n" +
-             "Type =" + clientParams.typeID + " \n" +
-             "where id=" + clientParams.visitPlaceID;
-         var message = "";
-         var status = ""
-         connection.request().query(updateVisitPlaceQuery, (err, result) => {
-             if (err) {
-                 message = statusMessageError + updateVisitPlaceQuery;
-                 status = statusFailed
-             } else {
-                 message = statusMessageSuccess + updateVisitPlaceQuery;
-                 status = statusSuccess
-             }
+         var VisitingPlace = require("./entities/visitingPlace")
+         var visitingPlace = new VisitingPlace();
+         visitingPlace.name = clientParams.name;
+         visitingPlace.latitude = clientParams.latitude;
+         visitingPlace.longitude = clientParams.longitude;
+         visitingPlace.type = clientParams.typeID;
+         visitingPlace.id = clientParams.visitPlaceID;
+         if (typeof clientParams.imageLink === "undefined" || clientParams.imageLink.trim().length == 0) {
+             clientParams.imageLink = "";
+         }
+         visitingPlace.imageLink = clientParams.imageLink;
+         var VisitingPlaceDAO = require("./dao/visitingPlaceDAO")
+         var visitingPlaceDAO = new VisitingPlaceDAO();
+         visitingPlaceDAO.updateVisitPlace(visitingPlace.name, visitingPlace.latitude, visitingPlace.longitude, visitingPlace.type, visitingPlace.id, visitingPlace.imageLink, (result) => {
              socket.emit('Update Visit Place', JSON.stringify({
-                 status: status
+                 status: result.status
              }))
-             io.emit('log message', message)
+             io.emit('log message', result.message)
          })
+
+
      })
 
      socket.on('Remove Visit Place', (params) => {
          var clientParams = JSON.parse(params);
-         var deactiveVisitPlaceQuery = "update VisitingPlace set isActive=0 where id=" + clientParams.visitPlaceID;
-         var message = "";
-         var status = ""
-         connection.request().query(deactiveVisitPlaceQuery, (err, result) => {
-             if (err) {
-                 message = statusMessageError + deactiveVisitPlaceQuery;
-                 status = statusFailed
-             } else {
-                 message = statusMessageSuccess + deactiveVisitPlaceQuery;
-                 status = statusSuccess
-             }
-
+         var VisitingPlace = require("./entities/visitingPlace")
+         var visitingPlace = new VisitingPlace();
+         visitingPlace.id = clientParams.visitPlaceID;
+         var VisitingPlaceDAO = require("./dao/visitingPlaceDAO")
+         var visitingPlaceDAO = new VisitingPlaceDAO();
+         visitingPlaceDAO.removeVisitPlace(visitingPlace.id, (result) => {
              socket.emit('Remove Visit Place', JSON.stringify({
-                 status: status
+                 status: result.status
              }))
-             io.emit('log message', message)
+             io.emit('log message', result.message)
          })
+
      })
 
      socket.on('Reactive Visit Place', (params) => {
          var clientParams = JSON.parse(params);
-         var reactiveVisitPlaceQuery = "update VisitingPlace set isActive=1 where id=" + clientParams.visitPlaceID;
-         var message = "";
-         var status = "";
-         connection.request().query(reactiveVisitPlaceQuery, (err, result) => {
-             if (err) {
-                 message = statusMessageError + reactiveVisitPlaceQuery;
-                 status = statusFailed
-             } else {
-                 message = statusMessageSuccess + reactiveVisitPlaceQuery;
-                 status = statusSuccess
-
-             }
+         var VisitingPlace = require("./entities/visitingPlace")
+         var visitingPlace = new VisitingPlace();
+         visitingPlace.id = clientParams.visitPlaceID;
+         var VisitingPlaceDAO = require("./dao/visitingPlaceDAO")
+         var visitingPlaceDAO = new VisitingPlaceDAO();
+         visitingPlaceDAO.reactiveVisitPlace(visitingPlace.id, (result) => {
              socket.emit('Reactive Visit Place', JSON.stringify({
-                 status: status
+                 status: result.status
              }))
-             io.emit('log message', message)
+             io.emit('log message', result.message)
          })
+
      })
 
      socket.on('Get Visit Place List', (params) => {
          var clientParams = JSON.parse(params);
-         var getPlaceListQuery = "select VP.ID as visitPlaceID, VP.Name as visitPlaceName, VP.isActive," +
-             "Latitude,Longitude, Type as typeID, VPT.Name as typeName \n" +
-             "from VisitingPlace as VP inner join VisitingPlaceType as VPT on VP.Type=VPT.ID \n" +
-             "where VP.IsActive = " + clientParams.isActive + "\n" +
-             "order by typeID";
-         var message = "";
-         var visitingPlaceList = []
-         connection.request().query(getPlaceListQuery, (err, result) => {
-             if (err) {
-                 message = statusMessageError + getPlaceListQuery
-             } else {
-                 message = statusMessageSuccess + getPlaceListQuery;
-                 if (typeof result !== "undefined" && result.recordset.length > 0) {
-                     visitingPlaceList = result.recordset;
-                 }
-             }
-
+         var VisitingPlace = require("./entities/visitingPlace")
+         var visitingPlace = new VisitingPlace();
+         visitingPlace.isActive = clientParams.isActive;
+         var VisitingPlaceDAO = require("./dao/visitingPlaceDAO")
+         var visitingPlaceDAO = new VisitingPlaceDAO();
+         visitingPlaceDAO.getAllVisitPlace(visitingPlace.isActive, (result) => {
              socket.emit('Get Visit Place List', JSON.stringify({
-                 visitingPlaceList: visitingPlaceList
+                 visitingPlaceList: result.visitingPlaceList
              }));
-             io.emit('log message', message);
+             io.emit('log message', result.message);
          })
+
 
      })
 
@@ -852,20 +808,6 @@
      socket.on('Mobile Login By Card', (params) => {
          console.log(params)
          var clientParams = JSON.parse(params);
-         /*
-         var authenicateQuery =
-             "select fullname,PhoneNumber,Email,Address, CoachID, Coach.LicensePlate, [user].TourInstanceID, [user].id as UserID, role.ID as RoleID, role" +
-             ", [user].IsActive as UserActive, role.IsActive as RoleActive, \n " +
-             "TourID, Tour.Name as TourName, TourInstance.StartTime,TourInstance.EndTime \n" +
-             "from [user] \n " +
-             "inner join UserInfo on [user].ID = UserInfo.UserID \n " +
-             "inner join Role on [user].RoleID = Role.ID \n " +
-             "inner join User_Coach_SeatNumber as UCSN on [user].id = UCSN.UserID \n" +
-             "inner join Coach on UCSN.CoachID=Coach.ID \n" +
-             "inner join TourInstance on [user].TourInstanceID=TourInstance.ID \n" +
-             "inner join Tour on TourInstance.TourID=Tour.ID \n" +
-             "where username ='" + username + "' and password='" + password + "'";
-         */
          var authenicateQuery =
              "select fullname,PhoneNumber,Email,Address, CoachID, Coach.LicensePlate, [user].TourInstanceID, [user].id as UserID, role.ID as RoleID, role" +
              ", [user].IsActive as UserActive, role.IsActive as RoleActive, \n " +
@@ -878,7 +820,7 @@
              "inner join TourInstance on [user].TourInstanceID=TourInstance.ID \n" +
              "inner join Tour on TourInstance.TourID=Tour.ID \n" +
              "where Card.Code='" + clientParams.cardCode + "'";
-         console.log(authenicateQuery)
+
          var message = "";
          var status = "";
          var logStatus = "";
@@ -2758,6 +2700,86 @@
          })
      })
 
+
+     socket.on('Get Coach List', (params) => {
+         var clientParams = JSON.parse(params);
+         var Coach = require("./entities/coach")
+         var coach = new Coach();
+         coach.isActive = clientParams.isActive;
+         var CoachDAO = require("./dao/coachDAO")
+         var coachDAO = new CoachDAO();
+         coachDAO.getAllCoach(coach.isActive, (result) => {
+             socket.emit('Get Coach List', JSON.stringify({
+                 coachList: result.coachList
+             }))
+             io.emit('log message', result.message)
+         })
+     })
+
+     socket.on('Create Coach', (params) => {
+         var clientParams = JSON.parse(params)
+         var Coach = require("./entities/coach")
+         var coach = new Coach();
+         coach.licensePlate = clientParams.licensePlate;
+         coach.numberOfSeat = clientParams.numberOfSeat;
+         coach.coachCompanyId = clientParams.coachCompanyID;
+         var CoachDAO = require("./dao/coachDAO")
+         var coachDAO = new CoachDAO();
+         coachDAO.createCoach(coach.licensePlate, coach.numberOfSeat, coach.coachCompanyId, (result) => {
+             socket.emit('Create Coach', JSON.stringify({
+                 status: result.status
+             }))
+             io.emit('log message', result.message)
+         })
+     })
+
+     socket.on('Update Coach', (params) => {
+         var clientParams = JSON.parse(params)
+         var Coach = require("./entities/coach")
+         var coach = new Coach();
+         coach.id = clientParams.coachID;
+         coach.licensePlate = clientParams.licensePlate;
+         coach.numberOfSeat = clientParams.numberOfSeat;
+         coach.coachCompanyId = clientParams.coachCompanyID;
+         var CoachDAO = require("./dao/coachDAO")
+         var coachDAO = new CoachDAO();
+         coachDAO.updateCoach(coach.id, coach.licensePlate, coach.numberOfSeat, coach.coachCompanyId, (result) => {
+             socket.emit('Update Coach', JSON.stringify({
+                 status: result.status
+             }))
+             io.emit('log message', result.message)
+         })
+     })
+
+     socket.on('Remove Coach', (params) => {
+         var clientParams = JSON.parse(params);
+         var Coach = require("./entities/coach")
+         var coach = new Coach();
+         coach.id = clientParams.coachID;
+         var CoachDAO = require("./dao/coachDAO")
+         var coachDAO = new CoachDAO();
+         coachDAO.removeCoach(coach.id, (result) => {
+             socket.emit('Remove Coach', JSON.stringify({
+                 status: result.status
+             }))
+             io.emit('log message', result.message)
+         })
+     })
+
+     socket.on('Reactive Coach', (params) => {
+         var clientParams = JSON.parse(params);
+         var Coach = require("./entities/coach")
+         var coach = new Coach();
+         coach.id = clientParams.coachID;
+         var CoachDAO = require("./dao/coachDAO")
+         var coachDAO = new CoachDAO();
+         coachDAO.reactiveCoach(coach.id, (result) => {
+             socket.emit('Reactive Coach', JSON.stringify({
+                 status: result.status
+             }))
+             io.emit('log message', result.message)
+         })
+     })
  })
 
 

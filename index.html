@@ -42,9 +42,7 @@
                         socket.emit('Get Visit Place Location', JSON.stringify({
                             tourInstanceID: 3
                         }))
-                        socket.emit('Create Place', JSON.stringify({
-                            Name: 'TP Hồ Chí Minh'
-                        }))
+                        
                         
                         socket.emit('Mobile Get Schedule', JSON.stringify({
                             tourInstanceID: 3
@@ -192,10 +190,23 @@
                 socket.emit('Complete Trip', JSON.stringify({
                     tourInstanceID: 4,
                     coachID: 2
-                }))*/
+                }))
+                
                 socket.emit('Web Login', JSON.stringify({
                     username: "admin1",
                     password: "40bd001563085fc35165329ea1ff5c5ecbdbbeef"
+                }))
+
+                
+
+                socket.emit('Create Place', JSON.stringify({
+                    Name: 'Moscow'
+                }))
+                */
+
+                socket.emit('Reactive Coach', JSON.stringify({
+
+                    coachID: 6
                 }))
                 $('#m').val('');
                 return false;
@@ -267,9 +278,11 @@
                 console.log(JSON.parse(data));
             })*/
 
-            socket.on('Web Login', (data) => {
+            socket.on('Get Coach List', (data) => {
                 console.log(JSON.parse(data));
             })
+
+
         });
     </script>
 </body>
