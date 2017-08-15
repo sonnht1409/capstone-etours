@@ -348,7 +348,7 @@ Ex:
               coachID: int,
               oldVisitPlaceID: int,
               oldVisitPlaceName: string,
-              newVisitiPlaceID: int,
+              newVisitPlaceID: int,
               newVisitPlaceName: string    
             }     
       }

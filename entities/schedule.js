@@ -40,6 +40,14 @@ class Schedule {
         return this._tourInstanceDetailId
     }
 
+    set coachId(coachId) {
+        this._coachId = coachId;
+    }
+
+    get coachId() {
+        return this._coachId
+    }
+
     set visitingPlaceId(visitingPlaceId) {
         this._visitingPlaceId = visitingPlaceId;
     }
@@ -47,6 +55,8 @@ class Schedule {
     get visitingPlaceId() {
         return this._visitingPlaceId
     }
+
+
 }
 
 module.exports = Schedule;

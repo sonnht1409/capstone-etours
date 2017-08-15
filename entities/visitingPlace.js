@@ -12,7 +12,7 @@ class VisitingPlace {
         this._name = name;
     }
 
-    get name(name) {
+    get name() {
         return this._name
     }
 
@@ -38,6 +38,14 @@ class VisitingPlace {
 
     get isActive() {
         return this._isActive
+    }
+
+    set imageLink(imageLink) {
+        this._imageLink = imageLink;
+    }
+
+    get imageLink() {
+        return this._imageLink;
     }
 
     set type(type) {

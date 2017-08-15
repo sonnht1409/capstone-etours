@@ -44,6 +44,10 @@ class Coach {
     set tourInstanceId(tourInstanceId) {
         this._tourInstanceId = tourInstanceId
     }
+
+    get tourInstanceId() {
+        return this._tourInstanceId
+    }
 }
 
 module.exports = Coach;

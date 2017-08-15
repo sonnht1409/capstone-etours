@@ -4,7 +4,7 @@ class TouristStatus {
         this._id = id;
     }
 
-    get iđ() {
+    get id() {
         return this._id;
     }
 

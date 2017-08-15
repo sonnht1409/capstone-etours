@@ -16,36 +16,44 @@ class ScanHistory {
         return this._scheduleId
     }
 
-    set tourist(tourist) {
-        this._tourist = tourist
+    set touristOff(touristOff) {
+        this._touristOff = touristOff
     }
 
-    get tourist() {
-        return this._tourist
+    get touristOff() {
+        return this._touristOff
     }
 
-    set tourGuide(tourGuide) {
-        this._tourGuide = tourGuide;
+    set userID(userID) {
+        this._userID = userID;
     }
 
-    get tourGuide() {
-        return this._tourGuide
+    get userID() {
+        return this._userID
     }
 
-    set touristStatus(touristStatus) {
-        this._touristStatus = touristStatus;
+    set coachID(coachID) {
+        this._coachID = coachID;
     }
 
-    get touristStatus() {
-        return this._touristStatus
+    get coachID() {
+        return this._coachID
     }
 
-    set scanTime(scanTime) {
-        this._scanTime = scanTime;
+    set onTotal(onTotal) {
+        this._onTotal = onTotal;
     }
 
-    get scanTime() {
-        return this._scanTime;
+    get onTotal() {
+        return this._onTotal;
+    }
+
+    set note(note) {
+        this._note = note;
+    }
+
+    get note() {
+        return this._note;
     }
 }
 
