@@ -2,12 +2,12 @@
 /* for local */
 /*
 const connection = ({
-    user: 'admin',
-    password: 'evil001',
+    user: 'sa',
+    password: 'Anhphuong11',
     server: 'localhost',
     driver: 'tedious',
     database: 'etours',
-    port: '61762',
+    port: '67854',
     dialectOptions: {
         "instanceName": "SQLEXPRESS"
     },
