@@ -7,17 +7,9 @@
  var path = require('path');
  var appDir = path.dirname(require.main.filename);
  const sql = require('mssql');
- const connection = new sql.ConnectionPool({
-     user: 'etours',
-     password: "$Son01627335534",
-     server: "etours3.database.windows.net",
-     driver: 'tedious',
-     database: 'etours',
-     options: {
-         encrypt: true
-     }
-
- })
+ var dbconfig = require("../dbconfig")
+ var config = new dbconfig();
+ const connection = new sql.ConnectionPool(config.option)
  const statusMessageError = "ERROR! ";
  const statusMessageSuccess = "SUCCESS! ";
  const statusFailed = "FAILED";

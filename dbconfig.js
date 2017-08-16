@@ -7,7 +7,7 @@ const connection = ({
     server: 'localhost',
     driver: 'tedious',
     database: 'etours',
-    port: '67854',
+    port: '60000',
     dialectOptions: {
         "instanceName": "SQLEXPRESS"
     },
