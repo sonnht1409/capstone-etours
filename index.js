@@ -7,7 +7,7 @@
  var path = require('path');
  var appDir = path.dirname(require.main.filename);
  const sql = require('mssql');
- var dbconfig = require("../dbconfig")
+ var dbconfig = require("./dbconfig")
  var config = new dbconfig();
  const connection = new sql.ConnectionPool(config.option)
  const statusMessageError = "ERROR! ";
