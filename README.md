@@ -353,6 +353,15 @@ Ex:
             }     
       }
 
+      {
+       event name: 'Assign Coach To Tour Instance'     
+       params:
+            {
+              coachID: int,
+              tourInstanceID: int    
+            }
+      }
+
 ## CRUD
 
      {
@@ -833,6 +842,31 @@ Ex:
             }     
      }
 
+     {
+      event name: 'Get User List'
+      params:
+            {
+                  isActive: bit
+            }     
+     }
+
+     {
+      event name: 'Create User'
+      params:
+            {
+                  username: string
+                  password: string
+                  roleID: int
+                  fullname: string
+                  birthday: string
+                  gender: int
+                  phoneNumber: string
+                  email: string
+                  address: string
+                  userIdNumber: string
+            }     
+     }
+
 # Server event (send to client)
       {
         event name: 'getTouristList',
@@ -1227,6 +1261,14 @@ Ex:
 
       {
        event name: 'Change Visit Place'
+       data:
+            {
+                  status: string
+            }     
+      }
+
+      {
+       event name: 'Assign Coach To Tour Instance'
        data:
             {
                   status: string
@@ -1696,13 +1738,16 @@ Ex:
       event name: 'Get Coach List'
       data:
             {
-                  coachID: int,
-                  licensePlate: string,
-                  numberOfSeat: int,
-                  isActive: bit,
-                  coachCompanyID: int,
-                  coachCompanyName: string,
-                  tourInstanceID: int
+                  coachList: array[{
+                        coachID: int,
+                        licensePlate: string,
+                        numberOfSeat: int,
+                        isActive: bit,
+                        coachCompanyID: int,
+                        coachCompanyName: string,
+                        tourInstanceID: int
+                  }]    
+                  
             }     
      }
 
@@ -1732,6 +1777,53 @@ Ex:
 
      {
       event name: 'Reactive Coach'
+      data:
+            {
+                  status: string
+            }     
+     }
+
+     {
+      event name: 'Get User List'
+      data:
+            {
+                userList: array[{
+                  userID: int,
+                  username: string,
+                  roleID: int,
+                  role: string,
+                  isActive: bit,
+                  fullname: string,
+                  phoneNumber:string,
+                  email: string   
+                }]     
+            }     
+     }
+
+     {
+      event name: 'Get User By ID'
+      data:
+            {
+                  userID: int,
+                  username: string,
+                  roleID: int,
+                  role: string,
+                  isActive: bit,
+                  fullname: string,
+                  phoneNumber:string,
+                  email: string,
+                  userIdNumber:string,
+                  gender:int,
+                  birthday: date,
+                  address: string,
+                  tourInstanceID,
+                  tourID: int,
+                  tourName: string
+            }     
+     }
+
+     {
+      event name: 'Create User'
       data:
             {
                   status: string

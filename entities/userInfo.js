@@ -24,14 +24,6 @@ class UserInfo {
         return this._gender
     }
 
-    set userIdNumber(userIdNumber) {
-        this._userIdNumber = userIdNumber
-    }
-
-    get userIdNumber() {
-        return this._userIdNumber
-    }
-
     set fullname(fullname) {
         this._fullname = fullname;
     }
@@ -46,6 +38,30 @@ class UserInfo {
 
     get phoneNumber() {
         return this._phoneNumber
+    }
+
+    set email(email) {
+        this._email = email
+    }
+
+    get email() {
+        return this._email
+    }
+
+    set address(address) {
+        this._address = address
+    }
+
+    get address() {
+        return this._address
+    }
+
+    set userIdNumber(userIdNumber) {
+        this._userIdNumber = userIdNumber
+    }
+
+    get userIdNumber() {
+        return this._userIdNumber
     }
 
     set userId(userId) {

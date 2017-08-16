@@ -101,6 +101,129 @@
 
      }
 
+     getAllUser(isActive, callback) {
+         connection.connect(err => {
+             if (err) {
+                 console.log(err)
+                 connection.close()
+             } else {
+                 var message = "";
+                 var userList = []
+                 var getAllUserQuery = "select [user].id as userID, username, [user].isActive, roleID, \n" +
+                     "role, fullname, phoneNumber,email \n" +
+                     "from [user] \n" +
+                     "inner join UserInfo on [user].id = UserInfo.UserID \n" +
+                     "inner join Role on Role.ID = [user].RoleID \n" +
+                     "where [user].isActive =" + isActive + " \n" +
+                     "order by RoleID"
+                 connection.request().query(getAllUserQuery, (err, result) => {
+                     if (err) {
+                         message = statusMessageError + getAllUserQuery
+                     } else {
+                         message = statusMessageSuccess + getAllUserQuery
+                         if (typeof result !== "undefined" && result.recordset.length > 0) {
+                             userList = result.recordset
+                         }
+                     }
+                     callback({
+                         userList: userList,
+                         message: message
+                     })
+                 })
+             }
+         })
+     }
+
+     getUserById(id, callback) {
+
+         connection.connect(err => {
+             if (err) {
+                 console.log(err)
+                 connection.close()
+             } else {
+                 var message = "";
+                 var user = {}
+                 var getUserQuery = "select [user].id as userID, username, [user].isActive, roleID, \n" +
+                     "role, fullname, phoneNumber,email, userIdNumber, gender, birthday, address, \n" +
+                     "tourInstanceID,tourID,Tour.name as tourName \n" +
+                     "from [user]  \n" +
+                     "inner join UserInfo on [user].id = UserInfo.UserID \n" +
+                     "inner join Role on Role.ID = [user].RoleID \n" +
+                     "left join TouristStatus on [user].TouristStatus = TouristStatus.ID \n" +
+                     "left join TourGuideStatus on [user].TourGuideStatus = TourGuideStatus.ID \n" +
+                     "inner join TourInstance on TourInstance.ID =[user].tourInstanceID \n" +
+                     "inner join Tour on Tour.ID = TourInstance.TourID \n" +
+                     "where [user].id=" + id;
+                 connection.request().query(getUserQuery, (err, result) => {
+                     if (err) {
+                         message = statusMessageError + getUserQuery
+                     } else {
+                         message = statusMessageSuccess + getUserQuery
+                         if (typeof result !== "undefined" && result.recordset.length > 0) {
+                             user = result.recordset[0]
+                         }
+                     }
+                     callback({
+                         user: user,
+                         message: message
+                     })
+                 })
+             }
+         })
+     }
+
+     createUser(user, userInfo, callback) {
+         connection.connect(err => {
+             if (err) {
+                 console.log(err)
+                 connection.close()
+             } else {
+                 var message = "";
+                 var status = "";
+                 var createUserQuery = "INSERT INTO [USER] (username,password,roleID,isActive) VALUES \n" +
+                     "('" + user.username + "','" + user.password + "'," + user.roleId + ",1)";
+                 connection.request().query(createUserQuery, (err, result) => {
+                     if (err) {
+                         message = statusMessageError + createUserQuery
+                         status = statusFailed
+                     } else {
+                         message = statusSuccess + createUserQuery
+                         status = statusSuccess;
+                     }
+                     var getNewestUserQuery = "Select top 1 ID from [User] order by ID DESC";
+                     var newestUser = {};
+                     connection.request().query(getNewestUserQuery, (err, result) => {
+                         if (err) {
+                             message += "\n " + statusMessageError + getNewestUserQuery
+                             status = statusFailed
+                         } else {
+                             message += "\n " + statusMessageSuccess + getNewestUserQuery
+                             status = statusSuccess
+                             newestUser = result.recordset[0];
+                         }
+                         var insertUserInfoQuery = "INSERT INTO UserInfo (fullname,birthday,userIdNumber,gender,phoneNumber,userID,email,address) \n" +
+                             "VALUES (N'" + userInfo.fullname + "','" + userInfo.birthday + "','" + userInfo.userIdNumber + "'," + userInfo.gender + ",'" +
+                             userInfo.phoneNumber + "'," + newestUser.ID + ",'" + userInfo.email + "','" + userInfo.address + "')";
+                         connection.request().query(insertUserInfoQuery, (err, result) => {
+                             if (err) {
+                                 message += "\n " + statusMessageError + insertUserInfoQuery;
+                                 status = statusFailed;
+                             } else {
+                                 message += "\n " + statusMessageSuccess + insertUserInfoQuery;
+                                 status = statusSuccess
+                             }
+                             callback({
+                                 message: message,
+                                 status: status
+                             })
+                         })
+                     })
+                 })
+
+             }
+         })
+     }
+
  }
 
  module.exports = UserDAO

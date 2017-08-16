@@ -158,6 +158,33 @@ class CoachDAO {
             }
         })
     }
+
+    setTourInstance(id, tourInstanceID, callback) {
+        connection.connect(err => {
+            if (err) {
+                console.log(err)
+                connection.close()
+            } else {
+                var message = "";
+                var status = "";
+                var setTourInstanceQuery = "UPDATE Coach set TourInstanceID=" + tourInstanceID + " where id=" + id;
+                connection.request().query(setTourInstanceQuery, (err, result) => {
+                    if (err) {
+                        message = statusMessageError + setTourInstanceQuery
+                        status = statusFailed
+                    } else {
+                        message = statusMessageSuccess + setTourInstanceQuery
+                        statusSuccess
+                    }
+                    callback({
+                        message: message,
+                        status: status
+                    })
+                    connection.close()
+                })
+            }
+        })
+    }
 }
 
 module.exports = CoachDAO;

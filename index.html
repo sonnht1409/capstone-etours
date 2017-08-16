@@ -204,9 +204,17 @@
                 }))
                 */
 
-                socket.emit('Reactive Coach', JSON.stringify({
-
-                    coachID: 6
+                socket.emit('Create User', JSON.stringify({
+                    username: "test1",
+                    password: "123",
+                    roleID: 1,
+                    fullname: "test user",
+                    birthday: "2017-08-16",
+                    gender: 1,
+                    phoneNumber: "1234567890",
+                    email: "testemail@gmail.com",
+                    address: "address",
+                    userIdNumber: "12345678"
                 }))
                 $('#m').val('');
                 return false;
@@ -278,7 +286,7 @@
                 console.log(JSON.parse(data));
             })*/
 
-            socket.on('Get Coach List', (data) => {
+            socket.on('Get User By ID', (data) => {
                 console.log(JSON.parse(data));
             })
 

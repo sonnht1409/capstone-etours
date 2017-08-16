@@ -2780,6 +2780,81 @@
              io.emit('log message', result.message)
          })
      })
+
+     socket.on('Assign Coach To Tour Instance', (params) => {
+         var clientParams = JSON.parse(params)
+         var Coach = require("./entities/coach")
+         var coach = new Coach();
+         coach.id = clientParams.coachID;
+         coach.tourInstanceId = clientParams.tourInstanceID;
+         var CoachDAO = require("./dao/coachDAO")
+         var coachDAO = new CoachDAO();
+         coachDAO.setTourInstance(coach.id, coach.tourInstanceId, (result) => {
+             socket.emit('Assign Coach To Tour Instance', JSON.stringify({
+                 status: result.status
+             }))
+             io.emit('log message', result.message)
+         })
+     })
+
+     socket.on('Get User List', (params) => {
+         var clientParams = JSON.parse(params);
+         var User = require("./entities/user")
+         var user = new User();
+         user.isActive = clientParams.isActive
+         var UserDAO = require("./dao/userDAO")
+         var userDAO = new UserDAO();
+         userDAO.getAllUser(user.isActive, (result) => {
+             socket.emit('Get User List', JSON.stringify({
+                 userList: result.userList
+             }))
+             io.emit('log message', result.message)
+         })
+     })
+
+     socket.on('Get User By ID', (params) => {
+         var clientParams = JSON.parse(params);
+         var User = require("./entities/user")
+         var user = new User();
+         user.id = clientParams.userID
+         var UserDAO = require("./dao/userDAO")
+         var userDAO = new UserDAO();
+         userDAO.getUserById(user.id, (result) => {
+             socket.emit('Get User By ID', JSON.stringify(result.user))
+             io.emit('log message', result.message)
+         })
+     })
+
+     socket.on('Create User', (params) => {
+         var clientParams = JSON.parse(params);
+         var User = require("./entities/user")
+         var user = new User();
+         var UserInfo = require("./entities/userInfo");
+         var userInfo = new UserInfo();
+         user.username = clientParams.username;
+         user.password = clientParams.password;
+         user.roleId = clientParams.roleID;
+         userInfo.fullname = clientParams.fullname;
+         userInfo.birthday = clientParams.birthday;
+         userInfo.gender = clientParams.gender;
+         userInfo.phoneNumber = clientParams.phoneNumber;
+         userInfo.userIdNumber = clientParams.phoneNumber;
+         userInfo.email = clientParams.email;
+         userInfo.address = clientParams.address;
+         var UserDAO = require("./dao/userDAO")
+         var userDAO = new UserDAO();
+         userDAO.createUser(user, userInfo, (result) => {
+             socket.emit('Create User', JSON.stringify({
+                 status: result.status
+             }))
+
+             io.emit('log message', result.message)
+         })
+     })
+
+     socket.on('Update User', (params) => {
+
+     })
  })
 
 
