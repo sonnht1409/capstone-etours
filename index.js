@@ -2972,40 +2972,42 @@
              socket.emit('Schedule Time', JSON.stringify(data));
          })
      })
- })
 
- socket.on('Mobile Get Others Location Detail', (params) => {
-     var clientParams = JSON.parse(params);
-     var getGpsQuery = "select Latitude, Longitude, Fullname, PhoneNumber, Role.role, SeatNumber, [user].ID as UserID \n" +
-         "from [user] inner join UserInfo on [user].ID = UserInfo.UserID \n" +
-         "inner join User_Coach_SeatNumber as UCSN on [user].ID = UCSN.UserID \n" +
-         "inner join Coach on UCSN.CoachID = Coach.ID \n" +
-         "inner join Role on [user].RoleID = Role.ID \n" +
-         "Where [user].TourInstanceID =" + clientParams.tourInstanceID + " and CoachID = " + clientParams.coachID;
-     if (clientParams.roleID != 0) {
-         getGpsQuery += " and RoleID=" + clientParams.roleID + " \n" +
-             "Order by RoleID,SeatNumber";
-     } else {
-         getGpsQuery += " and RoleID <>" + clientParams.currentRoleID + "\n"
-         getGpsQuery += "Order by RoleID,SeatNumber"
-     }
-     var message = "";
-     var data = {
-         userLocationList: []
-     };
-     connection.request().query(getGpsQuery, (err, result) => {
-         if (err) {
-             message = statusMessageError + getGpsQuery
+     socket.on('Mobile Get Others Location Detail', (params) => {
+         var clientParams = JSON.parse(params);
+         var getGpsQuery = "select Latitude, Longitude, Fullname, PhoneNumber, Role.role, SeatNumber, [user].ID as UserID \n" +
+             "from [user] inner join UserInfo on [user].ID = UserInfo.UserID \n" +
+             "inner join User_Coach_SeatNumber as UCSN on [user].ID = UCSN.UserID \n" +
+             "inner join Coach on UCSN.CoachID = Coach.ID \n" +
+             "inner join Role on [user].RoleID = Role.ID \n" +
+             "Where [user].TourInstanceID =" + clientParams.tourInstanceID + " and CoachID = " + clientParams.coachID;
+         if (clientParams.roleID != 0) {
+             getGpsQuery += " and RoleID=" + clientParams.roleID + " \n" +
+                 "Order by RoleID,SeatNumber";
          } else {
-             message = statusMessageSuccess + getGpsQuery;
-             if (typeof result !== "undefined" && result.recordset.length > 0) {
-                 data.userLocationList = result.recordset;
-             }
+             getGpsQuery += " and RoleID <>" + clientParams.currentRoleID + "\n"
+             getGpsQuery += "Order by RoleID,SeatNumber"
          }
-         io.emit('log message', message);
-         socket.emit('Mobile Get Others Location', JSON.stringify(data));
+         var message = "";
+         var data = {
+             userLocationList: []
+         };
+         connection.request().query(getGpsQuery, (err, result) => {
+             if (err) {
+                 message = statusMessageError + getGpsQuery
+             } else {
+                 message = statusMessageSuccess + getGpsQuery;
+                 if (typeof result !== "undefined" && result.recordset.length > 0) {
+                     data.userLocationList = result.recordset;
+                 }
+             }
+             io.emit('log message', message);
+             socket.emit('Mobile Get Others Location', JSON.stringify(data));
+         })
      })
  })
+
+
 
 
 
