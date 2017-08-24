@@ -1,17 +1,4 @@
-# API URL
 
-http://52.163.244.136:8080/
-
-# Tool Test Socket event 
-http://amritb.github.io/socketio-client-tool/
-
-# Database server
-
-etours3.database.windows.net
-username: etours
-password: $Son01627335534
-azure: etoursdatabase2@gmail.com
-password: Anhphuong11
 
 # casptone-etours
 This project for our graduation
